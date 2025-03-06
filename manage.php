@@ -13,10 +13,11 @@ $context = context_system::instance(); // Because we "have no scope".
 $PAGE->set_context($context);
 $systemcontext = \context_system::instance();
 $PAGE->set_url('/payment/gateway/bank/manage.php');
-$PAGE->set_pagelayout('report');
+$PAGE->set_pagelayout('standard');
 $pagetitle = get_string('manage', 'paygw_bank');
 $PAGE->set_title($pagetitle);
 $PAGE->set_heading($pagetitle);
+$PAGE->set_cacheable(false);
 $PAGE->navbar->add(get_string('pluginname', 'paygw_bank'), $PAGE->url);
 $confirm = optional_param('confirm', 0, PARAM_INT);
 $id = optional_param('id', 0, PARAM_INT);

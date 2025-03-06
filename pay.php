@@ -52,10 +52,11 @@ $context = context_system::instance(); // Because we "have no scope".
 $PAGE->set_context($context);
 
 $PAGE->set_url('/payment/gateway/bank/pay.php', $params);
-$PAGE->set_pagelayout('report');
+$PAGE->set_pagelayout('standard');
 $pagetitle = $description;
 $PAGE->set_title($pagetitle);
 $PAGE->set_heading($pagetitle);
+$PAGE->set_cacheable(false);
 
 $config = (object) helper::get_gateway_configuration($component, $paymentarea, $itemid, 'bank');
 $payable = helper::get_payable($component, $paymentarea, $itemid);
@@ -148,6 +149,8 @@ if ($surcharge && $surcharge > 0 && $bank_entry == null) {
 if ($bank_entry != null) {
     echo '<li class="list-group-item"><h4 class="card-title">' . get_string('transfer_code', 'paygw_bank') . ':</h4>';
     echo '<div id="transfercode">' . $bank_entry->code . '</div>';
+    echo '<br><div align=center>';
+    echo $OUTPUT->single_button('/',get_string('continue'));
     echo '</li>';
     $instructions = format_text($config->postinstructionstext['text']);
 }
