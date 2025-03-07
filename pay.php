@@ -253,9 +253,7 @@ if ($confirm == 0 && !bank_helper::has_openbankentry($itemid, $USER->id)) {
 }
 echo "</div>";
 echo "</div>";
-if ($bank_entry != null) {
-    echo '<br><div align=center>';
-    echo $OUTPUT->single_button(helper::get_success_url($component, $paymentarea, $itemid),get_string('continue'));
-    echo '</div>';
-}
+echo '<br><div align=center>';
+echo $OUTPUT->single_button(helper::get_success_url($component, $paymentarea, $itemid),get_string('back'));
+echo '</div>';
 echo $OUTPUT->footer();
