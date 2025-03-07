@@ -149,8 +149,6 @@ if ($surcharge && $surcharge > 0 && $bank_entry == null) {
 if ($bank_entry != null) {
     echo '<li class="list-group-item"><h4 class="card-title">' . get_string('transfer_code', 'paygw_bank') . ':</h4>';
     echo '<div id="transfercode">' . $bank_entry->code . '</div>';
-    echo '<br><div align=center>';
-    echo $OUTPUT->single_button('/',get_string('continue'));
     echo '</li>';
     $instructions = format_text($config->postinstructionstext['text']);
 }
@@ -255,4 +253,9 @@ if ($confirm == 0 && !bank_helper::has_openbankentry($itemid, $USER->id)) {
 }
 echo "</div>";
 echo "</div>";
+if ($bank_entry != null) {
+    echo '<br><div align=center>';
+    echo $OUTPUT->single_button('/',get_string('continue'));
+    echo '</div>';
+}
 echo $OUTPUT->footer();
