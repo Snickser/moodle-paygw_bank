@@ -103,7 +103,7 @@ if (!$bank_entries) {
     <?php
     $table->head = array($checkboxcheckall,
         get_string('date'), get_string('code', 'paygw_bank'), get_string('username'),  get_string('email'),
-        get_string('concept', 'paygw_bank'), get_string('total_cost', 'paygw_bank'), get_string('currency'), get_string('hasfiles', 'paygw_bank'), get_string('actions')
+        get_string('concept', 'paygw_bank'), get_string('total_cost', 'paygw_bank'), get_string('today_cost', 'paygw_bank'), get_string('currency'), get_string('hasfiles', 'paygw_bank'), get_string('actions')
     );
     //$headarray=array(get_string('date'),get_string('code', 'paygw_bank'), get_string('concept', 'paygw_bank'),get_string('amount', 'paygw_bank'),get_string('currency'));
 
@@ -175,12 +175,21 @@ if (!$bank_entries) {
             ';
         }
 
-
-
-
+$unpaid = $amount;
+// Check uninterrupted cost.
+if ($bank_entry->component == "enrol_yafee") {
+    $cs = $DB->get_record('enrol', ['id' => $bank_entry->itemid, 'enrol' => 'yafee']);
+        if ($data = $DB->get_record('user_enrolments', ['userid' => $bank_entry->userid, 'enrolid' => $cs->id])) {
+         if (isset($data->timeend) || isset($data->timestart)) {
+            if ($cs->customint5 && $cs->enrolperiod && $data->timeend < time() && $data->timestart) {
+                $unpaid = ceil(((time() - $data->timeend) / $cs->enrolperiod)) * $cs->cost ;
+             }
+         }
+        }
+}
         $table->data[] = array($selectitemcheckbox,
             date('Y-m-d', $bank_entry->timecreated), $bank_entry->code, $fullname, $customer->email, $bank_entry->description,
-            $amount, $currency, $hasfiles, $buttonaprobe . $buttondeny
+            $amount, $unpaid, $currency, $hasfiles, $buttonaprobe . $buttondeny
         );
     }
     echo html_writer::table($table);
