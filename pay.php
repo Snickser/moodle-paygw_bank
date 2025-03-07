@@ -255,7 +255,7 @@ echo "</div>";
 echo "</div>";
 if ($bank_entry != null) {
     echo '<br><div align=center>';
-    echo $OUTPUT->single_button('/',get_string('continue'));
+    echo $OUTPUT->single_button(helper::get_success_url($component, $paymentarea, $itemid),get_string('continue'));
     echo '</div>';
 }
 echo $OUTPUT->footer();
