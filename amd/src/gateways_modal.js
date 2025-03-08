@@ -37,9 +37,11 @@ import ModalFactory from 'core/modal_factory';
  */
 const showModalWithPlaceholder = async() => {
     const modal = await ModalFactory.create({
-        body: await Templates.render('paygw_bank/bank_button_placeholder', {})
+        body: await Templates.render('paygw_bank/bank_button_placeholder', {}),
+        show: true,
+        removeOnClose: true,
     });
-    modal.show();
+    modal.destroy();
 };
 
 
