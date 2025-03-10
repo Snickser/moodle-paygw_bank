@@ -67,13 +67,13 @@ if (!$bank_entries) {
         $itemid = $bank_entry->itemid;
         $description = $bank_entry->description;
         $urlpay=new moodle_url('/payment/gateway/bank/pay.php', array('component' => $component,'paymentarea' => $paymentarea,'itemid' => $itemid,'description' => $description));
-        $buttongo='<a class="btn btn-primary btn-block" href="'.$urlpay.'">'.get_string('go').'</a>';
+        $buttongo='<a class="btn btn-primary btn-block" href="'.$urlpay.'">'.get_string('edit').'</a>';
         $buttondeny = '<form action="my_pending_pay.php" id="cancel_' . $bank_entry->id . '" method="POST">
         <input type="hidden" name="sesskey" value="' .sesskey(). '">
         <input type="hidden" name="id" value="' . $bank_entry->id . '">
         <input type="hidden" name="action" value="D">
         <input type="hidden" name="confirm" value="1">
-        <input class="btn btn-primary btn-block" type="submit" data-modal="confirmation" data-modal-title-str=\'["cancel_process", "paygw_bank"]\'
+        <input class="btn btn-danger mt-3 btn-block" type="submit" data-modal="confirmation" data-modal-title-str=\'["cancel_process", "paygw_bank"]\'
         data-modal-content-str=\'["are_you_sure_cancel","paygw_bank"]\' data-modal-destination="javascript:document.getElementById(\'cancel_' . $bank_entry->id . '\').submit()" data-modal-yes-button-str=\'["yes", "core"]\' value="' . get_string("cancel_process", "paygw_bank") . '"></input>
         </form>';
         $buttons=$buttongo;

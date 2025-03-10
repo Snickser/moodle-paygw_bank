@@ -133,7 +133,7 @@ if (!$bank_entries) {
         <input type="hidden" name="id" value="' . $bank_entry->id . '">
         <input type="hidden" name="action" value="D">
         <input type="hidden" name="confirm" value="1">
-        <input class="btn btn-primary form-submit" type="submit" value="' . get_string('deny', 'paygw_bank') . '"></input>
+        <input class="btn btn-danger mt-2 form-submit" type="submit" value="' . get_string('deny', 'paygw_bank') . '"></input>
         </form>';
         $files = "-";
         $selectitemcheckbox = '<input type="checkbox" name="selectitem" value="' . $bank_entry->id . '">';
