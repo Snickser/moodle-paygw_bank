@@ -28,7 +28,7 @@ $action = optional_param('action', '', PARAM_TEXT);
 echo $OUTPUT->header();
 
 require_capability('paygw/bank:managepayments', $systemcontext);
-echo '<form name="filteritem" method="GET">
+echo '<form name="filteritem" method="POST">
 <select class="custom-select" name="filter" id="filterkey">';
 $items=bank_helper::get_pending_item_collections();
 echo '<option value="">'.get_string('all').'</option>';
@@ -37,8 +37,8 @@ foreach ($items as $item) {
 }
 
 echo '</select>
-<input type="submit" class="btn btn-primary" value="' . get_string('filter') . '">
-</form>';
+&nbsp;<input type="submit" class="btn btn-primary" value="' . get_string('show') . '">
+</form></br>';
 
 echo $OUTPUT->heading(get_string('pending_payments', 'paygw_bank'), 2);
 if ($confirm == 1 && $id > 0) {
@@ -175,18 +175,24 @@ if (!$bank_entries) {
             ';
         }
 
-$unpaid = $amount;
+$unpaid = '-';
 // Check uninterrupted cost.
 if ($bank_entry->component == "enrol_yafee") {
     $cs = $DB->get_record('enrol', ['id' => $bank_entry->itemid, 'enrol' => 'yafee']);
         if ($data = $DB->get_record('user_enrolments', ['userid' => $bank_entry->userid, 'enrolid' => $cs->id])) {
          if (isset($data->timeend) || isset($data->timestart)) {
             if ($cs->customint5 && $cs->enrolperiod && $data->timeend < time() && $data->timestart) {
-                $unpaid = ceil(((time() - $data->timeend) / $cs->enrolperiod)) * $cs->cost ;
-             }
+                $unpaid = (round(((time() - $data->timeend) / $cs->enrolperiod)) * $cs->cost) ;
+            }
          }
         }
+ if ($amount < $unpaid) {
+    $unpaid = '<font color=red><b>' . $unpaid . '</b></font>';
+ } else {
+    $unpaid = '<font color=green>' . $unpaid . '</font>';
+ }
 }
+
         $table->data[] = array($selectitemcheckbox,
             date('Y-m-d', $bank_entry->timecreated), $bank_entry->code, $fullname, $customer->email, $bank_entry->description,
             $amount, $unpaid, $currency, $hasfiles, $buttonaprobe . $buttondeny
