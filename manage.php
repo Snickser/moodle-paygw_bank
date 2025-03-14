@@ -75,8 +75,7 @@ $post_url= new moodle_url($PAGE->url, array('sesskey'=>sesskey()));
 $bank_entries = bank_helper::get_pending();
 if (!$bank_entries) {
     $match = array();
-    echo $OUTPUT->heading(get_string('noentriesfound', 'paygw_bank'));
-
+    echo '</br>'.$OUTPUT->heading(get_string('noentriesfound', 'paygw_bank'));
     $table = null;
 } else {
     $table = new html_table();
@@ -201,6 +200,7 @@ if ($bank_entry->component == "enrol_yafee") {
     echo html_writer::table($table);
 }
 
+if ($bank_entries) {
 ?>
 <div class="row">
     <div class="col">
@@ -209,6 +209,9 @@ if ($bank_entry->component == "enrol_yafee") {
         </button>
     </div>
 </div>
+<?php
+}
+?>
 <script>
 function sendmail() {
     var ids = '';
