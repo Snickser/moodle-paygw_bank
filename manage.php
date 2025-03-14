@@ -207,9 +207,7 @@ if ($bank_entry->component == "enrol_yafee") {
 //            $fullname,
 	    html_writer::link('/user/profile.php?id='.$customer->id, $fullname),
             $customer->email,
-//            format_string($course->shortname, true, ['context' => context_course::instance($course->id)]),
-	    html_writer::link('/course/view.php?id='.$course->id, $bank_entry->description),
-//            $bank_entry->description,
+            $bank_entry->description,
             $amount, $unpaid, $currency, $hasfiles, $buttonaprobe . $buttondeny
         );
     }
