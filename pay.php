@@ -255,6 +255,10 @@ if ($confirm == 0 && !bank_helper::has_openbankentry($itemid, $USER->id)) {
 echo "</div>";
 echo "</div>";
 echo '<br><div align=center>';
-echo $OUTPUT->single_button('/',get_string('cancel'));
+if ($bank_entry) {
+    echo $OUTPUT->single_button('/payment/gateway/bank/my_pending_pay.php',get_string('continue'));
+} else {
+    echo $OUTPUT->single_button('/',get_string('cancel'));
+}
 echo '</div>';
 echo $OUTPUT->footer();
