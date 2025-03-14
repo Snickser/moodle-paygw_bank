@@ -107,7 +107,7 @@ echo '<div class="card">';
 echo '<div class="card-body">';
 echo '<ul class="list-group list-group-flush">';
 echo '<li class="list-group-item"><h5 class="card-title">' . get_string('concept', 'paygw_bank') . ':</h5>';
-echo '<div>' . $description. '</div>';
+echo '<div>' . $description . '</div>';
 echo "</li>";
 $aceptform = "";
 $instructions = "";
@@ -119,7 +119,6 @@ if (bank_helper::has_openbankentry($itemid, $USER->id)) {
     $amount = $bank_entry->totalamount;
     $confirm = 0;
 } else {
-
     if ($confirm != 0) {
         $totalamount = $amount;
         $data = $mform->get_data();

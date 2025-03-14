@@ -101,7 +101,10 @@ if (!$bank_entries) {
     </script>
     <?php
     $table->head = array($checkboxcheckall,
-        get_string('date'), get_string('code', 'paygw_bank'), get_string('fullnameuser'),  get_string('email'),
+        get_string('date'), get_string('code', 'paygw_bank'),
+        get_string('fullnameuser'),
+        get_string('email'),
+//        get_string('course'),
         get_string('concept', 'paygw_bank'), get_string('total_cost', 'paygw_bank'), get_string('today_cost', 'paygw_bank'), get_string('currency'), get_string('hasfiles', 'paygw_bank'), get_string('actions')
     );
     //$headarray=array(get_string('date'),get_string('code', 'paygw_bank'), get_string('concept', 'paygw_bank'),get_string('amount', 'paygw_bank'),get_string('currency'));
@@ -116,6 +119,14 @@ if (!$bank_entries) {
         $currency = $payable->get_currency();
         $customer = $DB->get_record('user', array('id' => $bank_entry->userid));
         $fullname = fullname($customer, true);
+
+// Add course.
+$course = null;
+if ($bank_entry->paymentarea === 'fee') {
+    if ($cs = $DB->get_record('enrol', ['id' => $bank_entry->itemid])) {
+	$course = $DB->get_record('course', ['id' => $cs->courseid]);
+    }
+}
 
         // Add surcharge if there is any.
         $surcharge = helper::get_gateway_surcharge('paypal');
@@ -193,7 +204,13 @@ if ($bank_entry->component == "enrol_yafee") {
 }
 
         $table->data[] = array($selectitemcheckbox,
-            date('Y-m-d', $bank_entry->timecreated), $bank_entry->code, $fullname, $customer->email, $bank_entry->description,
+            date('Y-m-d', $bank_entry->timecreated), $bank_entry->code,
+//            $fullname,
+	    html_writer::link('/user/profile.php?id='.$customer->id, $fullname),
+            $customer->email,
+//            format_string($course->shortname, true, ['context' => context_course::instance($course->id)]),
+	    html_writer::link('/course/view.php?id='.$course->id, $bank_entry->description),
+//            $bank_entry->description,
             $amount, $unpaid, $currency, $hasfiles, $buttonaprobe . $buttondeny
         );
     }
