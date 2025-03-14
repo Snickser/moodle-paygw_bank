@@ -180,7 +180,7 @@ if ($confirm == 0 && !bank_helper::has_openbankentry($itemid, $USER->id)) {
                         }
                     }
                     if($isalreadyuplooaded) {
-                        \core\notification::warning(get_string('file_already_uploaded', 'paygw_bank'));                 
+                        \core\notification::warning(get_string('file_already_uploaded', 'paygw_bank'));
                     }
                     else
                     {
