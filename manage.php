@@ -202,12 +202,15 @@ if ($bank_entry->component == "enrol_yafee") {
  }
 }
 
+	$url = helper::get_success_url($bank_entry->component, $bank_entry->paymentarea, $bank_entry->itemid);
+
         $table->data[] = array($selectitemcheckbox,
             date('Y-m-d', $bank_entry->timecreated), $bank_entry->code,
 //            $fullname,
 	    html_writer::link('/user/profile.php?id='.$customer->id, $fullname),
             $customer->email,
-            $bank_entry->description,
+            html_writer::link($url, $bank_entry->description),
+//            $bank_entry->description,
             $amount, $unpaid, $currency, $hasfiles, $buttonaprobe . $buttondeny
         );
     }
