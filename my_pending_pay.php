@@ -86,7 +86,7 @@ if (!$bank_entries) {
         $amount,$currency);
      
         if($canuploadfiles) {
-            $hasfiles = get_string('no');
+            $hasfiles = "<font color=red><b>".get_string('no')."</b></font>";
             
             $files=bank_helper::files($bank_entry->id);
             if (count($files)>0) {
