@@ -26,11 +26,16 @@
 defined('MOODLE_INTERNAL') || die();
 
 if ($ADMIN->fulltree) {
+
+    $plugininfo = \core_plugin_manager::instance()->get_plugin_info('paygw_bank');
+    $donate = get_string('donate', 'paygw_bank', $plugininfo);
+
     $settings->add(new admin_setting_heading(
         'paygw_bank_settings',
-        '',
-        get_string('pluginname_desc', 'paygw_bank')
+        get_string('pluginname_desc', 'paygw_bank'),
+        $donate,
     ));
+
     $settings->add(new admin_setting_configcheckbox(
         'paygw_bank/usercanuploadfiles',
         get_string('allow_users_add_files', 'paygw_bank'),
