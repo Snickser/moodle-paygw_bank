@@ -42,8 +42,7 @@ class gateway extends \core_payment\gateway
             $altcurrenc=explode(',', $alternatecurrencies);
         }
         $initialcurrencies=[
-            'AUD', 'BRL', 'CAD', 'CHF', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HUF', 'ILS', 'INR', 'JPY',
-            'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PLN', 'RUB', 'SEK', 'SGD', 'THB', 'TRY', 'TWD', 'USD'
+            'USD', 'EUR', 'RUB', 'BYR'
         ];
         return array_merge($initialcurrencies, $altcurrenc);
     }
@@ -68,6 +67,10 @@ class gateway extends \core_payment\gateway
         $mform->setType('codeprefix', PARAM_RAW);
         //add default value to codeprefix
         $mform->setDefault('codeprefix', 'code');
+        $mform->addElement('html', '<hr>');
+        $plugininfo = \core_plugin_manager::instance()->get_plugin_info('paygw_bank');
+        $donate = get_string('donate', 'paygw_bank', $plugininfo);
+        $mform->addElement('html', $donate);
     }
 
     /**
