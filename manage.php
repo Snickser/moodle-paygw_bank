@@ -207,9 +207,9 @@ if ($bank_entry->component == "enrol_yafee") {
         $table->data[] = array($selectitemcheckbox,
             date('Y-m-d', $bank_entry->timecreated), $bank_entry->code,
 //            $fullname,
-	    html_writer::link('/user/profile.php?id='.$customer->id, $fullname),
+	    html_writer::link('/user/profile.php?id='.$customer->id, $fullname, array('target' => '_blank')),
             $customer->email,
-            html_writer::link($url, $bank_entry->description),
+            html_writer::link($url, $bank_entry->description, array('target' => '_blank')),
 //            $bank_entry->description,
             $amount, $unpaid, $currency, $hasfiles, $buttonaprobe . $buttondeny
         );
