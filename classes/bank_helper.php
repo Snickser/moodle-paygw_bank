@@ -136,9 +136,8 @@ class bank_helper
             $emailuser = new stdClass();
             $emailuser->email = $emailaddress;
             $emailuser->id = -99;
-            static::message_to_user($record->userid, $supportuser, $subject, $mailcontent);
+            email_to_user($emailuser, $supportuser, $subject, $mailcontent);
         }
-        
 
         return $record;
     }
@@ -255,7 +254,7 @@ class bank_helper
             $emailuser = new stdClass();
             $emailuser->email = $emailaddress;
             $emailuser->id = -99;
-            static::message_to_user($userid, $supportuser, $subject, $mailcontent);
+            email_to_user($emailuser, $supportuser, $subject, $mailcontent);
         }
         return $record;
     }
@@ -301,11 +300,13 @@ class bank_helper
     {
         global $DB;
         $record = $DB->get_record('paygw_bank', ['id' => $id]);
-        $paymentuser=bank_helper::get_user($record->userid);
-        $supportuser = core_user::get_support_user();
-        $fullname = fullname($paymentuser, true);
-        $mailcontent = $message;
-        static::message_to_user($record->userid, $supportuser, $subject, $mailcontent);
+//        $paymentuser=bank_helper::get_user($record->userid);
+//        $fullname = fullname($paymentuser, true);
+//        $mailcontent = $message;
+	if (isset($record->userid)) {
+            $supportuser = core_user::get_support_user();
+            static::message_to_user($record->userid, $supportuser, $subject, $message);
+        }
         return true;
     }
 }
