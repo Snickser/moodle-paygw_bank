@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * External functions and service definitions for the bank payment gateway plugin.
  *
@@ -29,6 +30,6 @@ $functions = [
         'classpath'   => '',
         'description' => 'Returns the configuration settings to be used in js',
         'type'        => 'read',
-        'ajax'        => true
-    ]
+        'ajax'        => true,
+    ],
 ];
