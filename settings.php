@@ -43,7 +43,7 @@ if ($ADMIN->fulltree) {
     ));
 
     \core_payment\helper::add_common_gateway_settings($settings, 'paygw_bank');
-    
+
     $settings->add(new admin_setting_configcheckbox(
         'paygw_bank/usercanuploadfiles',
         get_string('allow_users_add_files', 'paygw_bank'),
@@ -89,6 +89,15 @@ if ($ADMIN->fulltree) {
         '',
         0
     ));
+    $settings->add(new admin_setting_configcheckbox(
+        'paygw_bank/sendteachermail',
+        get_string('send_teacher_mail', 'paygw_bank'),
+        '',
+        0
+    ));
+
+    // -------------------------------------------------
+
     $settings->add(new admin_setting_heading(
         'paygw_bank/notemails',
         get_string('email_notifications', 'paygw_bank'),
