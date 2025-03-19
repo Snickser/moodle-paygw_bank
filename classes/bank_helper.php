@@ -56,8 +56,8 @@ class bank_helper
 	$message->fullmessageformat = FORMAT_MARKDOWN;
 	$message->notification = 1; // Because this is a notification generated from Moodle, not a user-to-user message.
 	
-	$messageid = message_send($message);
-	return $messageid;
+	message_send($message);
+	return true;
     }
     public static function get_openbankentry($itemid, $userid): \stdClass
     {
@@ -118,7 +118,7 @@ class bank_helper
             $contentmessage->useremail = $paymentuser->email;
             $contentmessage->userfullname = fullname($paymentuser, true);
             $mailcontent = get_string('mail_confirm_pay', 'paygw_bank', $contentmessage);
-            static::message_to_user($record->userid, $supportuser, $subject, $mailcontent);
+            self::message_to_user($record->userid, $supportuser, $subject, $mailcontent);
             $USER->lang=$userlang;
         }
         $send_email = get_config('paygw_bank', 'senconfirmailtosupport');
@@ -185,7 +185,7 @@ class bank_helper
             $contentmessage->code = $record->code;
             $contentmessage->concept = $record->description;
             $mailcontent = get_string('mail_denied_pay', 'paygw_bank', $contentmessage);
-            static::message_to_user($record->userid, $supportuser, $subject, $mailcontent);
+            self::message_to_user($record->userid, $supportuser, $subject, $mailcontent);
             $USER->lang=$userlang;
         }
         return $record;
@@ -305,7 +305,7 @@ class bank_helper
 //        $mailcontent = $message;
 	if (isset($record->userid)) {
             $supportuser = core_user::get_support_user();
-            static::message_to_user($record->userid, $supportuser, $subject, $message);
+            bank_helper::message_to_user($record->userid, $supportuser, $subject, $message);
         }
         return true;
     }
