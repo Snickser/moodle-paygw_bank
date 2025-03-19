@@ -36,8 +36,29 @@ use stdClass;
 
 class bank_helper
 {
+    private static function message_to_user($userid, $from, $subject, $text): bool
+    {
+	global $CFG;
 
+        // Get the user object for messaging and fullname.
+        $user = \core_user::get_user($userid);
+        if (empty($user) || isguestuser($user) || !empty($user->deleted)) {
+            return false;
+        }
 
+	$message = new \core\message\message();
+	$message->component = 'paygw_bank'; // Your plugin's name.
+	$message->name = 'payment_receipt'; // Your notification name from message.php.
+	$message->userfrom = $from;
+	$message->userto = $user;
+	$message->subject = $subject;
+	$message->fullmessage = $text;
+	$message->fullmessageformat = FORMAT_MARKDOWN;
+	$message->notification = 1; // Because this is a notification generated from Moodle, not a user-to-user message.
+	
+	$messageid = message_send($message);
+	return $messageid;
+    }
     public static function get_openbankentry($itemid, $userid): \stdClass
     {
         global $DB;
@@ -97,7 +118,7 @@ class bank_helper
             $contentmessage->useremail = $paymentuser->email;
             $contentmessage->userfullname = fullname($paymentuser, true);
             $mailcontent = get_string('mail_confirm_pay', 'paygw_bank', $contentmessage);
-            email_to_user($paymentuser, $supportuser, $subject, $mailcontent);
+            static::message_to_user($record->userid, $supportuser, $subject, $mailcontent);
             $USER->lang=$userlang;
         }
         $send_email = get_config('paygw_bank', 'senconfirmailtosupport');
@@ -117,7 +138,6 @@ class bank_helper
             $emailuser->id = -99;
             email_to_user($emailuser, $supportuser, $subject, $mailcontent);
         }
-        
 
         return $record;
     }
@@ -158,7 +178,6 @@ class bank_helper
             $fullname = fullname($paymentuser, true);
             $userlang=$USER->lang;
             $USER->lang=$paymentuser->lang;
-          
             $subject = get_string('mail_denied_pay_subject', 'paygw_bank');
             $contentmessage = new stdClass;
             $contentmessage->username = $fullname;
@@ -166,7 +185,7 @@ class bank_helper
             $contentmessage->code = $record->code;
             $contentmessage->concept = $record->description;
             $mailcontent = get_string('mail_denied_pay', 'paygw_bank', $contentmessage);
-            email_to_user($paymentuser, $supportuser, $subject, $mailcontent);
+            static::message_to_user($record->userid, $supportuser, $subject, $mailcontent);
             $USER->lang=$userlang;
         }
         return $record;
@@ -200,7 +219,7 @@ class bank_helper
             return null;
         }
         $config = (object) payment_helper::get_gateway_configuration($component, $paymentarea, $itemid, 'bank');
-        
+
         $user=bank_helper::get_user($userid);
         $record = new \stdClass();
         $record->itemid = $itemid;
@@ -281,11 +300,13 @@ class bank_helper
     {
         global $DB;
         $record = $DB->get_record('paygw_bank', ['id' => $id]);
-        $paymentuser=bank_helper::get_user($record->userid);
-        $supportuser = core_user::get_support_user();
-        $fullname = fullname($paymentuser, true);
-        $mailcontent = $message;
-        email_to_user($paymentuser, $supportuser, $subject, $mailcontent);
+//        $paymentuser=bank_helper::get_user($record->userid);
+//        $fullname = fullname($paymentuser, true);
+//        $mailcontent = $message;
+	if (isset($record->userid)) {
+            $supportuser = core_user::get_support_user();
+            static::message_to_user($record->userid, $supportuser, $subject, $message);
+        }
         return true;
     }
 }
