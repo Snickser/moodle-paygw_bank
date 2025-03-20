@@ -144,3 +144,4 @@ $ADMIN->add(
         'paygw/bank:managepayments'
     )
 );
+
