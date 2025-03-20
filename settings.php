@@ -89,12 +89,6 @@ if ($ADMIN->fulltree) {
         '',
         0
     ));
-    $settings->add(new admin_setting_configcheckbox(
-        'paygw_bank/sendteachermail',
-        get_string('send_teacher_mail', 'paygw_bank'),
-        '',
-        0
-    ));
 
     // -------------------------------------------------
 
@@ -125,6 +119,12 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configcheckbox(
         'paygw_bank/senconfirmailtosupport',
         get_string('send_confirm_mail_to_support', 'paygw_bank'),
+        '',
+        0
+    ));
+    $settings->add(new admin_setting_configcheckbox(
+        'paygw_bank/sendteachermail',
+        get_string('send_teacher_mail', 'paygw_bank'),
         '',
         0
     ));
