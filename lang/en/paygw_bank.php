@@ -59,8 +59,10 @@ $string['noentriesfound'] = 'No entries found';
 $string['send_confirmation_mail'] = 'Send a confirmation message to the user';
 $string['send_denied_mail'] = 'Send a denied message to the user';
 $string['send_teacher_mail'] = 'Also send these messages to teachers in course';
-$string['mail_confirm_pay'] = 'Dear {$a->username}. Your payment for "{$a->concept}" is confirmed.<br/> code: {$a->code}';
-$string['mail_denied_pay'] = 'Dear {$a->username}. Your payment for "{$a->concept}" is denied. <br/> code: {$a->code}';
+$string['mail_confirm_pay'] = 'Dear {$a->username}.
+Your payment for "{$a->concept}" is confirmed.<br/> code: {$a->code}';
+$string['mail_denied_pay'] = 'Dear {$a->username}.
+Your payment for "{$a->concept}" is denied. <br/> code: {$a->code}';
 $string['mail_confirm_pay_subject'] = 'Payment confirmed';
 $string['mail_denied_pay_subject'] = 'Payment denied';
 $string['max_number_of_files'] = 'Max number of files';

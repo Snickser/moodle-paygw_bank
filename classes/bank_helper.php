@@ -32,7 +32,7 @@ require_once $CFG->libdir . '/filelib.php';
 
 use core_payment\helper as payment_helper;
 use stdClass;
-
+use moodle_url;
 
 class bank_helper
 {
@@ -274,6 +274,7 @@ if ($sendteachermail) {
             $contentmessage->concept = $record->description;
             $contentmessage->useremail = $user->email;
             $contentmessage->userfullname = fullname($user, true);
+            $contentmessage->url = new moodle_url('/payment/gateway/bank/manage.php');
             $mailcontent = get_string('email_notifications_new_request', 'paygw_bank', $contentmessage);
 if ($emailaddress) {
             $emailuser = new stdClass();
@@ -288,6 +289,9 @@ if ($sendteachermail) {
 		$cs = $DB->get_record('gwpayments', ['id' => $itemid]);
 		$cs->courseid = $cs->course;
     	    }
+            $contentmessage->url = new moodle_url('/payment/gateway/bank/manage.php', ['cid' => $cs->courseid]);
+            $mailcontent = get_string('email_notifications_new_request', 'paygw_bank', $contentmessage);
+
             $context = \context_course::instance($cs->courseid, MUST_EXIST);
             self::message_to_teachers($context, $supportuser, $subject, $mailcontent);
 }

@@ -209,8 +209,9 @@ if ($confirm == 0 && !bank_helper::has_openbankentry($itemid, $USER->id)) {
                             $contentmessage = new stdClass;
                             $contentmessage->code = $bank_entry->code;
                             $contentmessage->concept = $bank_entry->description;
-                            $contentmessage->useremail=$USER->email;
-                            $contentmessage->userfullname=fullname($USER);
+                            $contentmessage->useremail = $USER->email;
+                            $contentmessage->userfullname = fullname($USER);
+                            $contentmessage->url = new moodle_url('/payment/gateway/bank/manage.php');
                             $mailcontent = get_string('email_notifications_new_attachments', 'paygw_bank', $contentmessage);
 if ($emailaddress) {
                             $emailuser = new stdClass();
@@ -225,9 +226,14 @@ if ($sendteachermail) {
 		$cs = $DB->get_record('gwpayments', ['id' => $itemid]);
 		$cs->courseid = $cs->course;
     	    }
+            $contentmessage->url = new moodle_url('/payment/gateway/bank/manage.php', ['cid' => $cs->courseid]);
+            $mailcontent = get_string('email_notifications_new_attachments', 'paygw_bank', $contentmessage);
+
             $context = \context_course::instance($cs->courseid, MUST_EXIST);
             bank_helper::message_to_teachers($context, $supportuser, $subject, $mailcontent);
 }
+
+
                         }
                         \core\notification::info(get_string('file_uploaded', 'paygw_bank'));
                     }

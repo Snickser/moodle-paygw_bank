@@ -37,9 +37,11 @@ $string['file_uploaded'] = 'Файл загружен';
 $string['gatewaydescription'] = 'Bank Transfer - это ручной способ оплаты с использованием подтверждающих документов.';
 $string['hasfiles'] = 'Вложения';
 $string['mails_sent'] = 'Письма отправлены';
-$string['mail_confirm_pay'] = 'Уважаемый {$a->username}. Ваш платёж за "{$a->concept}" подтверждён.<br/> код платежа: {$a->code}';
+$string['mail_confirm_pay'] = 'Уважаемый {$a->username}.
+Ваш платёж за "{$a->concept}" подтверждён.<br/> код платежа: {$a->code}';
 $string['mail_confirm_pay_subject'] = 'Запрос подтверждён';
-$string['mail_denied_pay'] = 'Уважаемый {$a->username}. Ваш запрос за "{$a->concept}" отклонён. <br/> код платежа: {$a->code}';
+$string['mail_denied_pay'] = 'Уважаемый {$a->username}.
+Ваш запрос за "{$a->concept}" отклонён. <br/> код платежа: {$a->code}';
 $string['mail_denied_pay_subject'] = 'Запрос отклонён';
 $string['max_number_of_files'] = 'Максимальное кол-во файлов';
 $string['my_pending_payments'] = 'Мои ожидающие платежи';
@@ -55,3 +57,12 @@ $string['today_cost'] = 'На сегодня';
 $string['total_cost'] = 'Сумма';
 $string['transfer_code'] = 'Код оплаты';
 $string['transfer_process_initiated'] = 'Процесс ручного перевода начат';
+$string['email_notifications_subject_new'] = 'Новая заявка на оплату';
+$string['email_notifications_subject_attachments'] = 'В заявку был добавлен документ';
+$string['email_notifications_subject_confirm'] = 'Заявка подтверждена';
+$string['email_notifications_new_request'] = 'Новая заявка.
+Код "{$a->code}" от {$a->userfullname} ({$a->useremail}) для "{$a->concept}".
+{$a->url}';
+$string['email_notifications_new_attachments'] = 'Новый файл в заявку с кодом "{$a->code}" от {$a->userfullname} ({$a->useremail}) для "{$a->concept}" добавлен.
+{$a->url}';
+$string['email_notifications_confirm'] = 'Заявка с кодом "{$a->code}" от {$a->userfullname} ({$a->useremail}) для "{$a->concept}" утверждёна.';
