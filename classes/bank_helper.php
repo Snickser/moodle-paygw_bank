@@ -151,10 +151,10 @@ if ($emailaddress) {
             email_to_user($emailuser, $supportuser, $subject, $mailcontent);
 }
 if ($sendteachermail) {
-	    if ($paymentarea == 'fee') {
-		$cs = $DB->get_record('enrol', ['id' => $itemid]);
-    	    } else if ($component == 'mod_gwpayments') {
-		$cs = $DB->get_record('gwpayments', ['id' => $itemid]);
+	    if ($record->paymentarea == 'fee') {
+		$cs = $DB->get_record('enrol', ['id' => $record->itemid]);
+    	    } else if ($record->component == 'mod_gwpayments') {
+		$cs = $DB->get_record('gwpayments', ['id' => $record->itemid]);
 		$cs->courseid = $cs->course;
     	    }
             $context = \context_course::instance($cs->courseid, MUST_EXIST);
