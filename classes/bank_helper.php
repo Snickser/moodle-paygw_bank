@@ -277,6 +277,26 @@ class bank_helper
         $keyexplode= explode(".", $key);
         return ['component' => $keyexplode[0], 'paymentarea' => $keyexplode[1], 'itemid' => $keyexplode[2]];
     }
+
+    public static function check_in_course($cid, $paymentarea, $component, $itemid): bool
+    {
+	global $DB;
+	if ($cid) {
+	    if($paymentarea == 'fee') {
+		$cs = $DB->get_record('enrol', ['id' => $itemid]);
+    	    } else if($component == 'mod_gwpayments') {
+		$cs = $DB->get_record('gwpayments', ['id' => $itemid]);
+		$cs->courseid = $cs->course;
+	    } else {
+    	        return false;
+    	    }
+	    if (!isset($cs->courseid) || $cid != $cs->courseid) {
+    	        return false;
+    	    }
+	}
+	return true;
+    }
+
     public static function get_pending_item_collections($cid = false): array
     {
         global $DB;
@@ -288,12 +308,8 @@ class bank_helper
             $paymentarea = $record->paymentarea;
             $itemid = $record->itemid;
 
-// Only this course.
-$cs = $DB->get_record('enrol', ['id' => $record->itemid]);
-if ($cid && isset($cs->courseid)) {
- if ($cid != $cs->courseid ) {
+if (!self::check_in_course($cid, $paymentarea, $component, $itemid)) {
     continue;
- }
 }
 
             $description = $record->description;

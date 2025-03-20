@@ -131,19 +131,9 @@ if (!$bank_entries) {
             continue;
         }
 
-// Only in course.
-if (isset($course->id)) {
-    if($bank_entry->paymentarea == 'fee') {
-     $cs = $DB->get_record('enrol', ['id' => $bank_entry->itemid]);
-    } else if($bank_entry->component == 'mod_gwpayments') {
-     $cs = $DB->get_record('gwpayments', ['id' => $bank_entry->itemid]);
-     $cs->courseid = $cs->course;
-    } else {
-	continue;
-    }
-    if (!isset($cs->courseid) || $course->id != $cs->courseid) {
-	continue;
-    }
+// Check in course.
+if (!bank_helper::check_in_course($cid, $bank_entry->paymentarea, $bank_entry->component, $bank_entry->itemid)) {
+    continue;
 }
 
         $config = (object) helper::get_gateway_configuration($bank_entry->component, $bank_entry->paymentarea, $bank_entry->itemid, 'bank');
