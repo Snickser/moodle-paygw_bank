@@ -24,4 +24,13 @@ $capabilities = [
         ],
         'clonepermissionsfrom' => 'moodle/site:config',
     ],
+    'paygw/bank:manageincourse' => [
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => [
+         'teacher' => CAP_ALLOW,
+         'manager' => CAP_ALLOW,
+        ],
+    ],
+
 ];

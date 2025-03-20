@@ -9,6 +9,9 @@ use paygw_bank\bank_helper;
 require_once __DIR__ . '/../../../config.php';
 require_once './lib.php';
 require_login();
+
+$cid = optional_param('cid', 0, PARAM_INT);
+
 $context = context_system::instance(); // Because we "have no scope".
 $PAGE->set_context($context);
 $systemcontext = \context_system::instance();
@@ -119,6 +122,11 @@ if (!$bank_entries) {
         $customer = $DB->get_record('user', array('id' => $bank_entry->userid));
         $fullname = fullname($customer, true);
 
+
+        // Add surcharge if there is any.
+        $surcharge = helper::get_gateway_surcharge('paypal');
+        $amount = helper::get_rounded_cost($bank_entry->totalamount, $currency, $surcharge);
+
 // Add course.
 $course = null;
 if ($bank_entry->paymentarea === 'fee') {
@@ -127,15 +135,32 @@ if ($bank_entry->paymentarea === 'fee') {
     }
 }
 
-        // Add surcharge if there is any.
-        $surcharge = helper::get_gateway_surcharge('paypal');
-        $amount = helper::get_rounded_cost($bank_entry->totalamount, $currency, $surcharge);
+$unpaid = '-';
+$primary = 'primary';
+// Check uninterrupted cost.
+if ($bank_entry->component == "enrol_yafee") {
+    $cs = $DB->get_record('enrol', ['id' => $bank_entry->itemid, 'enrol' => 'yafee']);
+        if ($data = $DB->get_record('user_enrolments', ['userid' => $bank_entry->userid, 'enrolid' => $cs->id])) {
+         if (isset($data->timeend) || isset($data->timestart)) {
+            if ($cs->customint5 && $cs->enrolperiod && $data->timeend < time() && $data->timestart) {
+                $unpaid = (round(((time() - $data->timeend) / $cs->enrolperiod)) * $cs->cost) ;
+            }
+         }
+        }
+ if ($amount < $unpaid) {
+    $unpaid = '<font color=red><b>' . $unpaid . '</b></font>';
+    $primary = 'secondary';
+ } else {
+    $unpaid = '<font color=green>' . $unpaid . '</font>';
+ }
+}
+
         $buttonaprobe = '<form name="formapprovepay' . $bank_entry->id . '" method="POST">
         <input type="hidden" name="sesskey" value="' .sesskey(). '">
         <input type="hidden" name="id" value="' . $bank_entry->id . '">
         <input type="hidden" name="action" value="A">
         <input type="hidden" name="confirm" value="1">
-        <input class="btn btn-primary form-submit" type="submit" value="' . get_string('approve', 'paygw_bank') . '"></input>
+        <input class="btn btn-'.$primary.' form-submit" type="submit" value="' . get_string('approve', 'paygw_bank') . '"></input>
         </form>';
         $buttondeny = '<form name="formaprovepay' . $bank_entry->id . '" method="POST">
         <input type="hidden" name="sesskey" value="' .sesskey(). '">
@@ -160,7 +185,6 @@ if ($bank_entry->paymentarea === 'fee') {
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel' . $bank_entry->id . '">' . get_string('files') . '</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span></button>
-       
                 </div>
                 <div class="modal-body">
               ';
@@ -183,24 +207,6 @@ if ($bank_entry->paymentarea === 'fee') {
             </div>
             ';
         }
-
-$unpaid = '-';
-// Check uninterrupted cost.
-if ($bank_entry->component == "enrol_yafee") {
-    $cs = $DB->get_record('enrol', ['id' => $bank_entry->itemid, 'enrol' => 'yafee']);
-        if ($data = $DB->get_record('user_enrolments', ['userid' => $bank_entry->userid, 'enrolid' => $cs->id])) {
-         if (isset($data->timeend) || isset($data->timestart)) {
-            if ($cs->customint5 && $cs->enrolperiod && $data->timeend < time() && $data->timestart) {
-                $unpaid = (round(((time() - $data->timeend) / $cs->enrolperiod)) * $cs->cost) ;
-            }
-         }
-        }
- if ($amount < $unpaid) {
-    $unpaid = '<font color=red><b>' . $unpaid . '</b></font>';
- } else {
-    $unpaid = '<font color=green>' . $unpaid . '</font>';
- }
-}
 
 	$url = helper::get_success_url($bank_entry->component, $bank_entry->paymentarea, $bank_entry->itemid);
 
