@@ -34,7 +34,7 @@ $PAGE->set_heading($pagetitle);
 $PAGE->set_cacheable(false);
 $PAGE->set_secondary_navigation(false);
 if ($cid) {
-    $PAGE->navbar->add(get_string('course'), '/course/view.php?id='.$course->id);
+    $PAGE->navbar->add($course->fullname, '/course/view.php?id='.$course->id);
     $PAGE->navbar->add(get_string('pluginname', 'paygw_bank'));
 }
 //$PAGE->navbar->add(get_string('pluginname', 'paygw_bank'), $PAGE->url);
