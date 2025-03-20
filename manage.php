@@ -46,7 +46,7 @@ $action = optional_param('action', '', PARAM_TEXT);
 
 echo $OUTPUT->header();
 
-$items=bank_helper::get_pending_item_collections($cid);
+$items = bank_helper::get_pending_item_collections($cid);
 
 echo '<form name="filteritem" method="POST">
 <select class="custom-select" name="filter" id="filterkey">';

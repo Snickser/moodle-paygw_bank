@@ -36,6 +36,15 @@ use stdClass;
 
 class bank_helper
 {
+
+    public static function message_to_teachers($context, $from, $subject, $text): bool
+    {
+        $teachers = get_enrolled_users($context,'paygw/bank:manageincourse');
+        foreach ($teachers as $teacher){
+    	    self::message_to_user($teacher->id, $from, $subject, $text);
+        }
+        return true;
+    }
     private static function message_to_user($userid, $from, $subject, $text): bool
     {
 	global $CFG;
@@ -122,7 +131,9 @@ class bank_helper
             $USER->lang=$userlang;
         }
         $send_email = get_config('paygw_bank', 'senconfirmailtosupport');
-        $emailaddress=get_config('paygw_bank', 'notificationsaddress');
+        $emailaddress = get_config('paygw_bank', 'notificationsaddress');
+	$sendteachermail = get_config('paygw_bank', 'sendteachermail');
+
         if ($send_email) {
             $supportuser = core_user::get_support_user();
             $subject = get_string('email_notifications_subject_confirm', 'paygw_bank');
@@ -133,10 +144,22 @@ class bank_helper
             $contentmessage->useremail = $paymentuser->email;
             $contentmessage->userfullname = fullname($paymentuser, true);
             $mailcontent = get_string('email_notifications_confirm', 'paygw_bank', $contentmessage);
+if ($emailaddress) {
             $emailuser = new stdClass();
             $emailuser->email = $emailaddress;
             $emailuser->id = -99;
             email_to_user($emailuser, $supportuser, $subject, $mailcontent);
+}
+if ($sendteachermail) {
+	    if ($paymentarea == 'fee') {
+		$cs = $DB->get_record('enrol', ['id' => $itemid]);
+    	    } else if ($component == 'mod_gwpayments') {
+		$cs = $DB->get_record('gwpayments', ['id' => $itemid]);
+		$cs->courseid = $cs->course;
+    	    }
+            $context = \context_course::instance($cs->courseid, MUST_EXIST);
+            self::message_to_teachers($context, $supportuser, $subject, $mailcontent);
+}
         }
 
         return $record;
@@ -240,8 +263,9 @@ class bank_helper
         $record->code = bank_helper::create_code($id, $codeprefix);
         $DB->update_record('paygw_bank', $record);
         $send_email = get_config('paygw_bank', 'sendnewrequestmail');
-        $emailaddress=get_config('paygw_bank', 'notificationsaddress');
-
+        $emailaddress = get_config('paygw_bank', 'notificationsaddress');
+	$sendteachermail = get_config('paygw_bank', 'sendteachermail');
+	
         if ($send_email) {
             $supportuser = core_user::get_support_user();
             $subject = get_string('email_notifications_subject_new', 'paygw_bank');
@@ -251,10 +275,22 @@ class bank_helper
             $contentmessage->useremail = $user->email;
             $contentmessage->userfullname = fullname($user, true);
             $mailcontent = get_string('email_notifications_new_request', 'paygw_bank', $contentmessage);
+if ($emailaddress) {
             $emailuser = new stdClass();
             $emailuser->email = $emailaddress;
             $emailuser->id = -99;
             email_to_user($emailuser, $supportuser, $subject, $mailcontent);
+}
+if ($sendteachermail) {
+	    if ($paymentarea == 'fee') {
+		$cs = $DB->get_record('enrol', ['id' => $itemid]);
+    	    } else if ($component == 'mod_gwpayments') {
+		$cs = $DB->get_record('gwpayments', ['id' => $itemid]);
+		$cs->courseid = $cs->course;
+    	    }
+            $context = \context_course::instance($cs->courseid, MUST_EXIST);
+            self::message_to_teachers($context, $supportuser, $subject, $mailcontent);
+}
         }
         return $record;
     }
@@ -282,9 +318,9 @@ class bank_helper
     {
 	global $DB;
 	if ($cid) {
-	    if($paymentarea == 'fee') {
+	    if ($paymentarea == 'fee') {
 		$cs = $DB->get_record('enrol', ['id' => $itemid]);
-    	    } else if($component == 'mod_gwpayments') {
+    	    } else if ($component == 'mod_gwpayments') {
 		$cs = $DB->get_record('gwpayments', ['id' => $itemid]);
 		$cs->courseid = $cs->course;
 	    } else {

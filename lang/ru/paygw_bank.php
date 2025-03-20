@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 $string['approve'] = 'Зачислить в курс';
 $string['are_you_sure_cancel'] = 'Вы точно уверены что хотите отменить запрос?';
 $string['cancel_process'] = 'Отменить';
-$string['code'] = 'Код оплаты';
+$string['code'] = 'Код платежа';
 $string['codeprefix'] = 'Префикс кода оплаты';
 $string['concept'] = 'Описание';
 $string['cost'] = 'Цена';

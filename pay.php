@@ -200,8 +200,9 @@ if ($confirm == 0 && !bank_helper::has_openbankentry($itemid, $USER->id)) {
                         $fs->create_file_from_pathname($fileinfo, $fullpath);
                         bank_helper::check_hasfiles($bank_entry->id);
                         $send_email = get_config('paygw_bank', 'sendnewattachmentsmail');
-                        $emailaddress=get_config('paygw_bank', 'notificationsaddress');
-                
+                        $emailaddress = get_config('paygw_bank', 'notificationsaddress');
+                        $sendteachermail = get_config('paygw_bank', 'sendteachermail');
+
                         if ($send_email) {
                             $supportuser = core_user::get_support_user();
                             $subject = get_string('email_notifications_subject_attachments', 'paygw_bank');
@@ -211,10 +212,22 @@ if ($confirm == 0 && !bank_helper::has_openbankentry($itemid, $USER->id)) {
                             $contentmessage->useremail=$USER->email;
                             $contentmessage->userfullname=fullname($USER);
                             $mailcontent = get_string('email_notifications_new_attachments', 'paygw_bank', $contentmessage);
+if ($emailaddress) {
                             $emailuser = new stdClass();
                             $emailuser->email = $emailaddress;
                             $emailuser->id = -99;
                             email_to_user($emailuser, $supportuser, $subject, $mailcontent);
+}
+if ($sendteachermail) {
+	    if ($paymentarea == 'fee') {
+		$cs = $DB->get_record('enrol', ['id' => $itemid]);
+    	    } else if ($component == 'mod_gwpayments') {
+		$cs = $DB->get_record('gwpayments', ['id' => $itemid]);
+		$cs->courseid = $cs->course;
+    	    }
+            $context = \context_course::instance($cs->courseid, MUST_EXIST);
+            bank_helper::message_to_teachers($context, $supportuser, $subject, $mailcontent);
+}
                         }
                         \core\notification::info(get_string('file_uploaded', 'paygw_bank'));
                     }
