@@ -135,8 +135,8 @@ if (!$bank_entries) {
         }
 
 // Only this course.
-if ($cid) {
- $cs = $DB->get_record('enrol', ['id' => $bank_entry->itemid]);
+$cs = $DB->get_record('enrol', ['id' => $bank_entry->itemid]);
+if (isset($course->id) && isset($cs->courseid)) {
  if ($course->id != $cs->courseid ) {
     continue;
  }
@@ -228,11 +228,10 @@ if ($bank_entry->component == "enrol_yafee") {
 
         $table->data[] = array($selectitemcheckbox,
             date('Y-m-d', $bank_entry->timecreated), $bank_entry->code,
-//            $fullname,
 	    html_writer::link('/user/profile.php?id='.$customer->id, $fullname, array('target' => '_blank')),
             $customer->email,
+//            $cs->courseid,
             html_writer::link($url, $bank_entry->description, array('target' => '_blank')),
-//            $bank_entry->description,
             $amount, $unpaid, $currency, $hasfiles, $buttonaprobe . $buttondeny
         );
     }
