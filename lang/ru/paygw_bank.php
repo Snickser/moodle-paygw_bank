@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -18,7 +17,7 @@
 /**
  * Local language pack from https://edu1080.duckdns.org
  *
- * @package    paygw
+ * @package    paygw_bank
  * @subpackage bank
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

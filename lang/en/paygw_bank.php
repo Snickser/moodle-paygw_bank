@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * Strings for component 'paygw_bank', language 'en'
  *
@@ -52,6 +53,7 @@ $string['payment_denied'] = 'You have canceled the payment';
 $string['transfer_process_initiated'] = 'Transfer process initiated';
 $string['manage'] = 'Manage Transfers';
 $string['bank:managepayments'] = 'Manage Transfers';
+$string['bank:manageincourse'] = 'Manage Transfers';
 $string['managepayments'] = 'Manage Transfers';
 $string['noentriesfound'] = 'No entries found';
 $string['send_confirmation_mail'] = 'Send a confirmation message to the user';
