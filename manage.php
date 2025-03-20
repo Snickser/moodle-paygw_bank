@@ -22,7 +22,6 @@ if ($cid) {
     require_capability('paygw/bank:manageincourse', $context, $USER->id);
 } else {
     $context = context_system::instance(); // Because we "have no scope".
-//    $systemcontext = \context_system::instance();
     require_capability('paygw/bank:managepayments', $context);
 }
 
@@ -47,11 +46,9 @@ $action = optional_param('action', '', PARAM_TEXT);
 
 echo $OUTPUT->header();
 
-//require_capability('paygw/bank:managepayments', $context);
-
 echo '<form name="filteritem" method="POST">
 <select class="custom-select" name="filter" id="filterkey">';
-$items=bank_helper::get_pending_item_collections();
+$items=bank_helper::get_pending_item_collections($cid);
 echo '<option value="">'.get_string('all').'</option>';
 foreach ($items as $item) {
     echo '<option value="' . $item['key'] . '" >' . $item['description'] . '</option>';
@@ -141,6 +138,7 @@ if (isset($course->id) && isset($cs->courseid)) {
     continue;
  }
 }
+
         $config = (object) helper::get_gateway_configuration($bank_entry->component, $bank_entry->paymentarea, $bank_entry->itemid, 'bank');
         $payable = helper::get_payable($bank_entry->component, $bank_entry->paymentarea, $bank_entry->itemid);
         $currency = $payable->get_currency();
