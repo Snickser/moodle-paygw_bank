@@ -46,9 +46,10 @@ $action = optional_param('action', '', PARAM_TEXT);
 
 echo $OUTPUT->header();
 
+$items=bank_helper::get_pending_item_collections($cid);
+
 echo '<form name="filteritem" method="POST">
 <select class="custom-select" name="filter" id="filterkey">';
-$items=bank_helper::get_pending_item_collections($cid);
 echo '<option value="">'.get_string('all').'</option>';
 foreach ($items as $item) {
     echo '<option value="' . $item['key'] . '" >' . $item['description'] . '</option>';
@@ -89,7 +90,7 @@ if ($confirm==1 && $ids!='' && $action=='sendmail') {
 $post_url= new moodle_url($PAGE->url, array('sesskey'=>sesskey()));
 
 $bank_entries = bank_helper::get_pending();
-if (!$bank_entries) {
+if (!$bank_entries || !count($items)) {
     $match = array();
     echo '</br>'.$OUTPUT->heading(get_string('noentriesfound', 'paygw_bank'));
     $table = null;
@@ -233,7 +234,7 @@ if ($bank_entry->component == "enrol_yafee") {
     echo html_writer::table($table);
 }
 
-if ($bank_entries) {
+if ($bank_entries && count($items)) {
 ?>
 <div class="row">
     <div class="col">
