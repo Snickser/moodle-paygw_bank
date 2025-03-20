@@ -277,7 +277,7 @@ class bank_helper
         $keyexplode= explode(".", $key);
         return ['component' => $keyexplode[0], 'paymentarea' => $keyexplode[1], 'itemid' => $keyexplode[2]];
     }
-    public static function get_pending_item_collections(): array
+    public static function get_pending_item_collections($cid = false): array
     {
         global $DB;
         $records = $DB->get_records('paygw_bank', ['status' => 'P']);
@@ -287,12 +287,21 @@ class bank_helper
             $component = $record->component;
             $paymentarea = $record->paymentarea;
             $itemid = $record->itemid;
+
+// Only this course.
+$cs = $DB->get_record('enrol', ['id' => $record->itemid]);
+if ($cid && isset($cs->courseid)) {
+ if ($cid != $cs->courseid ) {
+    continue;
+ }
+}
+
             $description = $record->description;
             $key = bank_helper::get_item_key($component, $paymentarea, $itemid);
             if (!in_array($key, $itemsstringarray)) {
                 array_push($itemsstringarray, $key);
                 array_push($items, ['component' => $component, 'paymentarea' => $paymentarea, 'itemid' => $itemid, 'description' => $description, 'key' => $key]);
-            }    
+            }
         }
         return $items;
     }
