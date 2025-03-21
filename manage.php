@@ -32,7 +32,7 @@ $pagetitle = get_string('manage', 'paygw_bank');
 $PAGE->set_title($pagetitle);
 $PAGE->set_heading($pagetitle);
 $PAGE->set_cacheable(false);
-//$PAGE->set_secondary_navigation(false);
+$PAGE->set_secondary_navigation(false);
 if ($cid) {
     $PAGE->navbar->add($course->fullname, '/course/view.php?id='.$course->id);
 }
