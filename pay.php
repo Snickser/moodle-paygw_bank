@@ -200,21 +200,42 @@ if ($confirm == 0 && !bank_helper::has_openbankentry($itemid, $USER->id)) {
                         $fs->create_file_from_pathname($fileinfo, $fullpath);
                         bank_helper::check_hasfiles($bank_entry->id);
                         $send_email = get_config('paygw_bank', 'sendnewattachmentsmail');
-                        $emailaddress=get_config('paygw_bank', 'notificationsaddress');
-                
+                        $emailaddress = get_config('paygw_bank', 'notificationsaddress');
+                        $sendteachermail = get_config('paygw_bank', 'sendteachermail');
+
                         if ($send_email) {
                             $supportuser = core_user::get_support_user();
                             $subject = get_string('email_notifications_subject_attachments', 'paygw_bank');
                             $contentmessage = new stdClass;
                             $contentmessage->code = $bank_entry->code;
                             $contentmessage->concept = $bank_entry->description;
-                            $contentmessage->useremail=$USER->email;
-                            $contentmessage->userfullname=fullname($USER);
+                            $contentmessage->useremail = $USER->email;
+                            $contentmessage->userfullname = fullname($USER);
+                            $contentmessage->url = new moodle_url('/payment/gateway/bank/manage.php');
                             $mailcontent = get_string('email_notifications_new_attachments', 'paygw_bank', $contentmessage);
+if ($emailaddress) {
                             $emailuser = new stdClass();
                             $emailuser->email = $emailaddress;
                             $emailuser->id = -99;
                             email_to_user($emailuser, $supportuser, $subject, $mailcontent);
+}
+if ($sendteachermail) {
+	    if ($paymentarea == 'fee') {
+		$cs = $DB->get_record('enrol', ['id' => $itemid]);
+    	    } else if ($component == 'mod_gwpayments') {
+		$cs = $DB->get_record('gwpayments', ['id' => $itemid]);
+		$cs->courseid = $cs->course;
+    	    }
+            $contentmessage->url = new moodle_url('/payment/gateway/bank/manage.php', ['cid' => $cs->courseid]);
+	    $contentmessage->course = format_string($DB->get_field('course', 'fullname', ['id' => $cs->courseid])); 
+	    $mailcontent = get_string('email_notifications_new_attachments', 'paygw_bank', $contentmessage);
+
+
+            $context = \context_course::instance($cs->courseid, MUST_EXIST);
+            bank_helper::message_to_teachers($context, $supportuser, $subject, $mailcontent);
+}
+
+
                         }
                         \core\notification::info(get_string('file_uploaded', 'paygw_bank'));
                     }

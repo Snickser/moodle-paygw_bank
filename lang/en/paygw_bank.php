@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * Strings for component 'paygw_bank', language 'en'
  *
@@ -52,12 +53,16 @@ $string['payment_denied'] = 'You have canceled the payment';
 $string['transfer_process_initiated'] = 'Transfer process initiated';
 $string['manage'] = 'Manage Transfers';
 $string['bank:managepayments'] = 'Manage Transfers';
+$string['bank:manageincourse'] = 'Manage Transfers';
 $string['managepayments'] = 'Manage Transfers';
 $string['noentriesfound'] = 'No entries found';
-$string['send_confirmation_mail'] = 'Send confirmation mail';
-$string['send_denied_mail'] = 'Send denied mail';
-$string['mail_confirm_pay'] = 'Dear {$a->username}. Your payment for "{$a->concept}" is confirmed.<br/> code: {$a->code}';
-$string['mail_denied_pay'] = 'Dear {$a->username}. Your payment for "{$a->concept}" is denied. <br/> code: {$a->code}';
+$string['send_confirmation_mail'] = 'Send a confirmation message to the user';
+$string['send_denied_mail'] = 'Send a denied message to the user';
+$string['send_teacher_mail'] = 'Also send these messages to teachers in course';
+$string['mail_confirm_pay'] = 'Dear {$a->username}.
+Your payment for "{$a->concept}" is confirmed.<br/> code: {$a->code}';
+$string['mail_denied_pay'] = 'Dear {$a->username}.
+Your payment for "{$a->concept}" is denied. <br/> code: {$a->code}';
 $string['mail_confirm_pay_subject'] = 'Payment confirmed';
 $string['mail_denied_pay_subject'] = 'Payment denied';
 $string['max_number_of_files'] = 'Max number of files';

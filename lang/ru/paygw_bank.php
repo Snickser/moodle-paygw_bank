@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -18,7 +17,7 @@
 /**
  * Local language pack from https://edu1080.duckdns.org
  *
- * @package    paygw
+ * @package    paygw_bank
  * @subpackage bank
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -28,7 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 $string['approve'] = 'Зачислить в курс';
 $string['are_you_sure_cancel'] = 'Вы точно уверены что хотите отменить запрос?';
 $string['cancel_process'] = 'Отменить';
-$string['code'] = 'Код оплаты';
+$string['code'] = 'Код платежа';
 $string['codeprefix'] = 'Префикс кода оплаты';
 $string['concept'] = 'Описание';
 $string['cost'] = 'Цена';
@@ -38,9 +37,13 @@ $string['file_uploaded'] = 'Файл загружен';
 $string['gatewaydescription'] = 'Bank Transfer - это ручной способ оплаты с использованием подтверждающих документов.';
 $string['hasfiles'] = 'Вложения';
 $string['mails_sent'] = 'Письма отправлены';
-$string['mail_confirm_pay'] = 'Уважаемый {$a->username}. Ваш платёж за "{$a->concept}" подтверждён.<br/> код платежа: {$a->code}';
+$string['mail_confirm_pay'] = 'Уважаемый {$a->username}.
+Ваш платёж за "{$a->concept}" с кодом {$a->code} подтверждён.
+{$a->url}';
 $string['mail_confirm_pay_subject'] = 'Запрос подтверждён';
-$string['mail_denied_pay'] = 'Уважаемый {$a->username}. Ваш запрос за "{$a->concept}" отклонён. <br/> код платежа: {$a->code}';
+$string['mail_denied_pay'] = 'Уважаемый {$a->username}.
+Ваш запрос за "{$a->concept}" отклонён.
+Код платежа: {$a->code}';
 $string['mail_denied_pay_subject'] = 'Запрос отклонён';
 $string['max_number_of_files'] = 'Максимальное кол-во файлов';
 $string['my_pending_payments'] = 'Мои ожидающие платежи';
@@ -56,3 +59,13 @@ $string['today_cost'] = 'На сегодня';
 $string['total_cost'] = 'Сумма';
 $string['transfer_code'] = 'Код оплаты';
 $string['transfer_process_initiated'] = 'Процесс ручного перевода начат';
+$string['email_notifications_subject_new'] = 'Новая заявка на оплату';
+$string['email_notifications_subject_attachments'] = 'В заявку был добавлен документ';
+$string['email_notifications_subject_confirm'] = 'Заявка подтверждена';
+$string['email_notifications_new_request'] = 'Новая заявка в курс "{$a->course}".
+Код "{$a->code}" от {$a->userfullname} ({$a->useremail}) с описанием "{$a->concept}".
+{$a->url}';
+$string['email_notifications_new_attachments'] = 'Файл в заявку с кодом "{$a->code}" от {$a->userfullname} ({$a->useremail}) для курса "{$a->course}" с пометкой "{$a->concept}" добавлен.
+{$a->url}';
+$string['email_notifications_confirm'] = 'Заявка с кодом "{$a->code}" от {$a->userfullname} ({$a->useremail}) в курс "{$a->course}" с пометкой "{$a->concept}" утверждёна.
+ {$a->teacher}';
