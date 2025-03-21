@@ -227,7 +227,9 @@ if ($sendteachermail) {
 		$cs->courseid = $cs->course;
     	    }
             $contentmessage->url = new moodle_url('/payment/gateway/bank/manage.php', ['cid' => $cs->courseid]);
-            $mailcontent = get_string('email_notifications_new_attachments', 'paygw_bank', $contentmessage);
+	    $contentmessage->course = format_string($DB->get_field('course', 'fullname', ['id' => $cs->courseid])); 
+	    $mailcontent = get_string('email_notifications_new_attachments', 'paygw_bank', $contentmessage);
+
 
             $context = \context_course::instance($cs->courseid, MUST_EXIST);
             bank_helper::message_to_teachers($context, $supportuser, $subject, $mailcontent);

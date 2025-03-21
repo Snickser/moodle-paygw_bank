@@ -115,17 +115,26 @@ class bank_helper
         $send_email = get_config('paygw_bank', 'sendconfmail');
         if ($send_email) {
             $supportuser = core_user::get_support_user();
-            $paymentuser=bank_helper::get_user($record->userid);
+            $paymentuser = bank_helper::get_user($record->userid);
             $fullname = fullname($paymentuser, true);
-            $userlang=$USER->lang;
-            $USER->lang=$paymentuser->lang;
+            $userlang = $USER->lang;
+            $USER->lang = $paymentuser->lang;
             $subject = get_string('mail_confirm_pay_subject', 'paygw_bank');
             $contentmessage = new stdClass;
             $contentmessage->username = $fullname;
             $contentmessage->code = $record->code;
             $contentmessage->concept = $record->description;
             $contentmessage->useremail = $paymentuser->email;
-            $contentmessage->userfullname = fullname($paymentuser, true);
+	    $contentmessage->userfullname = fullname($paymentuser, true);
+
+	    if ($record->paymentarea == 'fee') {
+		$cs = $DB->get_record('enrol', ['id' => $record->itemid]);
+    	    } else if ($record->component == 'mod_gwpayments') {
+		$cs = $DB->get_record('gwpayments', ['id' => $record->itemid]);
+		$cs->courseid = $cs->course;
+    	    }
+
+	    $contentmessage->url = new moodle_url('/course/view.php', ['id' => $cs->courseid]);
             $mailcontent = get_string('mail_confirm_pay', 'paygw_bank', $contentmessage);
             self::message_to_user($record->userid, $supportuser, $subject, $mailcontent);
             $USER->lang=$userlang;
@@ -157,6 +166,9 @@ if ($sendteachermail) {
 		$cs = $DB->get_record('gwpayments', ['id' => $record->itemid]);
 		$cs->courseid = $cs->course;
     	    }
+	    $contentmessage->course = format_string($DB->get_field('course', 'fullname', ['id' => $cs->courseid]));
+	    $contentmessage->teacher = fullname($USER);
+            $mailcontent = get_string('email_notifications_confirm', 'paygw_bank', $contentmessage);
             $context = \context_course::instance($cs->courseid, MUST_EXIST);
             self::message_to_teachers($context, $supportuser, $subject, $mailcontent);
 }
@@ -290,6 +302,7 @@ if ($sendteachermail) {
 		$cs->courseid = $cs->course;
     	    }
             $contentmessage->url = new moodle_url('/payment/gateway/bank/manage.php', ['cid' => $cs->courseid]);
+	    $contentmessage->course = format_string($DB->get_field('course', 'fullname', ['id' => $cs->courseid]));
             $mailcontent = get_string('email_notifications_new_request', 'paygw_bank', $contentmessage);
 
             $context = \context_course::instance($cs->courseid, MUST_EXIST);

@@ -38,10 +38,12 @@ $string['gatewaydescription'] = 'Bank Transfer - это ручной спосо�
 $string['hasfiles'] = 'Вложения';
 $string['mails_sent'] = 'Письма отправлены';
 $string['mail_confirm_pay'] = 'Уважаемый {$a->username}.
-Ваш платёж за "{$a->concept}" подтверждён.<br/> код платежа: {$a->code}';
+Ваш платёж за "{$a->concept}" с кодом {$a->code} подтверждён.
+{$a->url}';
 $string['mail_confirm_pay_subject'] = 'Запрос подтверждён';
 $string['mail_denied_pay'] = 'Уважаемый {$a->username}.
-Ваш запрос за "{$a->concept}" отклонён. <br/> код платежа: {$a->code}';
+Ваш запрос за "{$a->concept}" отклонён.
+Код платежа: {$a->code}';
 $string['mail_denied_pay_subject'] = 'Запрос отклонён';
 $string['max_number_of_files'] = 'Максимальное кол-во файлов';
 $string['my_pending_payments'] = 'Мои ожидающие платежи';
@@ -60,9 +62,10 @@ $string['transfer_process_initiated'] = 'Процесс ручного пере�
 $string['email_notifications_subject_new'] = 'Новая заявка на оплату';
 $string['email_notifications_subject_attachments'] = 'В заявку был добавлен документ';
 $string['email_notifications_subject_confirm'] = 'Заявка подтверждена';
-$string['email_notifications_new_request'] = 'Новая заявка.
-Код "{$a->code}" от {$a->userfullname} ({$a->useremail}) для "{$a->concept}".
+$string['email_notifications_new_request'] = 'Новая заявка в курс "{$a->course}".
+Код "{$a->code}" от {$a->userfullname} ({$a->useremail}) с описанием "{$a->concept}".
 {$a->url}';
-$string['email_notifications_new_attachments'] = 'Новый файл в заявку с кодом "{$a->code}" от {$a->userfullname} ({$a->useremail}) для "{$a->concept}" добавлен.
+$string['email_notifications_new_attachments'] = 'Файл в заявку с кодом "{$a->code}" от {$a->userfullname} ({$a->useremail}) для курса "{$a->course}" с пометкой "{$a->concept}" добавлен.
 {$a->url}';
-$string['email_notifications_confirm'] = 'Заявка с кодом "{$a->code}" от {$a->userfullname} ({$a->useremail}) для "{$a->concept}" утверждёна.';
+$string['email_notifications_confirm'] = 'Заявка с кодом "{$a->code}" от {$a->userfullname} ({$a->useremail}) в курс "{$a->course}" с пометкой "{$a->concept}" утверждёна.
+ {$a->teacher}';
