@@ -58,6 +58,11 @@ $PAGE->set_title($pagetitle);
 $PAGE->set_heading($pagetitle);
 $PAGE->set_cacheable(false);
 
+$cid = bank_helper::get_courseid($paymentarea, $component, $itemid);
+$course = $DB->get_record('course', ['id' => $cid], '*', MUST_EXIST);
+$PAGE->navbar->add($course->fullname, '/course/view.php?id='.$cid);
+$PAGE->navbar->add(get_string('pluginname', 'paygw_bank'));
+
 $config = (object) helper::get_gateway_configuration($component, $paymentarea, $itemid, 'bank');
 $payable = helper::get_payable($component, $paymentarea, $itemid);
 $currency = $payable->get_currency();
@@ -106,7 +111,7 @@ echo $OUTPUT->heading(get_string('gatewayname', 'paygw_bank'), 2);
 echo '<div class="card">';
 echo '<div class="card-body">';
 echo '<ul class="list-group list-group-flush">';
-echo '<li class="list-group-item"><h5 class="card-title">' . get_string('concept', 'paygw_bank') . ':</h5>';
+echo '<li class="list-group-item"><h4 class="card-title">' . get_string('concept', 'paygw_bank') . ':</h4>';
 echo '<div>' . $description . '</div>';
 echo "</li>";
 $aceptform = "";
