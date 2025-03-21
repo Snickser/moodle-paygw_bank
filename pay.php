@@ -203,6 +203,8 @@ if ($confirm == 0 && !bank_helper::has_openbankentry($itemid, $USER->id)) {
                         $emailaddress = get_config('paygw_bank', 'notificationsaddress');
                         $sendteachermail = get_config('paygw_bank', 'sendteachermail');
 
+			$cid = bank_helper::get_courseid($bank_entry->paymentarea, $bank_entry->component, $bank_entry->itemid);
+
                         if ($send_email) {
                             $supportuser = core_user::get_support_user();
                             $subject = get_string('email_notifications_subject_attachments', 'paygw_bank');
@@ -211,7 +213,8 @@ if ($confirm == 0 && !bank_helper::has_openbankentry($itemid, $USER->id)) {
                             $contentmessage->concept = $bank_entry->description;
                             $contentmessage->useremail = $USER->email;
                             $contentmessage->userfullname = fullname($USER);
-                            $contentmessage->url = new moodle_url('/payment/gateway/bank/manage.php');
+		            $contentmessage->url = new moodle_url('/payment/gateway/bank/manage.php', ['cid' => $cid]);
+			    $contentmessage->course = format_string($DB->get_field('course', 'fullname', ['id' => $cid])); 
                             $mailcontent = get_string('email_notifications_new_attachments', 'paygw_bank', $contentmessage);
 if ($emailaddress) {
                             $emailuser = new stdClass();
@@ -220,18 +223,7 @@ if ($emailaddress) {
                             email_to_user($emailuser, $supportuser, $subject, $mailcontent);
 }
 if ($sendteachermail) {
-	    if ($paymentarea == 'fee') {
-		$cs = $DB->get_record('enrol', ['id' => $itemid]);
-    	    } else if ($component == 'mod_gwpayments') {
-		$cs = $DB->get_record('gwpayments', ['id' => $itemid]);
-		$cs->courseid = $cs->course;
-    	    }
-            $contentmessage->url = new moodle_url('/payment/gateway/bank/manage.php', ['cid' => $cs->courseid]);
-	    $contentmessage->course = format_string($DB->get_field('course', 'fullname', ['id' => $cs->courseid])); 
-	    $mailcontent = get_string('email_notifications_new_attachments', 'paygw_bank', $contentmessage);
-
-
-            $context = \context_course::instance($cs->courseid, MUST_EXIST);
+            $context = \context_course::instance($cid, MUST_EXIST);
             bank_helper::message_to_teachers($context, $supportuser, $subject, $mailcontent);
 }
 
