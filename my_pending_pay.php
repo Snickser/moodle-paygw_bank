@@ -8,8 +8,8 @@ require_login();
 
 $context = context_system::instance(); // Because we "have no scope".
 $PAGE->set_context(context_user::instance($USER->id));
-$canuploadfiles=get_config('paygw_bank', 'usercanuploadfiles');
-$allowusercancel=get_config('paygw_bank', 'allowusercancel');
+$canuploadfiles = get_config('paygw_bank', 'usercanuploadfiles');
+$allowusercancel = get_config('paygw_bank', 'allowusercancel');
 //$PAGE->set_url('/payment/gateway/bank/my_pending_pay.php', $params);
 $PAGE->set_url($SCRIPT);
 $PAGE->set_pagelayout('standard');
