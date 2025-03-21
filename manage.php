@@ -66,14 +66,14 @@ if ($confirm == 1 && $id > 0) {
      if ($action == 'A') {
         bank_helper::aprobe_pay($id);
         $OUTPUT->notification("aprobed");
-        \core\notification::info("aprobed");
+        \core\notification::info(get_string('mail_confirm_pay_subject', 'paygw_bank'));
      } else if ($action == 'D') {
         bank_helper::deny_pay($id);
         $OUTPUT->notification("denied");
-        \core\notification::info("denied");
+        \core\notification::info(get_string('mail_denied_pay_subject', 'paygw_bank'));
      }
     } else {
-        \core\notification::info("reload");
+        \core\notification::info("Reload");
     }
 }
 if ($confirm==1 && $ids!='' && $action=='sendmail') {
