@@ -36,7 +36,18 @@ use moodle_url;
 
 class bank_helper
 {
+    public static function get_courseid($paymentarea, $component, $itemid): string
+    {
+	global $DB;
 
+	$cid = false;
+        if ($paymentarea == 'fee') {
+	    $cid = $DB->get_field('enrol', 'courseid', ['id' => $itemid]);
+    	} else if ($component == 'mod_gwpayments') {
+	    $cid = $DB->get_field('gwpayments', 'course', ['id' => $itemid]);
+    	}
+        return $cid;
+    }
     public static function message_to_teachers($context, $from, $subject, $text): bool
     {
         $teachers = get_enrolled_users($context,'paygw/bank:manageincourse');
@@ -112,6 +123,9 @@ class bank_helper
         $DB->update_record('paygw_bank', $record);
         payment_helper::deliver_order($record->component, $record->paymentarea, $record->itemid, $paymentid, (int) $record->userid);
         $transaction->allow_commit();
+
+	$cid = self::get_courseid($record->paymentarea, $record->component, $record->itemid);
+
         $send_email = get_config('paygw_bank', 'sendconfmail');
         if ($send_email) {
             $supportuser = core_user::get_support_user();
@@ -127,18 +141,13 @@ class bank_helper
             $contentmessage->useremail = $paymentuser->email;
 	    $contentmessage->userfullname = fullname($paymentuser, true);
 
-	    if ($record->paymentarea == 'fee') {
-		$cs = $DB->get_record('enrol', ['id' => $record->itemid]);
-    	    } else if ($record->component == 'mod_gwpayments') {
-		$cs = $DB->get_record('gwpayments', ['id' => $record->itemid]);
-		$cs->courseid = $cs->course;
-    	    }
+	    $contentmessage->url = new moodle_url('/course/view.php', ['id' => $cid]);
 
-	    $contentmessage->url = new moodle_url('/course/view.php', ['id' => $cs->courseid]);
             $mailcontent = get_string('mail_confirm_pay', 'paygw_bank', $contentmessage);
             self::message_to_user($record->userid, $supportuser, $subject, $mailcontent);
             $USER->lang=$userlang;
         }
+
         $send_email = get_config('paygw_bank', 'senconfirmailtosupport');
         $emailaddress = get_config('paygw_bank', 'notificationsaddress');
 	$sendteachermail = get_config('paygw_bank', 'sendteachermail');
@@ -147,11 +156,13 @@ class bank_helper
             $supportuser = core_user::get_support_user();
             $subject = get_string('email_notifications_subject_confirm', 'paygw_bank');
             $contentmessage = new stdClass;
-            $paymentuser=bank_helper::get_user($record->userid);
+            $paymentuser = bank_helper::get_user($record->userid);
             $contentmessage->code = $record->code;
             $contentmessage->concept = $record->description;
             $contentmessage->useremail = $paymentuser->email;
             $contentmessage->userfullname = fullname($paymentuser, true);
+	    $contentmessage->course = format_string($DB->get_field('course', 'fullname', ['id' => $cid]));
+	    $contentmessage->teacher = fullname($USER);
             $mailcontent = get_string('email_notifications_confirm', 'paygw_bank', $contentmessage);
 if ($emailaddress) {
             $emailuser = new stdClass();
@@ -160,16 +171,7 @@ if ($emailaddress) {
             email_to_user($emailuser, $supportuser, $subject, $mailcontent);
 }
 if ($sendteachermail) {
-	    if ($record->paymentarea == 'fee') {
-		$cs = $DB->get_record('enrol', ['id' => $record->itemid]);
-    	    } else if ($record->component == 'mod_gwpayments') {
-		$cs = $DB->get_record('gwpayments', ['id' => $record->itemid]);
-		$cs->courseid = $cs->course;
-    	    }
-	    $contentmessage->course = format_string($DB->get_field('course', 'fullname', ['id' => $cs->courseid]));
-	    $contentmessage->teacher = fullname($USER);
-            $mailcontent = get_string('email_notifications_confirm', 'paygw_bank', $contentmessage);
-            $context = \context_course::instance($cs->courseid, MUST_EXIST);
+            $context = \context_course::instance($cid, MUST_EXIST);
             self::message_to_teachers($context, $supportuser, $subject, $mailcontent);
 }
         }
@@ -278,6 +280,8 @@ if ($sendteachermail) {
         $emailaddress = get_config('paygw_bank', 'notificationsaddress');
 	$sendteachermail = get_config('paygw_bank', 'sendteachermail');
 	
+	$cid = self::get_courseid($record->paymentarea, $record->component, $record->itemid);
+
         if ($send_email) {
             $supportuser = core_user::get_support_user();
             $subject = get_string('email_notifications_subject_new', 'paygw_bank');
@@ -286,7 +290,8 @@ if ($sendteachermail) {
             $contentmessage->concept = $record->description;
             $contentmessage->useremail = $user->email;
             $contentmessage->userfullname = fullname($user, true);
-            $contentmessage->url = new moodle_url('/payment/gateway/bank/manage.php');
+            $contentmessage->url = new moodle_url('/payment/gateway/bank/manage.php', ['cid' => $cid]);
+	    $contentmessage->course = format_string($DB->get_field('course', 'fullname', ['id' => $cid]));
             $mailcontent = get_string('email_notifications_new_request', 'paygw_bank', $contentmessage);
 if ($emailaddress) {
             $emailuser = new stdClass();
@@ -295,17 +300,7 @@ if ($emailaddress) {
             email_to_user($emailuser, $supportuser, $subject, $mailcontent);
 }
 if ($sendteachermail) {
-	    if ($paymentarea == 'fee') {
-		$cs = $DB->get_record('enrol', ['id' => $itemid]);
-    	    } else if ($component == 'mod_gwpayments') {
-		$cs = $DB->get_record('gwpayments', ['id' => $itemid]);
-		$cs->courseid = $cs->course;
-    	    }
-            $contentmessage->url = new moodle_url('/payment/gateway/bank/manage.php', ['cid' => $cs->courseid]);
-	    $contentmessage->course = format_string($DB->get_field('course', 'fullname', ['id' => $cs->courseid]));
-            $mailcontent = get_string('email_notifications_new_request', 'paygw_bank', $contentmessage);
-
-            $context = \context_course::instance($cs->courseid, MUST_EXIST);
+            $context = \context_course::instance($cid, MUST_EXIST);
             self::message_to_teachers($context, $supportuser, $subject, $mailcontent);
 }
         }

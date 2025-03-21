@@ -62,7 +62,7 @@ $string['transfer_process_initiated'] = 'Процесс ручного пере�
 $string['email_notifications_subject_new'] = 'Новая заявка на оплату';
 $string['email_notifications_subject_attachments'] = 'В заявку был добавлен документ';
 $string['email_notifications_subject_confirm'] = 'Заявка подтверждена';
-$string['email_notifications_new_request'] = 'Новая заявка в курс "{$a->course}".
+$string['email_notifications_new_request'] = 'Новая заявка на оплату в курс "{$a->course}".
 Код "{$a->code}" от {$a->userfullname} ({$a->useremail}) с описанием "{$a->concept}".
 {$a->url}';
 $string['email_notifications_new_attachments'] = 'Файл в заявку с кодом "{$a->code}" от {$a->userfullname} ({$a->useremail}) для курса "{$a->course}" с пометкой "{$a->concept}" добавлен.
