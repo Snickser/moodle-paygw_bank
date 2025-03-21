@@ -92,7 +92,7 @@ $post_url= new moodle_url($PAGE->url, array('sesskey'=>sesskey()));
 $bank_entries = bank_helper::get_pending();
 if (!$bank_entries || !count($items)) {
     $match = array();
-    echo '</br>'.$OUTPUT->heading(get_string('noentriesfound', 'paygw_bank'));
+    echo '</br>'.(get_string('noentriesfound', 'paygw_bank'));
     $table = null;
 } else {
     $table = new html_table();

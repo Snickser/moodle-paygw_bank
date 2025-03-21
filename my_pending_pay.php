@@ -39,7 +39,7 @@ if ($requestMethod == 'POST') {
 $bank_entries= bank_helper::get_user_pending($USER->id);
 if (!$bank_entries) {
     $match = array();
-    echo $OUTPUT->heading(get_string('noentriesfound', 'paygw_bank'));
+    echo '</br>'.(get_string('noentriesfound', 'paygw_bank'));
     $table = null;
 
 } else
