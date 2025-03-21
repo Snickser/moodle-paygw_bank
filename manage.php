@@ -35,7 +35,6 @@ $PAGE->set_cacheable(false);
 //$PAGE->set_secondary_navigation(false);
 if ($cid) {
     $PAGE->navbar->add($course->fullname, '/course/view.php?id='.$course->id);
-    $PAGE->navbar->add(get_string('pluginname', 'paygw_bank'));
 }
 $PAGE->navbar->add(get_string('pluginname', 'paygw_bank'));
 $confirm = optional_param('confirm', 0, PARAM_INT);
