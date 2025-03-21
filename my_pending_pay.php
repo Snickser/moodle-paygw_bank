@@ -8,14 +8,14 @@ require_login();
 
 $context = context_system::instance(); // Because we "have no scope".
 $PAGE->set_context(context_user::instance($USER->id));
-$canuploadfiles=get_config('paygw_bank', 'usercanuploadfiles');
-$allowusercancel=get_config('paygw_bank', 'allowusercancel');
+$canuploadfiles = get_config('paygw_bank', 'usercanuploadfiles');
+$allowusercancel = get_config('paygw_bank', 'allowusercancel');
 //$PAGE->set_url('/payment/gateway/bank/my_pending_pay.php', $params);
 $PAGE->set_url($SCRIPT);
 $PAGE->set_pagelayout('standard');
 $PAGE->set_title(get_string('my_pending_payments', 'paygw_bank'));
-$PAGE->navigation->extend_for_user($USER->id);
-$PAGE->set_heading(get_string('my_pending_payments', 'paygw_bank'));
+//$PAGE->navigation->extend_for_user($USER->id);
+//$PAGE->set_heading(get_string('my_pending_payments', 'paygw_bank'));
 $PAGE->navbar->add(get_string('profile'), new moodle_url('/user/profile.php', array('id' => $USER->id)));
 $PAGE->navbar->add(get_string('my_pending_payments', 'paygw_bank'));
 $action = optional_param('action', '', PARAM_TEXT);
@@ -39,7 +39,7 @@ if ($requestMethod == 'POST') {
 $bank_entries= bank_helper::get_user_pending($USER->id);
 if (!$bank_entries) {
     $match = array();
-    echo $OUTPUT->heading(get_string('noentriesfound', 'paygw_bank'));
+    echo '</br>'.(get_string('noentriesfound', 'paygw_bank'));
     $table = null;
 
 } else

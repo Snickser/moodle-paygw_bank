@@ -35,9 +35,8 @@ $PAGE->set_cacheable(false);
 $PAGE->set_secondary_navigation(false);
 if ($cid) {
     $PAGE->navbar->add($course->fullname, '/course/view.php?id='.$course->id);
-    $PAGE->navbar->add(get_string('pluginname', 'paygw_bank'));
 }
-//$PAGE->navbar->add(get_string('pluginname', 'paygw_bank'), $PAGE->url);
+$PAGE->navbar->add(get_string('pluginname', 'paygw_bank'));
 $confirm = optional_param('confirm', 0, PARAM_INT);
 $id  = optional_param('id', 0, PARAM_INT);
 $ids = optional_param('ids', '', PARAM_TEXT);
@@ -92,7 +91,7 @@ $post_url= new moodle_url($PAGE->url, array('sesskey'=>sesskey()));
 $bank_entries = bank_helper::get_pending();
 if (!$bank_entries || !count($items)) {
     $match = array();
-    echo '</br>'.$OUTPUT->heading(get_string('noentriesfound', 'paygw_bank'));
+    echo '</br>'.(get_string('noentriesfound', 'paygw_bank'));
     $table = null;
 } else {
     $table = new html_table();
