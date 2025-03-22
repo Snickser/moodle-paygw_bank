@@ -46,7 +46,7 @@ if (!$bank_entries) {
 {
     $table = new html_table();
     $canuploadfiles=get_config('paygw_bank', 'usercanuploadfiles');
-    $headarray=array(get_string('date'),get_string('code', 'paygw_bank'), get_string('concept', 'paygw_bank'),get_string('total_cost', 'paygw_bank'),get_string('currency'));
+    $headarray=array(get_string('date'),get_string('code', 'paygw_bank'), get_string('concept', 'paygw_bank'), get_string('total_cost', 'paygw_bank'));
     if($canuploadfiles) {
         array_push($headarray, get_string('hasfiles', 'paygw_bank'));
     }
@@ -60,15 +60,13 @@ if (!$bank_entries) {
         $customer = $DB->get_record('user', array('id' => $bank_entry->userid));
         $fullname = fullname($customer, true);  
 
-        // Add surcharge if there is any.
-        $surcharge = helper::get_gateway_surcharge('paypal');
-        $amount = helper::get_cost_as_string($bank_entry->totalamount, $currency, $surcharge);
+        $amount = helper::get_cost_as_string($bank_entry->totalamount, $currency);
         $component = $bank_entry->component;
         $paymentarea = $bank_entry->paymentarea;
         $itemid = $bank_entry->itemid;
         $description = $bank_entry->description;
-        $urlpay=new moodle_url('/payment/gateway/bank/pay.php', array('component' => $component,'paymentarea' => $paymentarea,'itemid' => $itemid,'description' => $description));
-        $buttongo='<a class="btn btn-primary btn-block" href="'.$urlpay.'">'.get_string('edit').'</a>';
+        $urlpay = new moodle_url('/payment/gateway/bank/pay.php', array('component' => $component,'paymentarea' => $paymentarea,'itemid' => $itemid,'description' => $description));
+        $buttongo = '<a class="btn btn-primary btn-block" href="'.$urlpay.'">'.get_string('edit').'</a>';
         $buttondeny = '<form action="my_pending_pay.php" id="cancel_' . $bank_entry->id . '" method="POST">
         <input type="hidden" name="sesskey" value="' .sesskey(). '">
         <input type="hidden" name="id" value="' . $bank_entry->id . '">
@@ -82,8 +80,8 @@ if (!$bank_entries) {
             $buttons=$buttongo.$buttondeny;
         }
         $buttons='<div class="d-grid gap-2">'.$buttons.'</div>';
-        $dataarray=array(date('Y-m-d', $bank_entry->timecreated), $bank_entry->code,$bank_entry->description,
-        $amount,$currency);
+        $dataarray=array(date('d/m/Y, H:i', $bank_entry->timecreated), $bank_entry->code, $bank_entry->description,
+        $amount);
      
         if($canuploadfiles) {
             $hasfiles = "<font color=red><b>".get_string('no')."</b></font>";

@@ -142,9 +142,8 @@ if (!bank_helper::check_in_course($cid, $bank_entry->paymentarea, $bank_entry->c
         $customer = $DB->get_record('user', array('id' => $bank_entry->userid));
         $fullname = fullname($customer, true);
 
-        // Add surcharge if there is any.
-        $surcharge = helper::get_gateway_surcharge('paypal');
-        $amount = helper::get_rounded_cost($bank_entry->totalamount, $currency, $surcharge);
+        $amount = helper::get_rounded_cost($bank_entry->totalamount, $currency, 0);
+        $surcharge = helper::get_gateway_surcharge('bank');
 
 $unpaid = '-';
 $primary = 'primary';
@@ -154,7 +153,9 @@ if ($bank_entry->component == "enrol_yafee") {
         if ($data = $DB->get_record('user_enrolments', ['userid' => $bank_entry->userid, 'enrolid' => $cs->id])) {
          if (isset($data->timeend) || isset($data->timestart)) {
             if ($cs->customint5 && $cs->enrolperiod && $data->timeend < time() && $data->timestart) {
-                $unpaid = (round(((time() - $data->timeend) / $cs->enrolperiod)) * $cs->cost) ;
+                $unpaid = (round(((time() - $data->timeend) / $cs->enrolperiod)) * $cs->cost);
+                // Add surcharge.
+                $unpaid = helper::get_rounded_cost($unpaid, $currency, $surcharge);
             }
          }
         }
@@ -222,10 +223,10 @@ if ($bank_entry->component == "enrol_yafee") {
 	$url = helper::get_success_url($bank_entry->component, $bank_entry->paymentarea, $bank_entry->itemid);
 
         $table->data[] = array($selectitemcheckbox,
-            date('Y-m-d', $bank_entry->timecreated), $bank_entry->code,
+            date('d/m/Y, H:i', $bank_entry->timecreated), $bank_entry->code,
 	    html_writer::link('/user/profile.php?id='.$customer->id, $fullname, array('target' => '_blank')),
             $customer->email,
-//            $cs->courseid,
+//            $cid,
             html_writer::link($url, $bank_entry->description, array('target' => '_blank')),
             $amount, $unpaid, $currency, $hasfiles, $buttonaprobe . $buttondeny
         );
