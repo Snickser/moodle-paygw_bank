@@ -117,7 +117,7 @@ if (!$bank_entries || !count($items)) {
     </script>
     <?php
     $table->head = array($checkboxcheckall,
-        get_string('date'), get_string('code', 'paygw_bank'),
+        get_string('timecreated'), get_string('code', 'paygw_bank'),
         get_string('fullnameuser'),
         get_string('email'),
 //        get_string('course'),
@@ -160,10 +160,10 @@ if ($bank_entry->component == "enrol_yafee") {
          }
         }
  if ($amount < $unpaid) {
-    $unpaid = '<font color=red><b>' . $unpaid . '</b></font>';
+    $unpaid = '<font color=red><b>' . $unpaid . '</b></br>' . get_string('unpaidnotice', 'paygw_bank') . '</font>';
     $primary = 'secondary';
  } else {
-    $unpaid = '<font color=green>' . $unpaid . '</font>';
+    $unpaid = '<font color=green>' . get_string('ok') . '</font>';
  }
 }
 

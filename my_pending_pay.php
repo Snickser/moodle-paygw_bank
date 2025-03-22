@@ -45,13 +45,13 @@ if (!$bank_entries) {
 } else
 {
     $table = new html_table();
-    $canuploadfiles=get_config('paygw_bank', 'usercanuploadfiles');
-    $headarray=array(get_string('date'),get_string('code', 'paygw_bank'), get_string('concept', 'paygw_bank'), get_string('total_cost', 'paygw_bank'));
+    $canuploadfiles = get_config('paygw_bank', 'usercanuploadfiles');
+    $headarray = array(get_string('timecreated'),get_string('code', 'paygw_bank'), get_string('concept', 'paygw_bank'), get_string('total_cost', 'paygw_bank'), get_string('status'));
     if($canuploadfiles) {
         array_push($headarray, get_string('hasfiles', 'paygw_bank'));
     }
     array_push($headarray, get_string('actions'));
-    $table->head=$headarray;
+    $table->head = $headarray;
     foreach($bank_entries as $bank_entry)
     {
         $config = (object) helper::get_gateway_configuration($bank_entry->component, $bank_entry->paymentarea, $bank_entry->itemid, 'bank');
@@ -59,8 +59,29 @@ if (!$bank_entries) {
         $currency = $payable->get_currency();
         $customer = $DB->get_record('user', array('id' => $bank_entry->userid));
         $fullname = fullname($customer, true);  
+        $amount = helper::get_cost_as_string($bank_entry->totalamount, $currency, 0);
+        $surcharge = helper::get_gateway_surcharge('bank');
 
-        $amount = helper::get_cost_as_string($bank_entry->totalamount, $currency);
+$unpaid = '-';
+// Check uninterrupted cost.
+if ($bank_entry->component == "enrol_yafee") {
+    $cs = $DB->get_record('enrol', ['id' => $bank_entry->itemid, 'enrol' => 'yafee']);
+        if ($data = $DB->get_record('user_enrolments', ['userid' => $bank_entry->userid, 'enrolid' => $cs->id])) {
+         if (isset($data->timeend) || isset($data->timestart)) {
+            if ($cs->customint5 && $cs->enrolperiod && $data->timeend < time() && $data->timestart) {
+                $unpaid = (round(((time() - $data->timeend) / $cs->enrolperiod)) * $cs->cost);
+                // Add surcharge.
+                $unpaid = helper::get_rounded_cost($unpaid, $currency, $surcharge);
+            }
+         }
+        }
+ if ($bank_entry->totalamount < $unpaid) {
+    $unpaid = '<font color=red><b>' . get_string('unpaidnotice', 'paygw_bank') . '</b></font>';
+ } else {
+    $unpaid = '<font color=green>' . get_string('ok') . '</font>';
+ }
+}
+
         $component = $bank_entry->component;
         $paymentarea = $bank_entry->paymentarea;
         $itemid = $bank_entry->itemid;
@@ -75,13 +96,13 @@ if (!$bank_entries) {
         <input class="btn btn-danger mt-3 btn-block" type="submit" data-modal="confirmation" data-modal-title-str=\'["cancel_process", "paygw_bank"]\'
         data-modal-content-str=\'["are_you_sure_cancel","paygw_bank"]\' data-modal-destination="javascript:document.getElementById(\'cancel_' . $bank_entry->id . '\').submit()" data-modal-yes-button-str=\'["yes", "core"]\' value="' . get_string("cancel_process", "paygw_bank") . '"></input>
         </form>';
-        $buttons=$buttongo;
+        $buttons = $buttongo;
         if($allowusercancel) {
             $buttons=$buttongo.$buttondeny;
         }
         $buttons='<div class="d-grid gap-2">'.$buttons.'</div>';
         $dataarray=array(date('d/m/Y, H:i', $bank_entry->timecreated), $bank_entry->code, $bank_entry->description,
-        $amount);
+        $amount, $unpaid);
      
         if($canuploadfiles) {
             $hasfiles = "<font color=red><b>".get_string('no')."</b></font>";

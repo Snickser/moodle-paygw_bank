@@ -69,3 +69,4 @@ $string['email_notifications_new_attachments'] = 'Файл в заявку с к
 {$a->url}';
 $string['email_notifications_confirm'] = 'Заявка с кодом "{$a->code}" от {$a->userfullname} ({$a->useremail}) в курс "{$a->course}" с пометкой "{$a->concept}" утверждёна.
  {$a->teacher}';
+$string['unpaidnotice'] = 'Просрочено!';
