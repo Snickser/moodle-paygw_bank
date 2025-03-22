@@ -294,9 +294,11 @@ echo "</div>";
 echo "</div>";
 echo '<br><div align=center>';
 if ($bank_entry) {
-    echo $OUTPUT->single_button('/payment/gateway/bank/my_pending_pay.php',get_string('continue'));
+    $url = new moodle_url('/payment/gateway/bank/my_pending_pay.php');
+    echo $OUTPUT->single_button($url, get_string('continue'));
 } else {
-    echo $OUTPUT->single_button('/',get_string('cancel'));
+    $url = new moodle_url('/course/view.php', ['id' => $cid]);
+    echo $OUTPUT->single_button($url, get_string('cancel'));
 }
 echo '</div>';
 echo $OUTPUT->footer();

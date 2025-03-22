@@ -140,7 +140,7 @@ if (!bank_helper::check_in_course($cid, $bank_entry->paymentarea, $bank_entry->c
         $payable = helper::get_payable($bank_entry->component, $bank_entry->paymentarea, $bank_entry->itemid);
         $currency = $payable->get_currency();
         $customer = $DB->get_record('user', array('id' => $bank_entry->userid));
-        $fullname = fullname($customer, true);
+        $fullname = fullname($customer, false);
 
         $amount = helper::get_rounded_cost($bank_entry->totalamount, $currency, 0);
         $surcharge = helper::get_gateway_surcharge('bank');
