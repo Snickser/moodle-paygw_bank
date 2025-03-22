@@ -70,6 +70,7 @@ $bank_entry = null;
 
 // Add support for enrol_yafee.
 $cost = $payable->get_amount();
+$timeend = 0;
 if ($component == "enrol_yafee") {
     $cs = $DB->get_record('enrol', ['id' => $itemid, 'enrol' => 'yafee']);
     // Check uninterrupted cost.
@@ -90,12 +91,15 @@ if ($component == "enrol_yafee") {
                     $delta = ceil((($ctime - $data->timestart) / $cs->enrolperiod)+0) * $cs->enrolperiod +
                              $data->timestart - $data->timeend;
                     $cost = $delta * $price;
+                    $timeend += $delta;
                 } else if ($cs->customchar1 == 'month' && $cs->customint7 > 0) {
                     $delta = ($t2['year'] - $t1['year']) * 12 + $t2['mon'] - $t1['mon'] + 1;
                     $cost = $delta * $cost;
+                    $timeend = strtotime('+' . $delta . 'month', $timeend);
                 } else if ($cs->customchar1 == 'year' && $cs->customint7 > 0) {
                     $delta = ($t2['year'] - $t1['year']) + 1;
                     $cost = $delta * $cost;
+                    $timeend = strtotime('+' . $delta . 'year', $timeend);
                 }
             }
         }
@@ -142,7 +146,6 @@ if ($surcharge && $surcharge > 0 && $bank_entry == null) {
     echo '<div id="price">' . $surcharge. '%</div>';
     echo '<div id="explanation">' . get_string('surcharge_desc', 'core_payment') . '</div>';
     echo '</li>';
-    
     echo '<li class="list-group-item"><h4 class="card-title">' . get_string('total_cost', 'paygw_bank') . ':</h4>';
     echo '<div id="price">' .helper::get_cost_as_string($amount, $currency). ' </div>';
     echo '</li>';
@@ -155,8 +158,16 @@ if ($bank_entry != null) {
     echo '<li class="list-group-item"><h4 class="card-title">' . get_string('transfer_code', 'paygw_bank') . ':</h4>';
     echo '<div id="transfercode">' . $bank_entry->code . '</div>';
     echo '</li>';
+    if ($timeend) {
+	echo '<li class="list-group-item"><h4 class="card-title">' . get_string('unpaidtimeend', 'paygw_bank') . ':</h4>';
+	echo '<div id="transfercode">';
+	echo userdate($timeend, get_string('strftimedate', 'core_langconfig')) . ' ' . date('H:i', $timeend);
+	echo '</div>';
+	echo '</li>';
+    }
     $instructions = format_text($config->postinstructionstext['text']);
 }
+
 echo '<li class="list-group-item">';
 echo '<div id="bankinstructions">' . $instructions . '</div>';
 echo '</li>';
