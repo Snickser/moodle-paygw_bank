@@ -55,7 +55,7 @@ $PAGE->set_url('/payment/gateway/bank/pay.php', $params);
 $PAGE->set_pagelayout('standard');
 $pagetitle = $description;
 $PAGE->set_title($pagetitle);
-$PAGE->set_heading($pagetitle);
+//$PAGE->set_heading($pagetitle);
 $PAGE->set_cacheable(false);
 
 $cid = bank_helper::get_courseid($paymentarea, $component, $itemid);
