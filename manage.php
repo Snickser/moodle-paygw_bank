@@ -223,7 +223,7 @@ if ($bank_entry->component == "enrol_yafee") {
 	$url = helper::get_success_url($bank_entry->component, $bank_entry->paymentarea, $bank_entry->itemid);
 
         $table->data[] = array($selectitemcheckbox,
-            date('d/m/Y, H:i', $bank_entry->timecreated), $bank_entry->code,
+            date('d.m.Y, H:i', $bank_entry->timecreated), $bank_entry->code,
 	    html_writer::link('/user/profile.php?id='.$customer->id, $fullname, array('target' => '_blank')),
             $customer->email,
 //            $cid,

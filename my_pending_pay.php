@@ -101,7 +101,7 @@ if ($bank_entry->component == "enrol_yafee") {
             $buttons=$buttongo.$buttondeny;
         }
         $buttons='<div class="d-grid gap-2">'.$buttons.'</div>';
-        $dataarray=array(date('d/m/Y, H:i', $bank_entry->timecreated), $bank_entry->code, $bank_entry->description,
+        $dataarray=array(date('d-m-Y, H:i', $bank_entry->timecreated), $bank_entry->code, $bank_entry->description,
         $amount, $unpaid);
      
         if($canuploadfiles) {
