@@ -93,9 +93,11 @@ if ($component == "enrol_yafee") {
                 } else if ($cs->customchar1 == 'month' && $cs->customint7 > 0) {
                     $delta = ($t2['year'] - $t1['year']) * 12 + $t2['mon'] - $t1['mon'] + 1;
                     $cost = $delta * $cost;
+                    $timeend = strtotime("+$delta month", $data->timeend);
                 } else if ($cs->customchar1 == 'year' && $cs->customint7 > 0) {
                     $delta = ($t2['year'] - $t1['year']) + 1;
                     $cost = $delta * $cost;
+                    $timeend = strtotime("+$delta year", $data->timeend);
                 }
             }
         }
@@ -113,14 +115,26 @@ if (bank_helper::has_openbankentry($itemid, $USER->id)) {
     $bank_entry = bank_helper::get_openbankentry($itemid, $USER->id);
     $amount = $bank_entry->totalamount;
     $confirm = 0;
+
+
 } else {
     if ($confirm != 0) {
         $totalamount = $amount;
-        $data = $mform->get_data();
+///        $data = $mform->get_data();
         $bank_entry = bank_helper::create_bankentry($itemid, $USER->id, $totalamount, $currency, $component, $paymentarea, $description);
         \core\notification::info(get_string('transfer_process_initiated', 'paygw_bank'));
         $confirm = 0;
     }
+}
+
+// Check expired payment.
+if ($cs->enrolperiod && isset($bank_entry->totalamount)) {
+    $timeend = $data->timeend + round($bank_entry->totalamount/(1+$surcharge/100), 2)/$cs->cost*$cs->enrolperiod;
+}
+
+$unpaidnotice = false;
+if($timeend < time()) {
+    $unpaidnotice = true;
 }
 
 echo '<div class="card">';
@@ -129,34 +143,37 @@ echo '<ul class="list-group list-group-flush">';
 echo '<li class="list-group-item"><h4 class="card-title">' . get_string('concept', 'paygw_bank') . ':</h4>';
 echo '<div>' . $description . '</div>';
 echo '</li>';
-$aceptform = "";
-$instructions = "";
 
+$aceptform = "";
 $instructions = format_text($config->instructionstext['text']);
 
-if ($surcharge && $surcharge > 0 && $bank_entry == null) {
-    echo '<li class="list-group-item"><h4 class="card-title">' . get_string('cost', 'paygw_bank') . ':</h4>';
-    echo '<div id="price">' . helper::get_cost_as_string($payable->get_amount(), $currency) . '</div>';
-    echo '</li>';
-    echo '<li class="list-group-item"><h4 class="card-title">' . get_string('surcharge', 'core_payment') . ':</h4>';
-    echo '<div id="price">' . $surcharge. '%</div>';
-    echo '<div id="explanation">' . get_string('surcharge_desc', 'core_payment') . '</div>';
-    echo '</li>';
-    
-    echo '<li class="list-group-item"><h4 class="card-title">' . get_string('total_cost', 'paygw_bank') . ':</h4>';
-    echo '<div id="price">' .helper::get_cost_as_string($amount, $currency). ' </div>';
-    echo '</li>';
+echo '<li class="list-group-item"><h4 class="card-title">' . get_string('total_cost', 'paygw_bank') . ':</h4>';
+if ($surcharge > 0) {
+    $a = ['fee' => helper::get_cost_as_string($amount, $currency), 'surcharge' => $surcharge];
+    echo '<div id="price">' . get_string('feeincludesurcharge', 'payment', $a) . '</div>';
 } else {
-    echo '<li class="list-group-item"><h4 class="card-title">' . get_string('total_cost', 'paygw_bank') . ':</h4>';
-    echo '<div id="price">' . helper::get_cost_as_string($amount, $currency). '</div>';
-    echo '</li>';
+    echo '<div id="price">' .helper::get_cost_as_string($amount, $currency). ' </div>';
 }
+echo '</li>';
+
 if ($bank_entry != null) {
     echo '<li class="list-group-item"><h4 class="card-title">' . get_string('transfer_code', 'paygw_bank') . ':</h4>';
     echo '<div id="transfercode">' . $bank_entry->code . '</div>';
     echo '</li>';
     $instructions = format_text($config->postinstructionstext['text']);
+
+    if ($cs->customint5) {
+	echo '<li class="list-group-item"><h4 class="card-title">' . get_string('unpaidtimeend', 'paygw_bank') . ':</h4>';
+	echo '<div id="transfercode">';
+	echo userdate($timeend, get_string('strftimedate', 'core_langconfig')) . ' ' . date('H:i', $timeend);
+	if ($unpaidnotice) {
+	    echo '<h5><font color=red>' . get_string('unpaidnotice', 'paygw_bank') . '</font></h5>';
+	}
+	echo '</div>';
+	echo '</li>';
+    }
 }
+
 echo '<li class="list-group-item">';
 echo '<div id="bankinstructions">' . $instructions . '</div>';
 echo '</li>';

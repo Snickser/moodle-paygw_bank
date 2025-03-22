@@ -210,7 +210,7 @@ if ($sendteachermail) {
         $DB->update_record('paygw_bank', $record);
         $transaction->allow_commit();
         $send_email = get_config('paygw_bank', 'senddenmail');
-        if ($send_email) {
+        if ($send_email && $record->userid != $USER->id) {
             $supportuser = core_user::get_support_user();
             $fullname = fullname($paymentuser, true);
             $userlang=$USER->lang;
