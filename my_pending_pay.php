@@ -120,7 +120,7 @@ if ($bank_entry->component == "enrol_yafee") {
 }
 
 echo '<br><div align=center>';
-echo $OUTPUT->single_button('/user/profile.php', get_string('back'));
+//echo $OUTPUT->single_button('/user/profile.php', get_string('back'));
 echo '</div>';
 
 echo $OUTPUT->footer();
