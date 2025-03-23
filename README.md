@@ -14,7 +14,7 @@ The plugin has the following configurations in the plugin section:
 - Allow user add files. The user can (or must, depending of the instructions), upload files that proves the payment.
 - Surcharge. The surcharge is an additional percentage charged to users who choose to pay using this payment gateway.
 - Send confirmation email. An email is sent to user if the payment is approved.
-- Send denied email An email is sent to user if the payment is denied.
+- Send denied email an email is sent to user if the payment is denied.
 
 The mail texts are in the language strings of the plugin.
 
