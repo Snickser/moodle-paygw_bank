@@ -23,11 +23,10 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
- 
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->version   = 3025032301;        // The current plugin version (Date: YYYYMMDDXX).
 $plugin->requires  = 2021051100;        // Requires this Moodle version.
-$plugin->component = 'paygw_bank';       // Full name of the plugin (used for diagnostics).
+$plugin->component = 'paygw_bank';      // Full name of the plugin (used for diagnostics).
 $plugin->maturity  = MATURITY_STABLE;
 $plugin->release   = '2.0';
