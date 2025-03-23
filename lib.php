@@ -82,7 +82,7 @@ function paygw_bank_extend_navigation_course($navigation, $course, $context) {
     // Проверяем, что пользователь имеет право на доступ к платежному шлюзу.
     if (has_capability('paygw/bank:manageincourse', $context)) {
         // Создаем элемент меню.
-        $url = new moodle_url('/payment/gateway/bank/manage.php', array('cid' => $course->id));
+        $url = new moodle_url('/payment/gateway/bank/manage.php', ['cid' => $course->id]);
         $navigation->add(
             get_string('pluginname', 'paygw_bank'), // Название пункта меню.
             $url, // Ссылка.

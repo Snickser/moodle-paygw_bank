@@ -26,20 +26,19 @@
 defined('MOODLE_INTERNAL') || die();
 
 if ($ADMIN->fulltree) {
-
     $plugininfo = \core_plugin_manager::instance()->get_plugin_info('paygw_bank');
     $donate = get_string('donate', 'paygw_bank', $plugininfo);
 
     $settings->add(new admin_setting_heading(
         'paygw_bank_settings',
-	'',
-	$donate,
+        '',
+        $donate,
     ));
 
-   $settings->add(new admin_setting_heading(
-               'paygw_bank_defaults',
-	       ' ',
-	       get_string('pluginname_desc', 'paygw_bank'),
+    $settings->add(new admin_setting_heading(
+        'paygw_bank_defaults',
+        ' ',
+        get_string('pluginname_desc', 'paygw_bank'),
     ));
 
     \core_payment\helper::add_common_gateway_settings($settings, 'paygw_bank');
@@ -128,7 +127,6 @@ if ($ADMIN->fulltree) {
         '',
         0
     ));
-
 }
 
 $systemcontext = \context_system::instance();
@@ -144,4 +142,3 @@ $ADMIN->add(
         'paygw/bank:managepayments'
     )
 );
-
