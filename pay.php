@@ -130,6 +130,7 @@ if (bank_helper::has_openbankentry($itemid, $USER->id)) {
 // Check expired payment.
 if (isset($cs->enrolperiod) && isset($data->timeend) && isset($bank_entry->totalamount)) {
     $timeend = $data->timeend + round($bank_entry->totalamount/(1+$surcharge/100), 2)/$cs->cost*$cs->enrolperiod;
+    $timeend = round($timeend);
 }
 
 $unpaidnotice = false;
