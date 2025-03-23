@@ -128,12 +128,12 @@ if (bank_helper::has_openbankentry($itemid, $USER->id)) {
 }
 
 // Check expired payment.
-if ($cs->enrolperiod && isset($bank_entry->totalamount)) {
+if (isset($cs->enrolperiod) && isset($data->timeend) && isset($bank_entry->totalamount)) {
     $timeend = $data->timeend + round($bank_entry->totalamount/(1+$surcharge/100), 2)/$cs->cost*$cs->enrolperiod;
 }
 
 $unpaidnotice = false;
-if($timeend < time()) {
+if(isset($timeend) && $timeend < time()) {
     $unpaidnotice = true;
 }
 
@@ -162,7 +162,7 @@ if ($bank_entry != null) {
     echo '</li>';
     $instructions = format_text($config->postinstructionstext['text']);
 
-    if ($cs->customint5) {
+    if (isset($cs->customint5) && $cs->customint5) {
 	echo '<li class="list-group-item"><h4 class="card-title">' . get_string('unpaidtimeend', 'paygw_bank') . ':</h4>';
 	echo '<div id="transfercode">';
 	echo userdate($timeend, get_string('strftimedate', 'core_langconfig')) . ' ' . date('H:i', $timeend);
