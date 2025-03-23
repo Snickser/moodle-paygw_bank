@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['approve'] = 'Зачислить в курс';
+$string['approve'] = 'Утвердить заявку';
 $string['are_you_sure_cancel'] = 'Вы точно уверены что хотите отменить запрос?';
 $string['cancel_process'] = 'Отменить';
 $string['code'] = 'Код платежа';
@@ -32,7 +32,7 @@ $string['codeprefix'] = 'Префикс кода платежа';
 $string['concept'] = 'Описание';
 $string['cost'] = 'Цена';
 $string['deny'] = 'Отказать';
-$string['file_already_uploaded'] = 'Файл с таким именем уже был загружен';
+$string['file_already_uploaded'] = 'Файл с таким именем уже загружен';
 $string['file_uploaded'] = 'Файл загружен';
 $string['gatewaydescription'] = 'Bank Transfer - это ручной способ оплаты с использованием подтверждающих документов.';
 $string['hasfiles'] = 'Файлы';
@@ -42,14 +42,14 @@ $string['mail_confirm_pay'] = 'Уважаемый {$a->username}.
 {$a->url}';
 $string['mail_confirm_pay_subject'] = 'Запрос подтверждён';
 $string['mail_denied_pay'] = 'Уважаемый {$a->username}.
-Ваш запрос за "{$a->concept}" отклонён.
+Ваш запрос на "{$a->concept}" отклонён.
 Код платежа: {$a->code}';
 $string['mail_denied_pay_subject'] = 'Запрос отклонён';
 $string['max_number_of_files'] = 'Максимальное кол-во файлов';
 $string['my_pending_payments'] = 'Мои ожидающие платежи';
 $string['noentriesfound'] = 'Нет запросов.';
 $string['payments'] = 'Платежи';
-$string['payment_denied'] = 'Вы отменили платеж';
+$string['payment_denied'] = 'Вы отменили запрос';
 $string['pending_payments'] = 'Ожидаемые трансфертные платежи';
 $string['pluginname_desc'] = 'Плагин «Банковский перевод» позволяет оплачивать курсы банковским переводом или другими способами оплаты вручную.';
 $string['send'] = 'Отправить';
@@ -58,7 +58,7 @@ $string['start_process'] = 'Начать процесс оплаты';
 $string['today_cost'] = 'На сегодня';
 $string['total_cost'] = 'Сумма';
 $string['transfer_code'] = 'Код платежа';
-$string['transfer_process_initiated'] = 'Процесс ручного перевода начат';
+$string['transfer_process_initiated'] = 'Процесс банковского перевода активирован';
 $string['email_notifications_subject_new'] = 'Новая заявка на оплату';
 $string['email_notifications_subject_attachments'] = 'В заявку был добавлен документ';
 $string['email_notifications_subject_confirm'] = 'Заявка подтверждена';

@@ -23,6 +23,7 @@
  */
 
 namespace paygw_bank;
+
 /**
  * The gateway class for bank payment gateway.
  *
