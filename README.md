@@ -15,6 +15,7 @@ The plugin has the following configurations in the plugin section:
 - Surcharge. The surcharge is an additional percentage charged to users who choose to pay using this payment gateway.
 - Send confirmation email. An email is sent to user if the payment is approved.
 - Send denied email an email is sent to user if the payment is denied.
+- Course teachers can manage requests if they have the appropriate role permissions.
 
 The mail texts are in the language strings of the plugin.
 
