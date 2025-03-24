@@ -37,13 +37,13 @@ $string['file_uploaded'] = 'Файл загружен';
 $string['gatewaydescription'] = 'Bank Transfer - это ручной способ оплаты с использованием подтверждающих документов.';
 $string['hasfiles'] = 'Файлы';
 $string['mails_sent'] = 'Письма отправлены';
-$string['mail_confirm_pay'] = 'Уважаемый {$a->username}.
+$string['mail_confirm_pay'] = 'Уважаемый(ая) {$a->username}!
 Ваш платёж за "{$a->concept}" с кодом {$a->code} подтверждён.
+
 {$a->url}';
 $string['mail_confirm_pay_subject'] = 'Запрос подтверждён';
-$string['mail_denied_pay'] = 'Уважаемый {$a->username}.
-Ваш запрос на "{$a->concept}" отклонён.
-Код платежа: {$a->code}';
+$string['mail_denied_pay'] = 'Уважаемый(ая) {$a->username}!
+Ваш запрос c кодом платежа "{$a->code}" на "{$a->concept}" отклонён.';
 $string['mail_denied_pay_subject'] = 'Запрос отклонён';
 $string['max_number_of_files'] = 'Максимальное кол-во файлов';
 $string['my_pending_payments'] = 'Мои ожидающие платежи';
@@ -64,8 +64,10 @@ $string['email_notifications_subject_attachments'] = 'В заявку был д�
 $string['email_notifications_subject_confirm'] = 'Заявка подтверждена';
 $string['email_notifications_new_request'] = 'Новая заявка на оплату в курс "{$a->course}".
 Код "{$a->code}" от {$a->userfullname} ({$a->useremail}) с описанием "{$a->concept}".
+
 {$a->url}';
 $string['email_notifications_new_attachments'] = 'Файл в заявку с кодом "{$a->code}" от {$a->userfullname} ({$a->useremail}) для курса "{$a->course}" с пометкой "{$a->concept}" добавлен.
+
 {$a->url}';
 $string['email_notifications_confirm'] = 'Заявка с кодом "{$a->code}" от {$a->userfullname} ({$a->useremail}) в курс "{$a->course}" с пометкой "{$a->concept}" утверждёна.
  {$a->teacher}';
