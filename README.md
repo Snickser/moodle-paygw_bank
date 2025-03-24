@@ -5,7 +5,7 @@
 This plugin, is a moodle payment gateway that provides support to payments made by bank transferences, or another manual payment methods that need to be approved by a person.
 
 - Supports my [enrol_yafee](https://moodle.org/plugins/enrol_yafee) plugin.
-- Course teachers can manage requests if they have the appropriate role permissions.
+- Course teachers can manage requests if they have the appropriate role permissions (paygw/bank:manageincourse).
 - Notifications in courses are sent to everyone who has an administrative role. 
 
 ## Instalation.
