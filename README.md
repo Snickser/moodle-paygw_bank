@@ -6,7 +6,7 @@ This plugin, is a moodle payment gateway that provides support to payments made 
 
 - Supports my [enrol_yafee](https://moodle.org/plugins/enrol_yafee) plugin.
 - Course teachers can manage requests if they have the appropriate role permissions (paygw/bank:manageincourse).
-- Notifications in courses are sent to everyone who has an administrative role. 
+- Notifications in courses are sent to everyone who has an administrative role. It must be enabled on the global "Notification Settings" page.
 
 ## Instalation.
 
