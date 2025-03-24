@@ -1,6 +1,6 @@
-[![](https://img.shields.io/github/v/release/Snickser/moodle-paygw_bank.svg)](https://github.com/Snickser/moodle-paygw_bank/releases)
-
 # Impruved Bank transferences payment gateway
+
+[![](https://img.shields.io/github/v/release/Snickser/moodle-paygw_bank.svg)](https://github.com/Snickser/moodle-paygw_bank/releases)
 
 This plugin, is a moodle payment gateway that provides support to payments made by bank transferences, or another manual payment methods that need to be approved by a person.
 
