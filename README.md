@@ -12,7 +12,7 @@ This plugin, is a moodle payment gateway that provides support to payments made 
 
 This plugin is tested in Moodle 4.3 and 4.5.
 
-You can download the zip file and install directly in "Site administration " > Plugins > "Install plugins"
+You can download the zip file and install directly in "Site administration" > Plugins > "Install plugins"
 
 ## Global configuration.
 
@@ -30,4 +30,4 @@ Just as all the payment gateways, add the bank transference to a payment account
 
 ## Management of payment request.
 
-"Site administration " > "Bank transference" > "Manage transfer", or "More" in course, you can see the list of pending payments, and access to the files attached if the option is enabled.  You can deny or approve the payments. If you approve the payment, automatically the element purchased is served (f.e it the user buy an enrollment to a course, the enrollment is created).
+"Site administration" > "Bank transference" > "Manage transfer", or "More" in course, you can see the list of pending payments, and access to the files attached if the option is enabled. You can deny or approve the payments. If you approve the payment, automatically the element purchased is served (f.e it the user buy an enrollment to a course, the enrollment is created).
