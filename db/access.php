@@ -15,16 +15,13 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 $capabilities = [
-
     'paygw/bank:managepayments' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [
             'manager' => CAP_ALLOW,
         ],
-        'clonepermissionsfrom' => 'moodle/site:config',
     ],
-
     'paygw/bank:manageincourse' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
@@ -33,7 +30,5 @@ $capabilities = [
             'editingteacher' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
         ],
-        'clonepermissionsfrom' => 'moodle/site:config',
     ],
-
 ];
