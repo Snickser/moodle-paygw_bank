@@ -66,6 +66,8 @@ class bank_helper
             return false;
         }
 
+	$oldforcelang = force_current_language($user->lang);
+
 	$message = new \core\message\message();
 	$message->component = 'paygw_bank'; // Your plugin's name.
 	$message->name = 'payment_receipt'; // Your notification name from message.php.
@@ -75,8 +77,11 @@ class bank_helper
 	$message->fullmessage = $text;
 	$message->fullmessageformat = FORMAT_MARKDOWN;
 	$message->notification = 1; // Because this is a notification generated from Moodle, not a user-to-user message.
-	
+
 	message_send($message);
+
+	force_current_language($oldforcelang);
+
 	return true;
     }
     public static function get_openbankentry($itemid, $userid): \stdClass
