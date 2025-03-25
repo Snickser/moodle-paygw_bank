@@ -89,7 +89,7 @@ function paygw_bank_extend_navigation_course($navigation, $course, $context) {
             navigation_node::TYPE_SETTING, // Тип элемента.
             null, // Ключ.
             'paygw_bank', // Идентификатор.
-            new pix_icon('i/payment', '') // Иконка.
+            new pix_icon('icon', '', 'paygw_bank') // Иконка.
         );
     }
 }
