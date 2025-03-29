@@ -272,8 +272,8 @@ if(!$cid) {
     $courseid = bank_helper::get_courseid($bank_entry->paymentarea, $bank_entry->component, $bank_entry->itemid);
     $groupnames = bank_helper::get_course_usergroups($courseid, $bank_entry->userid);
     $course = get_course($courseid);
-    $courseurl = html_writer::link('/course/view.php?id='.$courseid, format_string($course->fullname), array('target' => '_blank'));
-//    $courseurl = format_string($course->fullname);
+//    $courseurl = html_writer::link('/course/view.php?id='.$courseid, format_string($course->fullname), array('target' => '_blank'));
+    $courseurl = format_string($course->fullname);
     array_push($tabledata, $courseurl);
 } else {
     $groupnames = bank_helper::get_course_usergroups($cid, $bank_entry->userid);
