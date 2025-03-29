@@ -116,14 +116,24 @@ if (!$bank_entries || !count($items)) {
     }
     </script>
     <?php
-    $table->head = array($checkboxcheckall,
+    $table->head = [];
+    array_push($table->head,
+	$checkboxcheckall,
         get_string('timecreated'), get_string('code', 'paygw_bank'),
         get_string('fullnameuser'),
         get_string('email'),
-//        get_string('course'),
-        get_string('concept', 'paygw_bank'), get_string('total_cost', 'paygw_bank'), get_string('today_cost', 'paygw_bank'), get_string('currency'), get_string('hasfiles', 'paygw_bank'), get_string('actions')
     );
-    //$headarray=array(get_string('date'),get_string('code', 'paygw_bank'), get_string('concept', 'paygw_bank'),get_string('amount', 'paygw_bank'),get_string('currency'));
+if(!$cid) {
+    array_push($table->head,
+        get_string('course'),
+    );
+}
+    array_push($table->head,
+        get_string('group'),
+        get_string('concept', 'paygw_bank'),
+        get_string('total_cost', 'paygw_bank'), get_string('today_cost', 'paygw_bank'), get_string('currency'), get_string('hasfiles', 'paygw_bank'),
+        get_string('actions')
+    );
 
     foreach ($bank_entries as $bank_entry) {
         $bankentrykey = bank_helper::get_item_key($bank_entry->component, $bank_entry->paymentarea, $bank_entry->itemid);
@@ -134,6 +144,20 @@ if (!$bank_entries || !count($items)) {
 // Check in course.
 if (!bank_helper::check_in_course($cid, $bank_entry->paymentarea, $bank_entry->component, $bank_entry->itemid)) {
     continue;
+}
+
+$groupnames = '-';
+if (!empty($cid)) {
+    if ($gs = groups_get_user_groups($cid, $bank_entry->userid, true)) {
+        foreach ($gs as $gr) {
+            foreach ($gr as $g) {
+                $groups[$g] = groups_get_group_name($g);
+            }
+        }
+        if (isset($groups)) {
+            $groupnames = implode(',', $groups);
+        }
+    }
 }
 
         $config = (object) helper::get_gateway_configuration($bank_entry->component, $bank_entry->paymentarea, $bank_entry->itemid, 'bank');
@@ -226,7 +250,7 @@ if ($bank_entry->component == "enrol_yafee") {
             date('d.m.Y, H:i', $bank_entry->timecreated), $bank_entry->code,
 	    html_writer::link('/user/profile.php?id='.$customer->id, $fullname, array('target' => '_blank')),
             $customer->email,
-//            $cid,
+            $groupnames,
             html_writer::link($url, $bank_entry->description, array('target' => '_blank')),
             $amount, $unpaid, $currency, $hasfiles, $buttonaprobe . $buttondeny
         );
