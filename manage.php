@@ -238,19 +238,20 @@ if($filter != 'showarchived') {
                 </div>
                 <div class="modal-body">
               ';
+            $i = 0;
             foreach ($files as $f) {
+	        $i++;
                 // $f is an instance of stored_file
                 $url = moodle_url::make_pluginfile_url($f->get_contextid(), $f->get_component(), $f->get_filearea(), $f->get_itemid(), $f->get_filepath(), $f->get_filename(), false);
+                $hasfiles .= $i.'. <a href="' . $url . '" target="_blank">' . $f->get_filename() . '</a><br>';
                 if (str_ends_with($f->get_filename(), ".png") || str_ends_with($f->get_filename(), ".jpg") || str_ends_with($f->get_filename(), ".gif")) {
-                    $hasfiles .= "<img src='$url'><br>";
-                } else {
-                    $hasfiles .= '<a href="' . $url . '" target="_blank">.....' . $f->get_filename() . '</a><br>';
+                    $hasfiles .= "<img src=$url width=50%><br>";
                 }
             }
             $hasfiles .= '
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">'.get_string('close', 'admin').'</button>
                 </div>
                 </div>
             </div>
@@ -271,8 +272,8 @@ if(!$cid) {
     $courseid = bank_helper::get_courseid($bank_entry->paymentarea, $bank_entry->component, $bank_entry->itemid);
     $groupnames = bank_helper::get_course_usergroups($courseid, $bank_entry->userid);
     $course = get_course($courseid);
-//    $courseurl = html_writer::link('/course/view.php?id='.$courseid, format_string($course->fullname), array('target' => '_blank'));
-    $courseurl = format_string($course->fullname);
+    $courseurl = html_writer::link('/course/view.php?id='.$courseid, format_string($course->fullname), array('target' => '_blank'));
+//    $courseurl = format_string($course->fullname);
     array_push($tabledata, $courseurl);
 } else {
     $groupnames = bank_helper::get_course_usergroups($cid, $bank_entry->userid);
@@ -302,7 +303,7 @@ if(!$cid) {
     }
 }
 
-if ($bank_entries && count($items)) {
+if (count($bank_entries)) {
 ?>
 <div class="row">
     <div class="col">
@@ -311,9 +312,6 @@ if ($bank_entries && count($items)) {
         </button>
     </div>
 </div>
-<?php
-}
-?>
 <script>
 function sendmail() {
     var ids = '';
@@ -335,7 +333,7 @@ function sendmail() {
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="sendmailmodalLabel"><?php echo get_string('sendmailtoselected', 'paygw_bank'); ?></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
                 <form name="formsendmail" method="POST">
@@ -343,7 +341,6 @@ function sendmail() {
                     <input type="hidden" name="action" value="sendmail">
                     <input type="hidden" name="confirm" value="1">
                     <input type="hidden" name="ids" id="ids" value="">
-        
                     <div class="form-group">
                         <label for="subject"><?php echo get_string('subject'); ?></label>
                         <input type="text" class="form-control" id="subject" name="subject" required>
@@ -356,6 +353,7 @@ function sendmail() {
         </div>
     </div>
 </div>
-
 <?php
+}
+
 echo $OUTPUT->footer();
