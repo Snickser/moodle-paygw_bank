@@ -251,7 +251,7 @@ if($filter != 'showarchived') {
             $hasfiles .= '
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">'.get_string('close', 'admin').'</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">'.get_string('close', 'admin').'</button>
                 </div>
                 </div>
             </div>
@@ -344,9 +344,11 @@ function sendmail() {
                     <div class="form-group">
                         <label for="subject"><?php echo get_string('subject'); ?></label>
                         <input type="text" class="form-control" id="subject" name="subject" required>
-                        </br><label for="message"><?php echo get_string('message'); ?></label>
+                        </br>
+                        <label for="message"><?php echo get_string('message'); ?></label>
                         <textarea class="form-textarea form-control" cols="40" rows="5" id="message" name="message" required></textarea>
-                        </br><input type="submit" class="btn btn-primary" value="<?php echo get_string('send','paygw_bank'); ?>">
+                        </br>
+                        <input type="submit" class="btn btn-primary" value="<?php echo get_string('send','paygw_bank'); ?>">
                     </div>
                 </form>
             </div>
