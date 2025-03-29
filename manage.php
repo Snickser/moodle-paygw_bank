@@ -122,6 +122,8 @@ if (!$bank_entries) {
     }
     </script>
     <?php
+
+
     $table->head = [];
     array_push($table->head,
 	$checkboxcheckall,
@@ -129,13 +131,13 @@ if (!$bank_entries) {
         get_string('fullnameuser'),
         get_string('email'),
     );
-/*
+
 if(!$cid) {
     array_push($table->head,
         get_string('course'),
     );
 }
-*/
+
     array_push($table->head,
         get_string('group'),
         get_string('concept', 'paygw_bank'),
@@ -151,24 +153,12 @@ if(!$cid) {
             }
         }
 
+
 // Check in course.
 if (!bank_helper::check_in_course($cid, $bank_entry->paymentarea, $bank_entry->component, $bank_entry->itemid)) {
     continue;
 }
 
-$groupnames = '-';
-if (!empty($cid)) {
-    if ($gs = groups_get_user_groups($cid, $bank_entry->userid, true)) {
-        foreach ($gs as $gr) {
-            foreach ($gr as $g) {
-                $groups[$g] = groups_get_group_name($g);
-            }
-        }
-        if (isset($groups)) {
-            $groupnames = implode(',', $groups);
-        }
-    }
-}
 
         $config = (object) helper::get_gateway_configuration($bank_entry->component, $bank_entry->paymentarea, $bank_entry->itemid, 'bank');
         $payable = helper::get_payable($bank_entry->component, $bank_entry->paymentarea, $bank_entry->itemid);
@@ -262,19 +252,34 @@ if($filter != 'showarchived') {
             ';
         }
 
-
-
 	$url = helper::get_success_url($bank_entry->component, $bank_entry->paymentarea, $bank_entry->itemid);
 
-	$table->data[] = array(
+	$tabledata = [];
+	array_push($tabledata,
     	    $selectitemcheckbox,
             date('d.m.Y, H:i', $bank_entry->timecreated), $bank_entry->code,
 	    html_writer::link('/user/profile.php?id='.$customer->id, $fullname, array('target' => '_blank')),
             $customer->email,
+        );
+
+$groupnames = '-';
+if(!$cid) {
+    $courseid = bank_helper::get_courseid($bank_entry->paymentarea, $bank_entry->component, $bank_entry->itemid);
+    $groupnames = bank_helper::get_course_usergroups($courseid, $bank_entry->userid);
+    $course = get_course($courseid);
+//    $courseurl = html_writer::link('/course/view.php?id='.$courseid, format_string($course->fullname), array('target' => '_blank'));
+    $courseurl = format_string($course->fullname);
+    array_push($tabledata, $courseurl);
+} else {
+    $groupnames = bank_helper::get_course_usergroups($cid, $bank_entry->userid);
+}
+
+	array_push($tabledata,
     	    $groupnames,
             html_writer::link($url, $bank_entry->description, array('target' => '_blank')),
             $amount, $unpaid, $currency, $hasfiles, $buttonaprobe . $buttondeny,
         );
+        $table->data[] = $tabledata;
 
     }
     echo html_writer::table($table);
