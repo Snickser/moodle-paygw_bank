@@ -73,3 +73,4 @@ $string['email_notifications_confirm'] = 'Заявка с кодом "{$a->code}
  {$a->teacher}';
 $string['unpaidnotice'] = 'Просрочено!';
 $string['unpaidtimeend'] = 'Конечная дата';
+$string['pendingrequests'] = 'Все активные запросы';

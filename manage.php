@@ -49,11 +49,11 @@ $items = bank_helper::get_pending_item_collections($cid);
 
 echo '<form name="filteritem" method="POST">
 <select class="custom-select" name="filter" id="filterkey">';
-echo '<option value="">'.get_string('all').'</option>';
+echo '<option value="">'.get_string('pendingrequests', 'paygw_bank').'</option>';
 foreach ($items as $item) {
     echo '<option value="' . $item['key'] . '" >' . $item['description'] . '</option>';
 }
-echo '<option value="showarchived">'.get_string('showarchived', 'core_payment').'</option>';
+echo '<option value="showarchived">'.get_string('group:archive', 'mimetypes').'</option>';
 echo '</select>
 &nbsp;<input type="submit" class="btn btn-primary" value="' . get_string('show') . '">
 </form></br>';
@@ -73,7 +73,7 @@ if ($confirm == 1 && $id > 0) {
         \core\notification::info(get_string('mail_denied_pay_subject', 'paygw_bank'));
      }
     } else {
-        \core\notification::info("Reload");
+        \core\notification::info("Reloaded");
     }
 }
 if ($confirm==1 && $ids!='' && $action=='sendmail') {
@@ -95,7 +95,7 @@ if ($filter == 'showarchived') {
 }
 
 $bank_entries = bank_helper::get_pending($status);
-if (!$bank_entries || !count($items)) {
+if (!$bank_entries) {
     $match = array();
     echo '</br><h5>'.(get_string('noentriesfound', 'paygw_bank')).'</h5>';
     $table = null;
