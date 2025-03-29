@@ -76,3 +76,4 @@ $string['email_notifications_confirm'] = 'Заявка с кодом "{$a->code}
 $string['unpaidnotice'] = 'Просрочено!';
 $string['unpaidtimeend'] = 'Конечная дата';
 $string['pendingrequests'] = 'Все активные запросы';
+$string['onlyingroup'] = 'Отправлять уведомления учителям только в пределах их групп';

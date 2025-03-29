@@ -102,3 +102,4 @@ $string['messageprovider:payment_receipt'] = 'Payment receipt';
 $string['unpaidnotice'] = 'Expired!';
 $string['unpaidtimeend'] = 'Expiration date';
 $string['pendingrequests'] = 'All requests';
+$string['onlyingroup'] = 'Send notifications to teachers only within their groups';

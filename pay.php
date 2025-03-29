@@ -190,7 +190,6 @@ if ($confirm == 0 && !bank_helper::has_openbankentry($itemid, $USER->id)) {
 
             $name = $at_form->get_new_filename('userfile');
             if ($name) {
-                
                 $fs = get_file_storage();
                 $isalreadyuplooaded=false;
                 $files=bank_helper::files($bank_entry->id);
@@ -255,6 +254,22 @@ if ($sendteachermail) {
 		            $context = \context_course::instance($cid, MUST_EXIST);
         		    $teachers = get_enrolled_users($context,'paygw/bank:manageincourse');
         		    foreach ($teachers as $teacher){
+        		        $flag = false;
+    	        if ($config->onlyingroup) {
+		    $tgs = bank_helper::get_course_usergroups($cid, $teacher->id);
+		    foreach (explode(',', $tgs) as $tg) {
+			foreach (explode(',', $groups) as $g) {
+			    if ($tg == $g) {
+				$flag = true;
+				break;
+			    }
+			}
+		    }
+		    if (!$flag) {
+			continue;
+		    }
+	        }
+
             			$oldforcelang = force_current_language($teacher->lang);
             			$supportuser = core_user::get_support_user();
             			$subject = get_string('email_notifications_subject_attachments', 'paygw_bank');
