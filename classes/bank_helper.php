@@ -47,6 +47,7 @@ class bank_helper
         	    }
     		}
     		if (isset($groups)) {
+    		    sort($groups);
         	    $groupnames = implode(',', $groups);
     		}
 	    }
