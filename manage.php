@@ -244,8 +244,8 @@ if($filter != 'showarchived') {
                 // $f is an instance of stored_file
                 $url = moodle_url::make_pluginfile_url($f->get_contextid(), $f->get_component(), $f->get_filearea(), $f->get_itemid(), $f->get_filepath(), $f->get_filename(), false);
                 $hasfiles .= $i.'. <a href="' . $url . '" target="_blank">' . $f->get_filename() . '</a><br>';
-                if (str_ends_with($f->get_filename(), ".png") || str_ends_with($f->get_filename(), ".jpg") || str_ends_with($f->get_filename(), ".gif")) {
-                    $hasfiles .= "<img src=$url width=50%><br>";
+                if (str_ends_with($f->get_filename(), ".png") || str_ends_with($f->get_filename(), ".jpeg") || str_ends_with($f->get_filename(), ".jpg") || str_ends_with($f->get_filename(), ".gif")) {
+                    $hasfiles .= "<img src=$url width=100% class=\"mt-2 mb-2\"><br>";
                 }
             }
             $hasfiles .= '
@@ -272,8 +272,8 @@ if(!$cid) {
     $courseid = bank_helper::get_courseid($bank_entry->paymentarea, $bank_entry->component, $bank_entry->itemid);
     $groupnames = bank_helper::get_course_usergroups($courseid, $bank_entry->userid);
     $course = get_course($courseid);
-    $courseurl = html_writer::link('/course/view.php?id='.$courseid, format_string($course->fullname), array('target' => '_blank'));
-//    $courseurl = format_string($course->fullname);
+//    $courseurl = html_writer::link('/course/view.php?id='.$courseid, format_string($course->fullname), array('target' => '_blank'));
+    $courseurl = format_string($course->fullname);
     array_push($tabledata, $courseurl);
 } else {
     $groupnames = bank_helper::get_course_usergroups($cid, $bank_entry->userid);
