@@ -266,7 +266,7 @@ if($filter != 'showarchived') {
             date('d.m.Y, H:i', $bank_entry->timecreated), $bank_entry->code,
         );
 
-$groupnames = '-';
+$groupnames = null;
 if(!$cid) {
     $courseid = bank_helper::get_courseid($bank_entry->paymentarea, $bank_entry->component, $bank_entry->itemid);
     $groupnames = bank_helper::get_course_usergroups($courseid, $bank_entry->userid);
@@ -286,15 +286,20 @@ if(!$cid) {
             $amount, $unpaid, $currency, $hasfiles,
         );
 
-if($filter != 'showarchived') {
-	array_push($tabledata,
-            $buttonaprobe . $buttondeny,
-        );
-}
+	if($filter != 'showarchived') {
+	    array_push($tabledata,
+        	$buttonaprobe . $buttondeny,
+    	    );
+	}
+
         $table->data[] = $tabledata;
 
     }
-    echo html_writer::table($table);
+    if (count($table->data)) {
+	echo html_writer::table($table);
+    } else {
+        echo '</br><h5>'.(get_string('noentriesfound', 'paygw_bank')).'</h5>';
+    }
 }
 
 if ($bank_entries && count($items)) {

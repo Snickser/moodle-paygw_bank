@@ -38,7 +38,7 @@ class bank_helper
 {
     public static function get_course_usergroups($courseid = null, $userid = 0): string
     {
-	$groupnames = null;
+	$groupnames = '-';
 	if (!empty($courseid)) {
 	    if ($gs = groups_get_user_groups($courseid, $userid, true)) {
     		foreach ($gs as $gr) {
