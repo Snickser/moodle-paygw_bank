@@ -58,7 +58,10 @@ class gateway extends \core_payment\gateway
     public static function add_configuration_to_gateway_form(\core_payment\form\account_gateway $form): void
     {
         $mform = $form->get_mform();
-        $mform->addElement('checkbox', 'upload', get_string('instructionstext', 'paygw_bank'));
+
+        $mform->addElement('advcheckbox', 'onlyingroup', get_string('onlyingroup', 'paygw_bank'));
+
+//        $mform->addElement('checkbox', 'upload', get_string('instructionstext', 'paygw_bank'));
         $mform->setType('instructionstext', PARAM_RAW);
         $mform->addElement('editor', 'instructionstext', get_string('instructionstext', 'paygw_bank'));
         $mform->setType('instructionstext', PARAM_RAW);
@@ -68,10 +71,12 @@ class gateway extends \core_payment\gateway
         $mform->setType('codeprefix', PARAM_RAW);
         //add default value to codeprefix
         $mform->setDefault('codeprefix', 'code');
+
         $mform->addElement('html', '<hr>');
         $plugininfo = \core_plugin_manager::instance()->get_plugin_info('paygw_bank');
         $donate = get_string('donate', 'paygw_bank', $plugininfo);
         $mform->addElement('html', $donate);
+
     }
 
     /**

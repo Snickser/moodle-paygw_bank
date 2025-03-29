@@ -144,6 +144,7 @@ class bank_helper
         $transaction->allow_commit();
 
 	$cid = self::get_courseid($record->paymentarea, $record->component, $record->itemid);
+	$groups = self::get_course_usergroups($cid, $record->userid);
 
         $send_email = get_config('paygw_bank', 'sendconfmail');
         if ($send_email) {
@@ -190,6 +191,21 @@ if ($sendteachermail) {
             $context = \context_course::instance($cid, MUST_EXIST);
     	    $teachers = get_enrolled_users($context,'paygw/bank:manageincourse');
     	    foreach ($teachers as $teacher){
+	        $flag = false;
+    	        if ($config->onlyingroup) {
+		    $tgs = bank_helper::get_course_usergroups($cid, $teacher->id);
+		    foreach (explode(',', $tgs) as $tg) {
+			foreach (explode(',', $groups) as $g) {
+			    if ($tg == $g) {
+				$flag = true;
+				break;
+			    }
+			}
+		    }
+		    if (!$flag) {
+			continue;
+		    }
+	        }
 	        $oldforcelang = force_current_language($teacher->lang);
         	$supportuser = core_user::get_support_user();
         	$subject = get_string('email_notifications_subject_confirm', 'paygw_bank');
@@ -338,6 +354,21 @@ if ($sendteachermail) {
             $context = \context_course::instance($cid, MUST_EXIST);
     	    $teachers = get_enrolled_users($context,'paygw/bank:manageincourse');
     	    foreach ($teachers as $teacher){
+	        $flag = false;
+    	        if ($config->onlyingroup) {
+		    $tgs = bank_helper::get_course_usergroups($cid, $teacher->id);
+		    foreach (explode(',', $tgs) as $tg) {
+			foreach (explode(',', $groups) as $g) {
+			    if ($tg == $g) {
+				$flag = true;
+				break;
+			    }
+			}
+		    }
+		    if (!$flag) {
+			continue;
+		    }
+	        }
 	        $oldforcelang = force_current_language($teacher->lang);
         	$supportuser = core_user::get_support_user();
         	$subject = get_string('email_notifications_subject_new', 'paygw_bank');
