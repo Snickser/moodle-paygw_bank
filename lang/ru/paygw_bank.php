@@ -71,7 +71,7 @@ $string['email_notifications_new_attachments'] = 'Файл в заявку с к
 Группа - {$a->groups}
 
 Просмотр заявки {$a->url}';
-$string['email_notifications_confirm'] = 'Заявка с кодом "{$a->code}" от {$a->userfullname} ({$a->useremail}) в курс "{$a->course}" с пометкой "{$a->concept}" утверждёна.
+$string['email_notifications_confirm'] = 'Заявка с кодом "{$a->code}" от {$a->userfullname} ({$a->useremail}) в курс "{$a->course}" с пометкой "{$a->concept}" утверждена.
  {$a->teacher}';
 $string['unpaidnotice'] = 'Просрочено!';
 $string['unpaidtimeend'] = 'Конечная дата';
