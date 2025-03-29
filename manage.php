@@ -280,8 +280,14 @@ if(!$cid) {
             $customer->email,
     	    $groupnames,
             html_writer::link($url, $bank_entry->description, array('target' => '_blank')),
-            $amount, $unpaid, $currency, $hasfiles, $buttonaprobe . $buttondeny,
+            $amount, $unpaid, $currency, $hasfiles,
         );
+
+if($filter != 'showarchived') {
+	array_push($tabledata,
+            $buttonaprobe . $buttondeny,
+        );
+}
         $table->data[] = $tabledata;
 
     }
