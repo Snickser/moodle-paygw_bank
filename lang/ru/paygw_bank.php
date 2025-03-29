@@ -38,9 +38,9 @@ $string['gatewaydescription'] = 'Bank Transfer - это ручной спосо�
 $string['hasfiles'] = 'Файлы';
 $string['mails_sent'] = 'Письма отправлены';
 $string['mail_confirm_pay'] = 'Уважаемый(ая) {$a->username}!
-Ваш платёж за "{$a->concept}" с кодом {$a->code} подтверждён.
+Ваша заявка на "{$a->concept}" с кодом {$a->code} подтверждена.
 
-{$a->url}';
+Перейти {$a->url}';
 $string['mail_confirm_pay_subject'] = 'Запрос подтверждён';
 $string['mail_denied_pay'] = 'Уважаемый(ая) {$a->username}!
 Ваш запрос c кодом платежа "{$a->code}" на "{$a->concept}" отклонён.';
