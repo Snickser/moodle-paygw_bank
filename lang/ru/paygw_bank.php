@@ -34,7 +34,7 @@ $string['cost'] = 'Цена';
 $string['deny'] = 'Отказать';
 $string['file_already_uploaded'] = 'Файл с таким именем уже загружен';
 $string['file_uploaded'] = 'Файл загружен';
-$string['gatewaydescription'] = 'Bank Transfer - это ручной способ оплаты с использованием подтверждающих документов.';
+$string['gatewaydescription'] = 'Bank Transfer - это ручной способ оплаты и денежных переводов по реквизитам, с возможным предоставлением подтверждающих документов.';
 $string['hasfiles'] = 'Файлы';
 $string['mails_sent'] = 'Письма отправлены';
 $string['mail_confirm_pay'] = 'Уважаемый(ая) {$a->username}!
@@ -64,12 +64,15 @@ $string['email_notifications_subject_attachments'] = 'В заявку был д�
 $string['email_notifications_subject_confirm'] = 'Заявка подтверждена';
 $string['email_notifications_new_request'] = 'Новая заявка на оплату в курс "{$a->course}".
 Код "{$a->code}" от {$a->userfullname} ({$a->useremail}) с описанием "{$a->concept}".
+Группа - {$a->groups}
 
-{$a->url}';
+Просмотр заявки {$a->url}';
 $string['email_notifications_new_attachments'] = 'Файл в заявку с кодом "{$a->code}" от {$a->userfullname} ({$a->useremail}) для курса "{$a->course}" с пометкой "{$a->concept}" добавлен.
+Группа - {$a->groups}
 
-{$a->url}';
-$string['email_notifications_confirm'] = 'Заявка с кодом "{$a->code}" от {$a->userfullname} ({$a->useremail}) в курс "{$a->course}" с пометкой "{$a->concept}" утверждёна.
+Просмотр заявки {$a->url}';
+$string['email_notifications_confirm'] = 'Заявка с кодом "{$a->code}" от {$a->userfullname} ({$a->useremail}) в курс "{$a->course}" с пометкой "{$a->concept}" утверждена.
  {$a->teacher}';
 $string['unpaidnotice'] = 'Просрочено!';
 $string['unpaidtimeend'] = 'Конечная дата';
+$string['pendingrequests'] = 'Все активные запросы';
