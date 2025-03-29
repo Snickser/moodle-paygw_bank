@@ -123,11 +123,13 @@ if (!$bank_entries || !count($items)) {
         get_string('fullnameuser'),
         get_string('email'),
     );
+/*
 if(!$cid) {
     array_push($table->head,
         get_string('course'),
     );
 }
+*/
     array_push($table->head,
         get_string('group'),
         get_string('concept', 'paygw_bank'),
@@ -191,6 +193,10 @@ if ($bank_entry->component == "enrol_yafee") {
  }
 }
 
+if (!$bank_entry->hasfiles) {
+    $primary = 'secondary';
+}
+
         $buttonaprobe = '<form name="formapprovepay' . $bank_entry->id . '" method="POST">
         <input type="hidden" name="sesskey" value="' .sesskey(). '">
         <input type="hidden" name="id" value="' . $bank_entry->id . '">
@@ -205,6 +211,7 @@ if ($bank_entry->component == "enrol_yafee") {
         <input type="hidden" name="confirm" value="1">
         <input class="btn btn-danger mt-2 form-submit" type="submit" value="' . get_string('deny', 'paygw_bank') . '"></input>
         </form>';
+
         $files = "-";
         $selectitemcheckbox = '<input type="checkbox" name="selectitem" value="' . $bank_entry->id . '">';
         $hasfiles = get_string('no');
@@ -244,16 +251,20 @@ if ($bank_entry->component == "enrol_yafee") {
             ';
         }
 
+
+
 	$url = helper::get_success_url($bank_entry->component, $bank_entry->paymentarea, $bank_entry->itemid);
 
-        $table->data[] = array($selectitemcheckbox,
+	$table->data[] = array(
+    	    $selectitemcheckbox,
             date('d.m.Y, H:i', $bank_entry->timecreated), $bank_entry->code,
 	    html_writer::link('/user/profile.php?id='.$customer->id, $fullname, array('target' => '_blank')),
             $customer->email,
-            $groupnames,
+    	    $groupnames,
             html_writer::link($url, $bank_entry->description, array('target' => '_blank')),
-            $amount, $unpaid, $currency, $hasfiles, $buttonaprobe . $buttondeny
+            $amount, $unpaid, $currency, $hasfiles, $buttonaprobe . $buttondeny,
         );
+
     }
     echo html_writer::table($table);
 }
