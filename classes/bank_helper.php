@@ -36,6 +36,23 @@ use moodle_url;
 
 class bank_helper
 {
+    public static function get_course_usergroups($courseid = null, $userid = 0): string
+    {
+	$groupnames = null;
+	if (!empty($courseid)) {
+	    if ($gs = groups_get_user_groups($courseid, $userid, true)) {
+    		foreach ($gs as $gr) {
+        	    foreach ($gr as $g) {
+            		$groups[$g] = groups_get_group_name($g);
+        	    }
+    		}
+    		if (isset($groups)) {
+        	    $groupnames = implode(',', $groups);
+    		}
+	    }
+	}
+	return $groupnames;
+    }
     public static function get_courseid($paymentarea, $component, $itemid): string
     {
 	global $DB;
@@ -293,12 +310,14 @@ if ($sendteachermail) {
 
         if ($send_email) {
 	    $cid = self::get_courseid($record->paymentarea, $record->component, $record->itemid);
+	    $groups = self::get_course_usergroups($cid, $userid);
 
             $contentmessage = new stdClass;
             $contentmessage->code = $record->code;
             $contentmessage->concept = $record->description;
             $contentmessage->useremail = $user->email;
             $contentmessage->userfullname = fullname($user, true);
+            $contentmessage->groups = $groups;
             $contentmessage->url = new moodle_url('/payment/gateway/bank/manage.php', ['cid' => $cid]);
 if ($emailaddress) {
             $supportuser = core_user::get_support_user();
