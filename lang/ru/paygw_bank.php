@@ -68,6 +68,7 @@ $string['email_notifications_new_request'] = 'Новая заявка на оп�
 
 Просмотр заявки {$a->url}';
 $string['email_notifications_new_attachments'] = 'Файл в заявку с кодом "{$a->code}" от {$a->userfullname} ({$a->useremail}) для курса "{$a->course}" с пометкой "{$a->concept}" добавлен.
+Группа - {$a->groups}
 
 Просмотр заявки {$a->url}';
 $string['email_notifications_confirm'] = 'Заявка с кодом "{$a->code}" от {$a->userfullname} ({$a->useremail}) в курс "{$a->course}" с пометкой "{$a->concept}" утверждёна.

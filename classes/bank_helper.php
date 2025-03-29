@@ -252,14 +252,18 @@ if ($sendteachermail) {
         return $record;
     }
 
-    public static function get_pending($status = 'P'): array
+    public static function get_pending($status = 'P', $id = false): array
     {
         global $DB;
         $order = 'id ASC';
         if($status == 'A') {
     	    $order = 'timecreated DESC';
         }
-        $records = $DB->get_records('paygw_bank', ['status' => $status], $order);
+        $params = ['status' => $status];
+        if($id) {
+    	    $params['id'] = $id;
+        }
+        $records = $DB->get_records('paygw_bank', $params, $order, '*', 0, 1000);
         return $records;
     }
     public static function get_user_pending($userid): array
@@ -319,7 +323,7 @@ if ($sendteachermail) {
             $contentmessage->useremail = $user->email;
             $contentmessage->userfullname = fullname($user, true);
             $contentmessage->groups = $groups;
-            $contentmessage->url = new moodle_url('/payment/gateway/bank/manage.php', ['cid' => $cid]);
+            $contentmessage->url = new moodle_url('/payment/gateway/bank/manage.php', ['cid' => $cid, 'id' => $record->id]);
 if ($emailaddress) {
             $supportuser = core_user::get_support_user();
             $subject = get_string('email_notifications_subject_new', 'paygw_bank');

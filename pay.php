@@ -200,7 +200,6 @@ if ($confirm == 0 && !bank_helper::has_openbankentry($itemid, $USER->id)) {
                 else
                 {
                     foreach ($files as $f) {
-                        
                         $filename= $f->get_filename();
                         if($name==$filename) {
                             $isalreadyuplooaded=true;
@@ -233,13 +232,15 @@ if ($confirm == 0 && !bank_helper::has_openbankentry($itemid, $USER->id)) {
 
                         if ($send_email) {
     			    $cid = bank_helper::get_courseid($bank_entry->paymentarea, $bank_entry->component, $bank_entry->itemid);
+    			    $groups = bank_helper::get_course_usergroups($cid, $bank_entry->userid);
 
                             $contentmessage = new stdClass;
                             $contentmessage->code = $bank_entry->code;
                             $contentmessage->concept = $bank_entry->description;
                             $contentmessage->useremail = $USER->email;
                             $contentmessage->userfullname = fullname($USER);
-		            $contentmessage->url = new moodle_url('/payment/gateway/bank/manage.php', ['cid' => $cid]);
+		            $contentmessage->url = new moodle_url('/payment/gateway/bank/manage.php', ['cid' => $cid, 'id' => $bank_entry->id]);
+		            $contentmessage->groups = $groups;
 if ($emailaddress) {
                             $supportuser = core_user::get_support_user();
                             $subject = get_string('email_notifications_subject_attachments', 'paygw_bank');

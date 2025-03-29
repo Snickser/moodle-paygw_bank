@@ -8,10 +8,15 @@ use paygw_bank\bank_helper;
 
 require_once __DIR__ . '/../../../config.php';
 require_once './lib.php';
-
 global $CFG, $USER, $DB;
 
 require_login();
+
+$confirm = optional_param('confirm', 0, PARAM_INT);
+$id      = optional_param('id', 0, PARAM_INT);
+$ids     = optional_param('ids', '', PARAM_TEXT);
+$filter  = optional_param('filter', '', PARAM_TEXT);
+$action  = optional_param('action', '', PARAM_TEXT);
 
 $cid = optional_param('cid', 0, PARAM_INT);
 
@@ -37,18 +42,14 @@ if ($cid) {
     $PAGE->navbar->add($course->fullname, '/course/view.php?id='.$course->id);
 }
 $PAGE->navbar->add(get_string('pluginname', 'paygw_bank'));
-$confirm = optional_param('confirm', 0, PARAM_INT);
-$id  = optional_param('id', 0, PARAM_INT);
-$ids = optional_param('ids', '', PARAM_TEXT);
-$filter = optional_param('filter', '', PARAM_TEXT);
-$action = optional_param('action', '', PARAM_TEXT);
 
 echo $OUTPUT->header();
 
 $items = bank_helper::get_pending_item_collections($cid);
 
-echo '<form name="filteritem" method="POST">
-<select class="custom-select" name="filter" id="filterkey">';
+echo '<form name="filteritem" method="post" action="/payment/gateway/bank/manage.php">';
+echo '<input type="hidden" name="cid" value="'.$cid.'">';
+echo '<select class="custom-select" name="filter" id="filterkey">';
 echo '<option value="">'.get_string('pendingrequests', 'paygw_bank').'</option>';
 foreach ($items as $item) {
     echo '<option value="' . $item['key'] . '" >' . $item['description'] . '</option>';
@@ -75,13 +76,14 @@ if ($confirm == 1 && $id > 0) {
     } else {
         \core\notification::info("Reloaded");
     }
+    $id = 0;
 }
 if ($confirm==1 && $ids!='' && $action=='sendmail') {
     require_sesskey();
     $ids=explode(',', $ids);
-    foreach ($ids as $id) {
-        if ($id>0) {
-            bank_helper::sendmail($id, optional_param('subject', '', PARAM_TEXT), optional_param('message', '', PARAM_TEXT));
+    foreach ($ids as $i) {
+        if ($i>0) {
+            bank_helper::sendmail($i, optional_param('subject', '', PARAM_TEXT), optional_param('message', '', PARAM_TEXT));
         }
     }
     \core\notification::info(get_string('mails_sent', 'paygw_bank'));
@@ -94,7 +96,8 @@ if ($filter == 'showarchived') {
     $status = 'A';
 }
 
-$bank_entries = bank_helper::get_pending($status);
+$bank_entries = bank_helper::get_pending($status, $id);
+
 if (!$bank_entries) {
     $match = array();
     echo '</br><h5>'.(get_string('noentriesfound', 'paygw_bank')).'</h5>';
@@ -129,11 +132,11 @@ if (!$bank_entries) {
         get_string('timecreated'), get_string('code', 'paygw_bank'),
     );
 
-if(!$cid) {
-    array_push($table->head,
-        get_string('course'),
-    );
-}
+    if(!$cid) {
+	array_push($table->head,
+    	    get_string('course'),
+	);
+    }
 
     array_push($table->head,
         get_string('fullnameuser'),
@@ -143,25 +146,25 @@ if(!$cid) {
         get_string('total_cost', 'paygw_bank'), get_string('today_cost', 'paygw_bank'), get_string('currency'), get_string('hasfiles', 'paygw_bank'),
     );
 
-
-if($filter != 'showarchived') {
-    array_push($table->head,
-        get_string('actions')
-    );
-}
+    if($filter != 'showarchived') {
+	array_push($table->head,
+    	    get_string('actions')
+	);
+    }
 
     foreach ($bank_entries as $bank_entry) {
         $bankentrykey = bank_helper::get_item_key($bank_entry->component, $bank_entry->paymentarea, $bank_entry->itemid);
+
         if ($filter != '' && ($bankentrykey != $filter)) {
     	    if ($filter != 'showarchived' || !$bank_entry->hasfiles) {
         	continue;
             }
         }
 
-// Check in course.
-if (!bank_helper::check_in_course($cid, $bank_entry->paymentarea, $bank_entry->component, $bank_entry->itemid)) {
-    continue;
-}
+	// Check in course.
+	if (!bank_helper::check_in_course($cid, $bank_entry->paymentarea, $bank_entry->component, $bank_entry->itemid)) {
+	    continue;
+	}
 
         $config = (object) helper::get_gateway_configuration($bank_entry->component, $bank_entry->paymentarea, $bank_entry->itemid, 'bank');
         $payable = helper::get_payable($bank_entry->component, $bank_entry->paymentarea, $bank_entry->itemid);
