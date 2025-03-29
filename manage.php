@@ -123,13 +123,10 @@ if (!$bank_entries) {
     </script>
     <?php
 
-
     $table->head = [];
     array_push($table->head,
 	$checkboxcheckall,
         get_string('timecreated'), get_string('code', 'paygw_bank'),
-        get_string('fullnameuser'),
-        get_string('email'),
     );
 
 if(!$cid) {
@@ -139,6 +136,8 @@ if(!$cid) {
 }
 
     array_push($table->head,
+        get_string('fullnameuser'),
+        get_string('email'),
         get_string('group'),
         get_string('concept', 'paygw_bank'),
         get_string('total_cost', 'paygw_bank'), get_string('today_cost', 'paygw_bank'), get_string('currency'), get_string('hasfiles', 'paygw_bank'),
@@ -153,12 +152,10 @@ if(!$cid) {
             }
         }
 
-
 // Check in course.
 if (!bank_helper::check_in_course($cid, $bank_entry->paymentarea, $bank_entry->component, $bank_entry->itemid)) {
     continue;
 }
-
 
         $config = (object) helper::get_gateway_configuration($bank_entry->component, $bank_entry->paymentarea, $bank_entry->itemid, 'bank');
         $payable = helper::get_payable($bank_entry->component, $bank_entry->paymentarea, $bank_entry->itemid);
@@ -258,8 +255,6 @@ if($filter != 'showarchived') {
 	array_push($tabledata,
     	    $selectitemcheckbox,
             date('d.m.Y, H:i', $bank_entry->timecreated), $bank_entry->code,
-	    html_writer::link('/user/profile.php?id='.$customer->id, $fullname, array('target' => '_blank')),
-            $customer->email,
         );
 
 $groupnames = '-';
@@ -275,6 +270,8 @@ if(!$cid) {
 }
 
 	array_push($tabledata,
+	    html_writer::link('/user/profile.php?id='.$customer->id, $fullname, array('target' => '_blank')),
+            $customer->email,
     	    $groupnames,
             html_writer::link($url, $bank_entry->description, array('target' => '_blank')),
             $amount, $unpaid, $currency, $hasfiles, $buttonaprobe . $buttondeny,
