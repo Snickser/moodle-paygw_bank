@@ -234,10 +234,14 @@ if ($sendteachermail) {
         return $record;
     }
 
-    public static function get_pending(): array
+    public static function get_pending($status = 'P'): array
     {
         global $DB;
-        $records = $DB->get_records('paygw_bank', ['status' => 'P']);
+        $order = 'id ASC';
+        if($status == 'A') {
+    	    $order = 'timecreated DESC';
+        }
+        $records = $DB->get_records('paygw_bank', ['status' => $status], $order);
         return $records;
     }
     public static function get_user_pending($userid): array

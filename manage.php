@@ -53,6 +53,7 @@ echo '<option value="">'.get_string('all').'</option>';
 foreach ($items as $item) {
     echo '<option value="' . $item['key'] . '" >' . $item['description'] . '</option>';
 }
+echo '<option value="showarchived">'.get_string('showarchived', 'core_payment').'</option>';
 echo '</select>
 &nbsp;<input type="submit" class="btn btn-primary" value="' . get_string('show') . '">
 </form></br>';
@@ -88,7 +89,12 @@ if ($confirm==1 && $ids!='' && $action=='sendmail') {
 }
 $post_url= new moodle_url($PAGE->url, array('sesskey'=>sesskey()));
 
-$bank_entries = bank_helper::get_pending();
+$status = 'P';
+if ($filter == 'showarchived') {
+    $status = 'A';
+}
+
+$bank_entries = bank_helper::get_pending($status);
 if (!$bank_entries || !count($items)) {
     $match = array();
     echo '</br><h5>'.(get_string('noentriesfound', 'paygw_bank')).'</h5>';
@@ -140,7 +146,9 @@ if(!$cid) {
     foreach ($bank_entries as $bank_entry) {
         $bankentrykey = bank_helper::get_item_key($bank_entry->component, $bank_entry->paymentarea, $bank_entry->itemid);
         if ($filter != '' && ($bankentrykey != $filter)) {
-            continue;
+    	    if ($filter != 'showarchived' || !$bank_entry->hasfiles) {
+        	continue;
+            }
         }
 
 // Check in course.
@@ -197,6 +205,9 @@ if (!$bank_entry->hasfiles) {
     $primary = 'secondary';
 }
 
+$buttonaprobe = '';
+$buttondeny = '';
+if($filter != 'showarchived') {
         $buttonaprobe = '<form name="formapprovepay' . $bank_entry->id . '" method="POST">
         <input type="hidden" name="sesskey" value="' .sesskey(). '">
         <input type="hidden" name="id" value="' . $bank_entry->id . '">
@@ -211,7 +222,7 @@ if (!$bank_entry->hasfiles) {
         <input type="hidden" name="confirm" value="1">
         <input class="btn btn-danger mt-2 form-submit" type="submit" value="' . get_string('deny', 'paygw_bank') . '"></input>
         </form>';
-
+}
         $files = "-";
         $selectitemcheckbox = '<input type="checkbox" name="selectitem" value="' . $bank_entry->id . '">';
         $hasfiles = get_string('no');
