@@ -254,21 +254,11 @@ if ($sendteachermail) {
 		            $context = \context_course::instance($cid, MUST_EXIST);
         		    $teachers = get_enrolled_users($context,'paygw/bank:manageincourse');
         		    foreach ($teachers as $teacher){
-        		        $flag = false;
-    	        if ($config->onlyingroup) {
-		    $tgs = bank_helper::get_course_usergroups($cid, $teacher->id);
-		    foreach (explode(',', $tgs) as $tg) {
-			foreach (explode(',', $groups) as $g) {
-			    if ($tg == $g) {
-				$flag = true;
-				break;
-			    }
-			}
-		    }
-		    if (!$flag) {
-			continue;
-		    }
-	        }
+	        	        if ($config->onlyingroup) {
+    	    			    if (!bank_helper::check_teacheringroup($cid, $teacher->id, $groups)) {
+					continue;
+				    }
+	    			}
 
             			$oldforcelang = force_current_language($teacher->lang);
             			$supportuser = core_user::get_support_user();
