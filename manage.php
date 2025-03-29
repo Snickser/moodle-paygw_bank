@@ -244,8 +244,8 @@ if($filter != 'showarchived') {
                 // $f is an instance of stored_file
                 $url = moodle_url::make_pluginfile_url($f->get_contextid(), $f->get_component(), $f->get_filearea(), $f->get_itemid(), $f->get_filepath(), $f->get_filename(), false);
                 $hasfiles .= $i.'. <a href="' . $url . '" target="_blank">' . $f->get_filename() . '</a><br>';
-                if (str_ends_with($f->get_filename(), ".png") || str_ends_with($f->get_filename(), ".jpg") || str_ends_with($f->get_filename(), ".gif")) {
-                    $hasfiles .= "<img src=$url width=50%><br>";
+                if (str_ends_with($f->get_filename(), ".png") || str_ends_with($f->get_filename(), ".jpeg") || str_ends_with($f->get_filename(), ".jpg") || str_ends_with($f->get_filename(), ".gif")) {
+                    $hasfiles .= "<img src=$url width=100% class=\"mt-2 mb-2\"><br>";
                 }
             }
             $hasfiles .= '
