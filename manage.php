@@ -141,8 +141,14 @@ if(!$cid) {
         get_string('group'),
         get_string('concept', 'paygw_bank'),
         get_string('total_cost', 'paygw_bank'), get_string('today_cost', 'paygw_bank'), get_string('currency'), get_string('hasfiles', 'paygw_bank'),
+    );
+
+
+if($filter != 'showarchived') {
+    array_push($table->head,
         get_string('actions')
     );
+}
 
     foreach ($bank_entries as $bank_entry) {
         $bankentrykey = bank_helper::get_item_key($bank_entry->component, $bank_entry->paymentarea, $bank_entry->itemid);
