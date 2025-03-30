@@ -79,9 +79,10 @@ $string['pendingrequests'] = 'Все активные запросы';
 $string['onlyingroup'] = 'Отправлять уведомления учителям только в пределах их групп';
 $string['maxnumberoffilesreached'] = 'Достигнуто максимальное количество загруженных файлов';
 $string['messegesubject'] = 'Bank Transfer уведомление';
-$string['email_notifications_new_user'] = 'Уважаемый(ая) {$a->userfullname}!
-Уведомляем, что создана новая заявка на оплату, при оплате укажите в платеже сумму и код.
+$string['email_notifications_new_user'] = 'Уважаемый(ая) {$a->userfullname},
+уведомляем вас о создании новой заявки на оплату в курсе «{$a->course}», при оплате укажите в платеже сумму и код.
 Сумма: {$a->amount} {$a->currency}
 Код платежа: "{$a->code}"
 
 {$a->url}';
+$string['send_teacher_mail_help'] = 'Также в настройках платёжного интерфеса можно включить ограничение по группам для учителей.';

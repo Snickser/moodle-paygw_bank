@@ -34,17 +34,14 @@ require_once $CFG->libdir . '/formslib.php';
 
 class attachtransfer_form extends \moodleform
 {
-
     /**
      * form definition
      */
     public function definition()
     {
         global $CFG;
-        $maxbytes = 0;
-        if (!empty($CFG->maxbytes)) {
-            $maxbytes = $CFG->maxbytes;
-        }
+
+        $maxbytes = $CFG->maxbytes;
         $accepted_types = array('.zip', '.png', '.jpg', '.jpeg', '.doc', '.docx', '.pdf', '.odt');
         $cfgallowedfiletypes = get_config('paygw_bank', 'allowedfiletypes');
         if (!empty($cfgallowedfiletypes)) {
