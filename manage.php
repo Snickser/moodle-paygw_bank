@@ -343,7 +343,7 @@ function sendmail() {
                     <input type="hidden" name="ids" id="ids" value="">
                     <div class="form-group">
                         <label for="subject"><?php echo get_string('subject'); ?></label>
-                        <input type="text" class="form-control" id="subject" name="subject" required>
+                        <input type="text" class="form-control" id="subject" name="subject" value="<?php echo get_string('messegesubject', 'paygw_bank'); ?>" required>
                         <br>
                         <label for="message"><?php echo get_string('message'); ?></label>
                         <textarea class="form-textarea form-control" cols="40" rows="5" id="message" name="message" required></textarea>

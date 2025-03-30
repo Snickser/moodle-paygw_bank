@@ -78,3 +78,4 @@ $string['unpaidtimeend'] = 'Конечная дата';
 $string['pendingrequests'] = 'Все активные запросы';
 $string['onlyingroup'] = 'Отправлять уведомления учителям только в пределах их групп';
 $string['maxnumberoffilesreached'] = 'Достигнуто максимальное количество загруженных файлов';
+$string['messegesubject'] = 'Bank Transfer уведомление';

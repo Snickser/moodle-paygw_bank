@@ -104,3 +104,5 @@ $string['unpaidtimeend'] = 'Expiration date';
 $string['pendingrequests'] = 'All requests';
 $string['onlyingroup'] = 'Send notifications to teachers only within their groups';
 $string['maxnumberoffilesreached'] = 'Maximum number of files reached';
+$string['messegesubject'] = 'Bank Transfer notification';
+
