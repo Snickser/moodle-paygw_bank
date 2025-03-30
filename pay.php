@@ -286,7 +286,7 @@ if ($sendteachermail) {
         }
         $files = bank_helper::files($bank_entry->id);
         if(count($files)>0) {
-            echo '<h5>'.get_string('files').' ('.count($files).'/'.$maxnumberfiles.')'.':</h5>';
+            echo '<h5>'.get_string('files').':</h5>';
             echo '<ul class="list-group">';
             $i = 0;
             foreach ($files as $f) {
@@ -305,7 +305,10 @@ if ($sendteachermail) {
                 }
                 echo '</li>';
             }
-            echo "</ul><br>";
+            if(count($files) < $maxnumberfiles){
+        	echo get_string('maxattachments', 'forum').': '.$maxnumberfiles;
+            }
+            echo '</ul><br>';
         }
         if(count($files) < $maxnumberfiles) {
             $at_form->display();
