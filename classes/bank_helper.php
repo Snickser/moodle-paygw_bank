@@ -327,6 +327,8 @@ if ($sendteachermail) {
         $record->code = bank_helper::create_code($id, $codeprefix);
         $DB->update_record('paygw_bank', $record);
 
+	$cid = self::get_courseid($record->paymentarea, $record->component, $record->itemid);
+
 	// Send to user.
         $supportuser = core_user::get_support_user();
         $contentmessage = new stdClass;
@@ -335,6 +337,8 @@ if ($sendteachermail) {
         $contentmessage->currency = $currency;
         $contentmessage->url = new moodle_url('/payment/gateway/bank/my_pending_pay.php');
         $contentmessage->userfullname = fullname($user);
+	$contentmessage->course = format_string($DB->get_field('course', 'fullname', ['id' => $cid]));
+        $contentmessage->concept = $record->description;
         $subject = get_string('email_notifications_subject_new', 'paygw_bank');
         $mailcontent = get_string('email_notifications_new_user', 'paygw_bank', $contentmessage);
 	self::message_to_user($userid, $supportuser, $subject, $mailcontent);
@@ -344,16 +348,11 @@ if ($sendteachermail) {
 	$sendteachermail = get_config('paygw_bank', 'sendteachermail');
 
         if ($send_email) {
-	    $cid = self::get_courseid($record->paymentarea, $record->component, $record->itemid);
 	    $groups = self::get_course_usergroups($cid, $userid);
-
-            $contentmessage->concept = $record->description;
             $contentmessage->useremail = $user->email;
             $contentmessage->groups = $groups;
             $contentmessage->url = new moodle_url('/payment/gateway/bank/manage.php', ['cid' => $cid, 'id' => $record->id]);
 if ($emailaddress) {
-            $subject = get_string('email_notifications_subject_new', 'paygw_bank');
-	    $contentmessage->course = format_string($DB->get_field('course', 'fullname', ['id' => $cid]));
             $mailcontent = get_string('email_notifications_new_request', 'paygw_bank', $contentmessage);
             $emailuser = new stdClass();
             $emailuser->email = $emailaddress;
@@ -370,7 +369,6 @@ if ($sendteachermail) {
                     }
                 }
 	        $oldforcelang = force_current_language($teacher->lang);
-        	$supportuser = core_user::get_support_user();
         	$subject = get_string('email_notifications_subject_new', 'paygw_bank');
 		$contentmessage->course = format_string($DB->get_field('course', 'fullname', ['id' => $cid]));
         	$mailcontent = get_string('email_notifications_new_request', 'paygw_bank', $contentmessage);

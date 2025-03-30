@@ -50,6 +50,13 @@ if ($ADMIN->fulltree) {
         0
     ));
     $settings->add(new admin_setting_configtext(
+        'paygw_bank/maxnumberfiles',
+        get_string('max_number_of_files', 'paygw_bank'),
+        '',
+        '3',
+        PARAM_INT
+    ));
+    $settings->add(new admin_setting_configtext(
         'paygw_bank/allowedfiletypes',
         get_string('allowed_file_types', 'paygw_bank'),
         get_string('allowed_file_types_help', 'paygw_bank'),
@@ -61,13 +68,6 @@ if ($ADMIN->fulltree) {
         get_string('allow_users_cancel_payments', 'paygw_bank'),
         '',
         0
-    ));
-    $settings->add(new admin_setting_configtext(
-        'paygw_bank/maxnumberfiles',
-        get_string('max_number_of_files', 'paygw_bank'),
-        '',
-        '3',
-        PARAM_INT
     ));
     $settings->add(new admin_setting_configtext(
         'paygw_bank/aditionalcurrencies',
@@ -124,7 +124,7 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configcheckbox(
         'paygw_bank/sendteachermail',
         get_string('send_teacher_mail', 'paygw_bank'),
-        '',
+        get_string('send_teacher_mail_help', 'paygw_bank'),
         0
     ));
 }

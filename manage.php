@@ -143,7 +143,15 @@ if (!$bank_entries) {
         get_string('email'),
         get_string('group'),
         get_string('concept', 'paygw_bank'),
-        get_string('total_cost', 'paygw_bank'), get_string('today_cost', 'paygw_bank'), get_string('currency'), get_string('hasfiles', 'paygw_bank'),
+        get_string('total_cost', 'paygw_bank'),
+    );
+if ($filter != 'showarchived') {
+    array_push($table->head,
+     get_string('today_cost', 'paygw_bank'),
+    );
+}
+    array_push($table->head,
+      get_string('currency'), get_string('hasfiles', 'paygw_bank'),
     );
 
     if($filter != 'showarchived') {
@@ -178,7 +186,7 @@ if (!$bank_entries) {
 $unpaid = '-';
 $primary = 'primary';
 // Check uninterrupted cost.
-if ($bank_entry->component == "enrol_yafee") {
+if ($bank_entry->component == "enrol_yafee" && $filter != 'showarchived') {
     $cs = $DB->get_record('enrol', ['id' => $bank_entry->itemid, 'enrol' => 'yafee']);
         if ($data = $DB->get_record('user_enrolments', ['userid' => $bank_entry->userid, 'enrolid' => $cs->id])) {
          if (isset($data->timeend) || isset($data->timestart)) {
@@ -284,7 +292,14 @@ if(!$cid) {
             $customer->email,
     	    $groupnames,
             html_writer::link($url, $bank_entry->description, array('target' => '_blank')),
-            $amount, $unpaid, $currency, $hasfiles,
+            $amount,
+        );
+if ($filter != 'showarchived') {
+        array_push($tabledata,
+            $unpaid,
+        );
+}
+        array_push($tabledata, $currency, $hasfiles,
         );
 
 	if($filter != 'showarchived') {
