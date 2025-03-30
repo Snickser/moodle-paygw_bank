@@ -105,4 +105,9 @@ $string['pendingrequests'] = 'All requests';
 $string['onlyingroup'] = 'Send notifications to teachers only within their groups';
 $string['maxnumberoffilesreached'] = 'Maximum number of files reached';
 $string['messegesubject'] = 'Bank Transfer notification';
+$string['email_notifications_new_user'] = 'Dear {$a->userfullname}.
+You make a new bank payment request.
+Amount: {$a->fee}
+Code: {$a->code}
 
+{$a->url}';

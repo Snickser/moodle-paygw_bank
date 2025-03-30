@@ -327,6 +327,18 @@ if ($sendteachermail) {
         $record->code = bank_helper::create_code($id, $codeprefix);
         $DB->update_record('paygw_bank', $record);
 
+	// Send to user.
+        $supportuser = core_user::get_support_user();
+        $contentmessage = new stdClass;
+        $contentmessage->code = $record->code;
+        $contentmessage->amount = $totalamount;
+        $contentmessage->currency = $currency;
+        $contentmessage->url = new moodle_url('/payment/gateway/bank/my_pending_pay.php');
+        $contentmessage->userfullname = fullname($user);
+        $subject = get_string('email_notifications_subject_new', 'paygw_bank');
+        $mailcontent = get_string('email_notifications_new_user', 'paygw_bank', $contentmessage);
+	self::message_to_user($userid, $supportuser, $subject, $mailcontent);
+
         $send_email = get_config('paygw_bank', 'sendnewrequestmail');
         $emailaddress = get_config('paygw_bank', 'notificationsaddress');
 	$sendteachermail = get_config('paygw_bank', 'sendteachermail');
@@ -335,15 +347,11 @@ if ($sendteachermail) {
 	    $cid = self::get_courseid($record->paymentarea, $record->component, $record->itemid);
 	    $groups = self::get_course_usergroups($cid, $userid);
 
-            $contentmessage = new stdClass;
-            $contentmessage->code = $record->code;
             $contentmessage->concept = $record->description;
             $contentmessage->useremail = $user->email;
-            $contentmessage->userfullname = fullname($user, true);
             $contentmessage->groups = $groups;
             $contentmessage->url = new moodle_url('/payment/gateway/bank/manage.php', ['cid' => $cid, 'id' => $record->id]);
 if ($emailaddress) {
-            $supportuser = core_user::get_support_user();
             $subject = get_string('email_notifications_subject_new', 'paygw_bank');
 	    $contentmessage->course = format_string($DB->get_field('course', 'fullname', ['id' => $cid]));
             $mailcontent = get_string('email_notifications_new_request', 'paygw_bank', $contentmessage);
