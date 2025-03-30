@@ -57,6 +57,7 @@ $pagetitle = $description;
 $PAGE->set_title($pagetitle);
 //$PAGE->set_heading($pagetitle);
 $PAGE->set_cacheable(false);
+$PAGE->set_periodic_refresh_delay(120);
 
 $cid = bank_helper::get_courseid($paymentarea, $component, $itemid);
 $course = $DB->get_record('course', ['id' => $cid], '*', MUST_EXIST);
@@ -115,8 +116,6 @@ if (bank_helper::has_openbankentry($itemid, $USER->id)) {
     $bank_entry = bank_helper::get_openbankentry($itemid, $USER->id);
     $amount = $bank_entry->totalamount;
     $confirm = 0;
-
-
 } else {
     if ($confirm != 0) {
         $totalamount = $amount;
@@ -140,13 +139,20 @@ if(isset($timeend) && $timeend < time()) {
 
 echo '<div class="card">';
 echo '<div class="card-body">';
-echo '<ul class="list-group list-group-flush">';
+
+if ($bank_entry != null) {
+    $instructions = format_text($config->postinstructionstext['text']);
+    echo '<div class="ml-2 mr-2" id="bankinstructions">' . $instructions . '</div>';
+    echo '<br><ul class="list-group">';
+} else {
+    echo '<ul class="list-group list-group-flush">';
+}
+
 echo '<li class="list-group-item"><h4 class="card-title">' . get_string('concept', 'paygw_bank') . ':</h4>';
 echo '<div>' . $description . '</div>';
 echo '</li>';
 
 $aceptform = "";
-$instructions = format_text($config->instructionstext['text']);
 
 echo '<li class="list-group-item"><h4 class="card-title">' . get_string('total_cost', 'paygw_bank') . ':</h4>';
 if ($surcharge > 0) {
@@ -162,8 +168,6 @@ if ($bank_entry != null) {
     echo '<div id="transfercode">' . $bank_entry->code . '</div>';
     echo '</li>';
 
-    $instructions = format_text($config->postinstructionstext['text']);
-
     if (isset($cs->customint5) && $cs->customint5) {
 	echo '<li class="list-group-item"><h4 class="card-title">' . get_string('unpaidtimeend', 'paygw_bank') . ':</h4>';
 	echo '<div id="transfercode">';
@@ -176,10 +180,14 @@ if ($bank_entry != null) {
     }
 }
 
-echo '<li class="list-group-item">';
-echo '<div id="bankinstructions">' . $instructions . '</div>';
-echo '</li>';
-echo '</ul>';
+if ($bank_entry == null) {
+    $instructions = format_text($config->instructionstext['text']);
+    echo '<li class="list-group-item">';
+    echo '<div id="bankinstructions">' . $instructions . '</div>';
+    echo '</li>';
+}
+
+echo '</ul><br><div class="ml-2 mr-2">';
 
 if ($confirm == 0 && !bank_helper::has_openbankentry($itemid, $USER->id)) {
     $mform->display();
@@ -187,14 +195,13 @@ if ($confirm == 0 && !bank_helper::has_openbankentry($itemid, $USER->id)) {
     if ($canuploadfiles) {
         if ($at_form != null) {
             $content = $at_form->get_file_content('userfile');
-
             $name = $at_form->get_new_filename('userfile');
             if ($name) {
                 $fs = get_file_storage();
-                $isalreadyuplooaded=false;
-                $files=bank_helper::files($bank_entry->id);
-                if(count($files)>=$maxnumberfiles) {
-                    \core\notification::error(get_string('max_number_of_files_reached', 'paygw_bank'));
+                $isalreadyuplooaded = false;
+                $files = bank_helper::files($bank_entry->id);
+                if(count($files) >= $maxnumberfiles) {
+                    \core\notification::error(get_string('maxnumberoffilesreached', 'paygw_bank'));
                 }
                 else
                 {
@@ -279,43 +286,45 @@ if ($sendteachermail) {
         }
         $files = bank_helper::files($bank_entry->id);
         if(count($files)>0) {
-            echo '<h3>'.get_string('files').':</h3>';
+            echo '<h5>'.get_string('files').' ('.count($files).'/'.$maxnumberfiles.')'.':</h5>';
             echo '<ul class="list-group">';
+            $i = 0;
             foreach ($files as $f) {
-                $hasfiles=true;
+        	$i++;
+                $hasfiles = true;
                 // $f is an instance of stored_file
                 echo '<li class="list-group-item">';
-               
                 $url = moodle_url::make_pluginfile_url($f->get_contextid(), $f->get_component(), $f->get_filearea(), $f->get_itemid(), $f->get_filepath(), $f->get_filename(), false);
                 if (str_ends_with($f->get_filename(), ".png")|| str_ends_with($f->get_filename(), ".jpeg") || str_ends_with($f->get_filename(), ".jpg")|| str_ends_with($f->get_filename(), ".svg") || str_ends_with($f->get_filename(), ".gif")) {           
-               
-                    echo $f->get_filename();
+                    echo $i.'. '.$f->get_filename();
                     echo "<br><img style='max-height:100px' src='".$url."'>";
                 }
                 else
                 {
-                    echo $f->get_filename();
+                    echo $i.'. '.$f->get_filename();
                 }
                 echo '</li>';
             }
-            echo "</ul>";
-                
+            echo "</ul><br>";
         }
-        if(count($files)<$maxnumberfiles) {
+        if(count($files) < $maxnumberfiles) {
             $at_form->display();
         }
-
     }
 }
 echo "</div>";
 echo "</div>";
-echo '<br><div align=center>';
+echo "</div><br>";
+
 if ($bank_entry) {
+    echo '<div align=center>';
     $url = new moodle_url('/payment/gateway/bank/my_pending_pay.php');
     echo $OUTPUT->single_button($url, get_string('continue'));
 } else {
+    echo '<div align=right>';
     $url = new moodle_url('/course/view.php', ['id' => $cid]);
     echo $OUTPUT->single_button($url, get_string('cancel'));
 }
 echo '</div>';
+
 echo $OUTPUT->footer();

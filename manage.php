@@ -74,7 +74,7 @@ if ($confirm == 1 && $id > 0) {
         \core\notification::info(get_string('mail_denied_pay_subject', 'paygw_bank'));
      }
     } else {
-        \core\notification::info("Reloaded");
+        \core\notification::warning("Reloaded");
     }
     $id = 0;
 }
@@ -344,10 +344,10 @@ function sendmail() {
                     <div class="form-group">
                         <label for="subject"><?php echo get_string('subject'); ?></label>
                         <input type="text" class="form-control" id="subject" name="subject" required>
-                        </br>
+                        <br>
                         <label for="message"><?php echo get_string('message'); ?></label>
                         <textarea class="form-textarea form-control" cols="40" rows="5" id="message" name="message" required></textarea>
-                        </br>
+                        <br>
                         <input type="submit" class="btn btn-primary" value="<?php echo get_string('send','paygw_bank'); ?>">
                     </div>
                 </form>
