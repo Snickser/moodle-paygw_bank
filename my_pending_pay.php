@@ -82,12 +82,19 @@ if ($bank_entry->component == "enrol_yafee") {
  }
 }
 
+	$maxnumberfiles = get_config('paygw_bank', 'maxnumberfiles');
+	$files = bank_helper::files($bank_entry->id);
+
         $component = $bank_entry->component;
         $paymentarea = $bank_entry->paymentarea;
         $itemid = $bank_entry->itemid;
         $description = $bank_entry->description;
         $urlpay = new moodle_url('/payment/gateway/bank/pay.php', array('component' => $component,'paymentarea' => $paymentarea,'itemid' => $itemid,'description' => $description));
+if (count($files) < $maxnumberfiles){
         $buttongo = '<a class="btn btn-primary btn-block" href="'.$urlpay.'">'.get_string('edit').'</a>';
+} else {
+        $buttongo = '<a class="btn btn-secondary btn-block" href="'.$urlpay.'">'.get_string('view').'</a>';
+}
         $buttondeny = '<form action="my_pending_pay.php" id="cancel_' . $bank_entry->id . '" method="POST">
         <input type="hidden" name="sesskey" value="' .sesskey(). '">
         <input type="hidden" name="id" value="' . $bank_entry->id . '">
@@ -103,12 +110,10 @@ if ($bank_entry->component == "enrol_yafee") {
         $buttons='<div class="d-grid gap-2">'.$buttons.'</div>';
         $dataarray=array(date('d-m-Y, H:i', $bank_entry->timecreated), $bank_entry->code, $bank_entry->description,
         $amount, $unpaid);
-     
+
         if($canuploadfiles) {
             $hasfiles = "<font color=red><b>".get_string('no')."</b></font>";
-            
-            $files=bank_helper::files($bank_entry->id);
-            if (count($files)>0) {
+            if (count($files)) {
                 $hasfiles = get_string('yes');
             }
             array_push($dataarray, $hasfiles);

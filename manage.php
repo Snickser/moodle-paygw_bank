@@ -74,7 +74,7 @@ if ($confirm == 1 && $id > 0) {
         \core\notification::info(get_string('mail_denied_pay_subject', 'paygw_bank'));
      }
     } else {
-        \core\notification::info("Reloaded");
+        \core\notification::warning("Reloaded");
     }
     $id = 0;
 }
@@ -233,7 +233,7 @@ if($filter != 'showarchived') {
             <div class="modal-dialog">
                 <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel' . $bank_entry->id . '">' . get_string('files') . '</h5>
+                    <h5 class="modal-title" id="staticBackdropLabel' . $bank_entry->id . '">' . get_string('files') . ' (' .count($files) . ')</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
@@ -245,13 +245,13 @@ if($filter != 'showarchived') {
                 $url = moodle_url::make_pluginfile_url($f->get_contextid(), $f->get_component(), $f->get_filearea(), $f->get_itemid(), $f->get_filepath(), $f->get_filename(), false);
                 $hasfiles .= $i.'. <a href="' . $url . '" target="_blank">' . $f->get_filename() . '</a><br>';
                 if (str_ends_with($f->get_filename(), ".png") || str_ends_with($f->get_filename(), ".jpeg") || str_ends_with($f->get_filename(), ".jpg") || str_ends_with($f->get_filename(), ".gif")) {
-                    $hasfiles .= "<img src=$url width=100% class=\"mt-2 mb-2\"><br>";
+                    $hasfiles .= "<img style='max-width: 100%; object-fit: contain;' src=$url class=\"mt-2 mb-2\"><br>";
                 }
             }
             $hasfiles .= '
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">'.get_string('close', 'admin').'</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">'.get_string('close', 'admin').'</button>
                 </div>
                 </div>
             </div>
@@ -344,9 +344,11 @@ function sendmail() {
                     <div class="form-group">
                         <label for="subject"><?php echo get_string('subject'); ?></label>
                         <input type="text" class="form-control" id="subject" name="subject" required>
-                        </br><label for="message"><?php echo get_string('message'); ?></label>
+                        <br>
+                        <label for="message"><?php echo get_string('message'); ?></label>
                         <textarea class="form-textarea form-control" cols="40" rows="5" id="message" name="message" required></textarea>
-                        </br><input type="submit" class="btn btn-primary" value="<?php echo get_string('send','paygw_bank'); ?>">
+                        <br>
+                        <input type="submit" class="btn btn-primary" value="<?php echo get_string('send','paygw_bank'); ?>">
                     </div>
                 </form>
             </div>
