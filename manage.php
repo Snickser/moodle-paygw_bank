@@ -59,7 +59,11 @@ echo '</select>
 &nbsp;<input type="submit" class="btn btn-primary" value="' . get_string('show') . '">
 </form></br>';
 
-echo $OUTPUT->heading(get_string('pending_payments', 'paygw_bank'), 2);
+if ($filter == 'showarchived') {
+    echo $OUTPUT->heading(get_string('group:archive', 'mimetypes'), 4);
+} else {
+    echo $OUTPUT->heading(get_string('pending_payments', 'paygw_bank'), 4);
+}
 if ($confirm == 1 && $id > 0) {
     require_sesskey();
     // Check what has already been aprobed.
@@ -127,9 +131,21 @@ if (!$bank_entries) {
     <?php
 
     $table->head = [];
+
+
     array_push($table->head,
 	$checkboxcheckall,
-        get_string('timecreated'), get_string('code', 'paygw_bank'),
+	get_string('timecreated'),
+    );
+
+if ($filter == 'showarchived') {
+    array_push($table->head,
+        get_string('recordapproved', 'data'),
+    );
+}
+    
+    array_push($table->head,
+        get_string('code', 'paygw_bank'),
     );
 
     if(!$cid) {
@@ -143,16 +159,21 @@ if (!$bank_entries) {
         get_string('email'),
         get_string('group'),
         get_string('concept', 'paygw_bank'),
-        get_string('total_cost', 'paygw_bank'),
     );
-if ($filter != 'showarchived') {
+
+if ($filter == 'showarchived') {
     array_push($table->head,
-     get_string('today_cost', 'paygw_bank'),
+        get_string('total_cost', 'paygw_bank'),
+        get_string('hasfiles', 'paygw_bank'),
+    );
+} else {
+    array_push($table->head,
+        get_string('total_cost', 'paygw_bank'),
+	get_string('today_cost', 'paygw_bank'),
+        get_string('currency'),
+        get_string('hasfiles', 'paygw_bank'),
     );
 }
-    array_push($table->head,
-      get_string('currency'), get_string('hasfiles', 'paygw_bank'),
-    );
 
     if($filter != 'showarchived') {
 	array_push($table->head,
@@ -272,7 +293,16 @@ if($filter != 'showarchived') {
 	$tabledata = [];
 	array_push($tabledata,
     	    $selectitemcheckbox,
-            date('d.m.Y, H:i', $bank_entry->timecreated), $bank_entry->code,
+	    date('d.m.Y, H:i', $bank_entry->timecreated),
+    	);
+
+if ($filter == 'showarchived') {
+	array_push($tabledata,
+	    date('d.m.Y, H:i', $bank_entry->timechecked),
+        );
+}
+	array_push($tabledata,
+    	    $bank_entry->code,
         );
 
 $groupnames = null;
@@ -292,14 +322,20 @@ if(!$cid) {
             $customer->email,
     	    $groupnames,
             html_writer::link($url, $bank_entry->description, array('target' => '_blank')),
-            $amount,
         );
-if ($filter != 'showarchived') {
+if ($filter == 'showarchived') {
         array_push($tabledata,
+            helper::get_cost_as_string($amount, $currency, 0),
+        );
+} else {
+        array_push($tabledata,
+            $amount,
             $unpaid,
+            $currency,
         );
 }
-        array_push($tabledata, $currency, $hasfiles,
+        array_push($tabledata,
+    	    $hasfiles,
         );
 
 	if($filter != 'showarchived') {
