@@ -64,7 +64,14 @@ if ($filter == 'showarchived') {
 } else {
     echo $OUTPUT->heading(get_string('pending_payments', 'paygw_bank'), 4);
 }
-if ($confirm == 1 && $id > 0) {
+
+// Delete uploaded files.
+if ($action == 'deletefiles' && $id && has_capability('paygw/bank:managepayments', $context)) {
+    bank_helper::deletefiles($id);
+    $id = 0;
+}
+
+if ($confirm && $id) {
     require_sesskey();
     // Check what has already been aprobed.
     if ( $DB->record_exists('paygw_bank', ['id' => $id, 'status' => 'P']) ){
@@ -196,6 +203,14 @@ if ($filter == 'showarchived') {
 	}
 
         $config = (object) helper::get_gateway_configuration($bank_entry->component, $bank_entry->paymentarea, $bank_entry->itemid, 'bank');
+
+	$groups = bank_helper::get_course_usergroups($cid, $bank_entry->userid);
+        if ($config->onlyingroup && !has_capability('moodle/site:accessallgroups', $context)) {
+            if (!bank_helper::check_teacheringroup($cid, $USER->id, $groups)) {
+                continue;
+    	    }
+	}
+
         $payable = helper::get_payable($bank_entry->component, $bank_entry->paymentarea, $bank_entry->itemid);
         $currency = $payable->get_currency();
         $customer = $DB->get_record('user', array('id' => $bank_entry->userid));
@@ -203,6 +218,7 @@ if ($filter == 'showarchived') {
 
         $amount = helper::get_rounded_cost($bank_entry->totalamount, $currency, 0);
         $surcharge = helper::get_gateway_surcharge('bank');
+
 
 $unpaid = '-';
 $primary = 'primary';
@@ -238,14 +254,14 @@ if($filter != 'showarchived') {
         <input type="hidden" name="id" value="' . $bank_entry->id . '">
         <input type="hidden" name="action" value="A">
         <input type="hidden" name="confirm" value="1">
-        <input class="btn btn-'.$primary.' form-submit" type="submit" value="' . get_string('approve', 'paygw_bank') . '"></input>
+        <input class="btn btn-block btn-'.$primary.' mb-2 form-submit" type="submit" value="' . get_string('approve', 'paygw_bank') . '"></input>
         </form>';
         $buttondeny = '<form name="formaprovepay' . $bank_entry->id . '" method="POST">
         <input type="hidden" name="sesskey" value="' .sesskey(). '">
         <input type="hidden" name="id" value="' . $bank_entry->id . '">
         <input type="hidden" name="action" value="D">
         <input type="hidden" name="confirm" value="1">
-        <input class="btn btn-danger mt-2 form-submit" type="submit" value="' . get_string('deny', 'paygw_bank') . '"></input>
+        <input class="btn btn-danger form-submit" type="submit" value="' . get_string('deny', 'paygw_bank') . '"></input>
         </form>';
 }
         $files = "-";
@@ -254,10 +270,22 @@ if($filter != 'showarchived') {
         $fs = get_file_storage();
         $files = bank_helper::files($bank_entry->id);
         if ($bank_entry->hasfiles > 0 || count($files)>0) {
-            $hasfiles = get_string('yes');
-            $hasfiles = '<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop' . $bank_entry->id . '" id="launchmodal' . $bank_entry->id . '">
-            '. get_string('view') .'
-          </button>
+            $hasfiles = '<button type="button" class="btn btn-primary btn-block mb-2" data-toggle="modal" data-target="#staticBackdrop' . $bank_entry->id . '" id="launchmodal' . $bank_entry->id . '">&nbsp;'. get_string('view') .'&nbsp;</button>';
+
+if($filter == 'showarchived' && has_capability('paygw/bank:managepayments', $context)) {
+            $hasfiles .= '
+	    <form action="manage.php" id="deletefiles_' . $bank_entry->id . '" method="POST">
+    	    <input type="hidden" name="sesskey" value="' .sesskey(). '">
+    	    <input type="hidden" name="id" value="' . $bank_entry->id . '">
+    	    <input type="hidden" name="filter" value="showarchived">
+    	    <input type="hidden" name="action" value="deletefiles">
+            <button type="submit" class="btn btn-secondary" data-modal="confirmation"
+            data-modal-title-str=\'["delete", "core"]\' data-modal-content-str=\'["areyousure"]\'
+            data-modal-yes-button-str=\'["delete", "core"]\'">'.get_string('delete').'</button>
+            </form>';
+}
+
+            $hasfiles .= '
             <div class="modal fade" id="staticBackdrop' . $bank_entry->id . '" aria-labelledby="staticBackdropLabel' . $bank_entry->id . '" aria-hidden="true">
             <div class="modal-dialog modal-dialog-scrollable">
                 <div class="modal-content">
@@ -358,7 +386,7 @@ if (count($bank_entries)) {
 ?>
 <div class="row">
     <div class="col">
-        <button type="button" class="btn btn-primary" onclick="sendmail()">
+        <button type="button" class="btn btn-secondary" onclick="sendmail()">
             <?php echo get_string('sendmailtoselected', 'paygw_bank'); ?>
         </button>
     </div>

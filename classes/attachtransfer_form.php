@@ -64,7 +64,7 @@ class attachtransfer_form extends \moodleform
             'filepicker',
             'userfile',
             get_string('file'),
-            null,
+	    null,
             array('maxbytes' => $maxbytes, 'accepted_types' => $accepted_types)
         );
         $mform->addRule('userfile', null, 'required');

@@ -46,7 +46,7 @@ if (!$bank_entries) {
 {
     $table = new html_table();
     $canuploadfiles = get_config('paygw_bank', 'usercanuploadfiles');
-    $headarray = array(get_string('timecreated'),get_string('code', 'paygw_bank'), get_string('concept', 'paygw_bank'), get_string('total_cost', 'paygw_bank'), get_string('status'));
+    $headarray = array(get_string('timecreated'),get_string('code', 'paygw_bank'), get_string('course'),get_string('concept', 'paygw_bank'), get_string('total_cost', 'paygw_bank'), get_string('status'));
     if($canuploadfiles) {
         array_push($headarray, get_string('hasfiles', 'paygw_bank'));
     }
@@ -101,14 +101,20 @@ if (count($files) < $maxnumberfiles){
         <input type="hidden" name="action" value="D">
         <input type="hidden" name="confirm" value="1">
         <input class="btn btn-danger mt-3 btn-block" type="submit" data-modal="confirmation" data-modal-title-str=\'["cancel_process", "paygw_bank"]\'
-        data-modal-content-str=\'["are_you_sure_cancel","paygw_bank"]\' data-modal-destination="javascript:document.getElementById(\'cancel_' . $bank_entry->id . '\').submit()" data-modal-yes-button-str=\'["yes", "core"]\' value="' . get_string("cancel_process", "paygw_bank") . '"></input>
+        data-modal-content-str=\'["areyousure","core"]\' data-modal-destination="javascript:document.getElementById(\'cancel_' . $bank_entry->id . '\').submit()" data-modal-yes-button-str=\'["yes", "core"]\' value="' . get_string("cancel_process", "paygw_bank") . '"></input>
         </form>';
+
+        $courseid = bank_helper::get_courseid($bank_entry->paymentarea, $bank_entry->component, $bank_entry->itemid);
+        $course = get_course($courseid);
+
         $buttons = $buttongo;
         if($allowusercancel) {
             $buttons=$buttongo.$buttondeny;
         }
-        $buttons='<div class="d-grid gap-2">'.$buttons.'</div>';
-        $dataarray=array(date('d-m-Y, H:i', $bank_entry->timecreated), $bank_entry->code, $bank_entry->description,
+        $buttons = '<div class="d-grid gap-2">'.$buttons.'</div>';
+        $dataarray = array(date('Y-m-d, H:i', $bank_entry->timecreated), $bank_entry->code,
+        format_string($course->fullname),
+        $bank_entry->description,
         $amount, $unpaid);
 
         if($canuploadfiles) {
