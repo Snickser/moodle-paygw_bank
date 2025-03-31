@@ -67,6 +67,7 @@ if ($filter == 'showarchived') {
 
 // Delete uploaded files.
 if ($action == 'deletefiles' && $id && has_capability('paygw/bank:managepayments', $context)) {
+    require_sesskey();
     bank_helper::deletefiles($id);
     $id = 0;
 }
@@ -261,7 +262,11 @@ if($filter != 'showarchived') {
         <input type="hidden" name="id" value="' . $bank_entry->id . '">
         <input type="hidden" name="action" value="D">
         <input type="hidden" name="confirm" value="1">
-        <input class="btn btn-danger form-submit" type="submit" value="' . get_string('deny', 'paygw_bank') . '"></input>
+
+            <button type="submit" class="btn btn-danger" data-modal="confirmation"
+            data-modal-title-str=\'["deny", "paygw_bank"]\' data-modal-content-str=\'["areyousure"]\'
+            data-modal-yes-button-str=\'["deny", "paygw_bank"]\'">'.get_string('deny', 'paygw_bank').'</button>
+
         </form>';
 }
         $files = "-";
