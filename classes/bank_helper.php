@@ -249,7 +249,7 @@ if ($sendteachermail) {
         global $DB;
         return $DB->get_record('user', ['id' => $userid]);
     }
-    public static function deny_pay($id,$canceledbyuser=false): \stdClass
+    public static function deny_pay($id, $canceledbyuser = false): \stdClass
     {
         global $DB, $USER;
         $transaction = $DB->start_delegated_transaction();;
@@ -263,6 +263,7 @@ if ($sendteachermail) {
         $record->canceledbyuser = $canceledbyuser;
         $DB->update_record('paygw_bank', $record);
         $transaction->allow_commit();
+        self::deletefiles($id);
         $send_email = get_config('paygw_bank', 'senddenmail');
         if ($send_email && $record->userid != $USER->id) {
             $oldforcelang = force_current_language($paymentuser->lang);
