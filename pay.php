@@ -64,6 +64,7 @@ if ($at_dataform != null) {
 
 $cid = bank_helper::get_courseid($paymentarea, $component, $itemid);
 $course = $DB->get_record('course', ['id' => $cid], '*', MUST_EXIST);
+$groups = bank_helper::get_course_usergroups($cid, $USER->id);
 
 $PAGE->navbar->add($course->fullname, '/course/view.php?id='.$cid);
 $PAGE->navbar->add(get_string('pluginname', 'paygw_bank'));
@@ -230,7 +231,7 @@ if ($confirm == 0 && !bank_helper::has_openbankentry($itemid, $USER->id)) {
                             'component' => 'paygw_bank',
                             'filearea' => 'transfer',
                             'filepath' => '/',
-                            'filename' =>  $name,
+                            'filename' => format_string($course->shortname).' - '.$groups.' - '.$USER->id.' - '.$name,
                             'itemid' => $bank_entry->id,
                             'userid' => $USER->id,
                             'author' => fullname($USER)
