@@ -231,7 +231,7 @@ if ($confirm == 0 && !bank_helper::has_openbankentry($itemid, $USER->id)) {
                             'component' => 'paygw_bank',
                             'filearea' => 'transfer',
                             'filepath' => '/',
-                            'filename' => format_string($course->shortname).' - '.$groups.' - '.$USER->id.' - '.$name,
+                            'filename' => format_string($course->shortname).' - '.$groups.' - '.$name,
                             'itemid' => $bank_entry->id,
                             'userid' => $USER->id,
                             'author' => fullname($USER)
