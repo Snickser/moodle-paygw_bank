@@ -114,7 +114,6 @@ if ($component == "enrol_yafee") {
 $surcharge = helper::get_gateway_surcharge('bank');
 $amount = helper::get_rounded_cost($cost, $currency, $surcharge);
 
-
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('gatewayname', 'paygw_bank'), 2);
 
@@ -174,7 +173,7 @@ if ($bank_entry != null) {
     echo '<div id="transfercode">' . $bank_entry->code . '</div>';
     echo '</li>';
 
-    if (isset($cs->customint5) && $cs->customint5) {
+    if (isset($cs->customint5) && $cs->customint5 && isset($timeend)) {
 	echo '<li class="list-group-item"><h4 class="card-title">' . get_string('unpaidtimeend', 'paygw_bank') . ':</h4>';
 	echo '<div id="transfercode">';
 	echo userdate($timeend, get_string('strftimedate', 'core_langconfig')) . ' ' . date('H:i', $timeend);
