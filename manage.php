@@ -309,7 +309,7 @@ if($filter == 'showarchived' && has_capability('paygw/bank:managepayments', $con
             $hasfiles .= '
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">'.get_string('close', 'admin').'</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">'.get_string('close', 'admin').'</button>
                 </div>
                 </div>
             </div>
