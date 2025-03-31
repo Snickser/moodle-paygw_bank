@@ -245,14 +245,14 @@ if($filter != 'showarchived') {
         <input type="hidden" name="id" value="' . $bank_entry->id . '">
         <input type="hidden" name="action" value="A">
         <input type="hidden" name="confirm" value="1">
-        <input class="btn btn-block btn-'.$primary.' form-submit" type="submit" value="' . get_string('approve', 'paygw_bank') . '"></input>
+        <input class="btn btn-block btn-'.$primary.' mb-2 form-submit" type="submit" value="' . get_string('approve', 'paygw_bank') . '"></input>
         </form>';
         $buttondeny = '<form name="formaprovepay' . $bank_entry->id . '" method="POST">
         <input type="hidden" name="sesskey" value="' .sesskey(). '">
         <input type="hidden" name="id" value="' . $bank_entry->id . '">
         <input type="hidden" name="action" value="D">
         <input type="hidden" name="confirm" value="1">
-        <input class="btn btn-danger mt-2 form-submit" type="submit" value="' . get_string('deny', 'paygw_bank') . '"></input>
+        <input class="btn btn-danger form-submit" type="submit" value="' . get_string('deny', 'paygw_bank') . '"></input>
         </form>';
 }
         $files = "-";
@@ -261,9 +261,7 @@ if($filter != 'showarchived') {
         $fs = get_file_storage();
         $files = bank_helper::files($bank_entry->id);
         if ($bank_entry->hasfiles > 0 || count($files)>0) {
-//            $hasfiles = get_string('yes');
-            $hasfiles = '<button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#staticBackdrop' . $bank_entry->id . '" id="launchmodal' . $bank_entry->id . '">
-            '. get_string('view') .'</button>';
+            $hasfiles = '<button type="button" class="btn btn-primary btn-block mb-2" data-toggle="modal" data-target="#staticBackdrop' . $bank_entry->id . '" id="launchmodal' . $bank_entry->id . '">&nbsp;'. get_string('view') .'&nbsp;</button>';
 
 if($filter == 'showarchived' && has_capability('paygw/bank:managepayments', $context)) {
             $hasfiles .= '
@@ -272,7 +270,7 @@ if($filter == 'showarchived' && has_capability('paygw/bank:managepayments', $con
     	    <input type="hidden" name="id" value="' . $bank_entry->id . '">
     	    <input type="hidden" name="filter" value="showarchived">
     	    <input type="hidden" name="action" value="deletefiles">
-            <button type="submit" class="btn btn-secondary mt-2" data-modal="confirmation"
+            <button type="submit" class="btn btn-secondary" data-modal="confirmation"
             data-modal-title-str=\'["delete", "core"]\' data-modal-content-str=\'["areyousure"]\'
             data-modal-yes-button-str=\'["delete", "core"]\'">'.get_string('delete').'</button>
             </form>';
