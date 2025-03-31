@@ -238,7 +238,7 @@ if($filter != 'showarchived') {
         <input type="hidden" name="id" value="' . $bank_entry->id . '">
         <input type="hidden" name="action" value="A">
         <input type="hidden" name="confirm" value="1">
-        <input class="btn btn-'.$primary.' form-submit" type="submit" value="' . get_string('approve', 'paygw_bank') . '"></input>
+        <input class="btn btn-block btn-'.$primary.' form-submit" type="submit" value="' . get_string('approve', 'paygw_bank') . '"></input>
         </form>';
         $buttondeny = '<form name="formaprovepay' . $bank_entry->id . '" method="POST">
         <input type="hidden" name="sesskey" value="' .sesskey(). '">
@@ -358,7 +358,7 @@ if (count($bank_entries)) {
 ?>
 <div class="row">
     <div class="col">
-        <button type="button" class="btn btn-primary" onclick="sendmail()">
+        <button type="button" class="btn btn-secondary" onclick="sendmail()">
             <?php echo get_string('sendmailtoselected', 'paygw_bank'); ?>
         </button>
     </div>
