@@ -254,10 +254,23 @@ if($filter != 'showarchived') {
         $fs = get_file_storage();
         $files = bank_helper::files($bank_entry->id);
         if ($bank_entry->hasfiles > 0 || count($files)>0) {
-            $hasfiles = get_string('yes');
-            $hasfiles = '<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop' . $bank_entry->id . '" id="launchmodal' . $bank_entry->id . '">
-            '. get_string('view') .'
-          </button>
+//            $hasfiles = get_string('yes');
+            $hasfiles = '<button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#staticBackdrop' . $bank_entry->id . '" id="launchmodal' . $bank_entry->id . '">
+            '. get_string('view') .'</button>';
+
+if($filter == 'showarchived' && has_capability('paygw/bank:managepayments', $context)) {
+            $hasfiles .= '
+	    <form action="manage.php" id="deletefiles_' . $bank_entry->id . '" method="POST">
+    	    <input type="hidden" name="sesskey" value="' .sesskey(). '">
+    	    <input type="hidden" name="deletefiles" value="' . $bank_entry->id . '">
+    	    <input type="hidden" name="filter" value="showarchived">
+            <button type="submit" class="btn btn-secondary mt-2" data-modal="confirmation"
+            data-modal-title-str=\'["delete", "core"]\' data-modal-content-str=\'["areyousure"]\'
+            data-modal-yes-button-str=\'["delete", "core"]\'">'.get_string('delete').'</button>
+            </form>';
+}
+
+            $hasfiles .= '
             <div class="modal fade" id="staticBackdrop' . $bank_entry->id . '" aria-labelledby="staticBackdropLabel' . $bank_entry->id . '" aria-hidden="true">
             <div class="modal-dialog modal-dialog-scrollable">
                 <div class="modal-content">
