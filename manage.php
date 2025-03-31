@@ -292,7 +292,7 @@ if($filter == 'showarchived' && has_capability('paygw/bank:managepayments', $con
 
             $hasfiles .= '
             <div class="modal fade" id="staticBackdrop' . $bank_entry->id . '" aria-labelledby="staticBackdropLabel' . $bank_entry->id . '" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
                 <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel' . $bank_entry->id . '">' . get_string('files') . ' (' .count($files) . ')</h5>
@@ -414,7 +414,7 @@ function sendmail() {
 }
 </script>
 <div class="modal fade" id="sendmailmodal"  aria-labelledby="sendmailmodalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="sendmailmodalLabel"><?php echo get_string('sendmailtoselected', 'paygw_bank'); ?></h5>
@@ -431,7 +431,7 @@ function sendmail() {
                         <input type="text" class="form-control" id="subject" name="subject" value="<?php echo get_string('messegesubject', 'paygw_bank'); ?>" required>
                         <br>
                         <label for="message"><?php echo get_string('message'); ?></label>
-                        <textarea class="form-textarea form-control" cols="40" rows="5" id="message" name="message" required></textarea>
+                        <textarea class="form-textarea form-control" cols="40" rows="10" id="message" name="message" required></textarea>
                         <br>
                         <input type="submit" class="btn btn-primary" value="<?php echo get_string('send','paygw_bank'); ?>">
                     </div>
