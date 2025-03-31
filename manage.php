@@ -265,7 +265,7 @@ if($filter != 'showarchived') {
 
             <button type="submit" class="btn btn-danger" data-modal="confirmation"
             data-modal-title-str=\'["deny", "paygw_bank"]\' data-modal-content-str=\'["areyousure"]\'
-            data-modal-yes-button-str=\'["deny", "paygw_bank"]\'">'.get_string('deny', 'paygw_bank').'</button>
+            data-modal-yes-button-str=\'["yes", "core"]\'">'.get_string('deny', 'paygw_bank').'</button>
 
         </form>';
 }
@@ -286,7 +286,7 @@ if($filter == 'showarchived' && has_capability('paygw/bank:managepayments', $con
     	    <input type="hidden" name="action" value="deletefiles">
             <button type="submit" class="btn btn-secondary" data-modal="confirmation"
             data-modal-title-str=\'["delete", "core"]\' data-modal-content-str=\'["areyousure"]\'
-            data-modal-yes-button-str=\'["delete", "core"]\'">'.get_string('delete').'</button>
+            data-modal-yes-button-str=\'["yes", "core"]\'">'.get_string('delete').'</button>
             </form>';
 }
 

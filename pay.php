@@ -23,8 +23,10 @@ $component = required_param('component', PARAM_COMPONENT);
 $paymentarea = required_param('paymentarea', PARAM_AREA);
 $itemid = required_param('itemid', PARAM_INT);
 $description = required_param('description', PARAM_TEXT);
-$description=json_decode('"'.$description.'"');
+$description = json_decode('"'.$description.'"');
+
 $params = [
+    'sesskey' => sesskey(),
     'component' => $component,
     'paymentarea' => $paymentarea,
     'itemid' => $itemid,
@@ -59,7 +61,6 @@ if ($at_dataform != null) {
     $description = $at_dataform->description;
     $confirm = $at_dataform->confirm;
 }
-
 
 $cid = bank_helper::get_courseid($paymentarea, $component, $itemid);
 $course = $DB->get_record('course', ['id' => $cid], '*', MUST_EXIST);
