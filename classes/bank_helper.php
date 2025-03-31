@@ -86,7 +86,11 @@ class bank_helper
 	    $cid = $DB->get_field('enrol', 'courseid', ['id' => $itemid]);
     	} else if ($component == 'mod_gwpayments') {
 	    $cid = $DB->get_field('gwpayments', 'course', ['id' => $itemid]);
-    	}
+	} else if ($paymentarea == 'cmfee') {
+	    $cid = $DB->get_field('course_modules', 'course', ['id' => $itemid]);
+	} else if ($paymentarea == 'sectionfee') {
+	    $cid = $DB->get_field('course_sections', 'course', ['id' => $itemid]);
+	}
         return $cid;
     }
     public static function message_to_teachers($context, $from, $subject, $text): bool

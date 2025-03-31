@@ -37,8 +37,8 @@ $string['file_uploaded'] = 'Файл загружен';
 $string['gatewaydescription'] = 'Bank Transfer - это ручной способ оплаты и денежных переводов по реквизитам, с возможным предоставлением подтверждающих документов.';
 $string['hasfiles'] = 'Файлы';
 $string['mails_sent'] = 'Письма отправлены';
-$string['mail_confirm_pay'] = 'Уважаемый(ая) {$a->username}!
-Ваша заявка на "{$a->concept}" с кодом {$a->code} подтверждена.
+$string['mail_confirm_pay'] = 'Уважаемый(ая) {$a->username},
+ваша заявка на "{$a->concept}" с кодом {$a->code} подтверждена.
 
 Перейти {$a->url}';
 $string['mail_confirm_pay_subject'] = 'Запрос подтверждён';
