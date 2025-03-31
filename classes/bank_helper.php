@@ -345,7 +345,7 @@ if ($sendteachermail) {
         $supportuser = core_user::get_support_user();
         $contentmessage = new stdClass;
         $contentmessage->code = $record->code;
-        $contentmessage->amount = $totalamount;
+        $contentmessage->amount = format_float($totalamount, 2);
         $contentmessage->currency = $currency;
         $contentmessage->url = new moodle_url('/payment/gateway/bank/my_pending_pay.php');
         $contentmessage->userfullname = fullname($user);

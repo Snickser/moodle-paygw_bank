@@ -112,7 +112,7 @@ if (count($files) < $maxnumberfiles){
             $buttons=$buttongo.$buttondeny;
         }
         $buttons = '<div class="d-grid gap-2">'.$buttons.'</div>';
-        $dataarray = array(date('d-m-Y, H:i', $bank_entry->timecreated), $bank_entry->code,
+        $dataarray = array(date('Y-m-d, H:i', $bank_entry->timecreated), $bank_entry->code,
         format_string($course->fullname),
         $bank_entry->description,
         $amount, $unpaid);
