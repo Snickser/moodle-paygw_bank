@@ -36,6 +36,17 @@ use moodle_url;
 
 class bank_helper
 {
+    public static function deletefiles($id): bool
+    {
+	global $DB;
+
+        $files = self::files($id);
+        foreach ($files as $file) {
+	    $file->delete();
+        }
+    	$DB->update_record('paygw_bank', ['id' => $id, 'hasfiles' => 0]);
+	return true;
+    }
     public static function check_teacheringroup($courseid, $teacherid, $groups): bool
     {
 	$tgs = self::get_course_usergroups($courseid, $teacherid);

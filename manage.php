@@ -64,6 +64,13 @@ if ($filter == 'showarchived') {
 } else {
     echo $OUTPUT->heading(get_string('pending_payments', 'paygw_bank'), 4);
 }
+
+// Delete uploaded files.
+if ($action == 'deletefiles' && $id && has_capability('paygw/bank:managepayments', $context)) {
+    bank_helper::deletefiles($id);
+    $id = 0;
+}
+
 if ($confirm == 1 && $id > 0) {
     require_sesskey();
     // Check what has already been aprobed.
@@ -262,8 +269,9 @@ if($filter == 'showarchived' && has_capability('paygw/bank:managepayments', $con
             $hasfiles .= '
 	    <form action="manage.php" id="deletefiles_' . $bank_entry->id . '" method="POST">
     	    <input type="hidden" name="sesskey" value="' .sesskey(). '">
-    	    <input type="hidden" name="deletefiles" value="' . $bank_entry->id . '">
+    	    <input type="hidden" name="id" value="' . $bank_entry->id . '">
     	    <input type="hidden" name="filter" value="showarchived">
+    	    <input type="hidden" name="action" value="deletefiles">
             <button type="submit" class="btn btn-secondary mt-2" data-modal="confirmation"
             data-modal-title-str=\'["delete", "core"]\' data-modal-content-str=\'["areyousure"]\'
             data-modal-yes-button-str=\'["delete", "core"]\'">'.get_string('delete').'</button>
