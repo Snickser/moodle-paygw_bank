@@ -1,4 +1,4 @@
-// This file is part of the bank paymnts module for Moodle - http://moodle.org/
+// This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,30 +14,25 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This module is responsible for bank content in the gateways modal.
+ * This module is responsible for PayNL content in the gateways modal.
  *
- * @module     paygw_bank/gateway_modal
- * @copyright  UNESCO/IESALC
+ * @module     paygw_robokassa/gateways_modal
+ * @copyright  2024 Alex Orlov <snickser@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- *import * as Repository from './repository';
-import * as Ajax from 'core/ajax';
-import Templates from 'core/templates';
-//import Truncate from 'core/truncate';
-import ModalFactory from 'core/modal_factory';
-import ModalEvents from 'core/modal_events';
-//import {get_string as getString} from 'core/str';
  */
 
 import Templates from 'core/templates';
-import ModalFactory from 'core/modal_factory';
+import Modal from 'core/modal';
+
 /**
- * Creates and shows a modal that contains a placeholder.
+ * Show modal with the PayNL placeholder.
  *
- * @returns {Promise<Modal>}
+ * @returns {Promise}
  */
+
 const showModalWithPlaceholder = async() => {
-    const modal = await ModalFactory.create({
-        body: await Templates.render('paygw_bank/bank_button_placeholder', {}),
+    const modal = await Modal.create({
+        body: await Templates.render('paygw_bank/button_placeholder', {}),
         show: true,
         removeOnClose: true,
     });
@@ -46,19 +41,20 @@ const showModalWithPlaceholder = async() => {
 
 
 /**
- * Process the payment.
+ * Process.
  *
- * @param {string} component Name of the component that the itemId belongs to
- * @param {string} paymentArea The area of the component that the itemId belongs to
- * @param {number} itemId An internal identifier that is used by the component
- * @param {string} description Description of the payment
- * @returns {Promise<string>}
+ * @param {String} component
+ * @param {String} paymentArea
+ * @param {String} itemId
+ * @param {String} description
+ * @returns {Promise<>}
  */
 export const process = (component, paymentArea, itemId, description) => {
     return showModalWithPlaceholder()
         .then(() => {
             location.href = M.cfg.wwwroot + '/payment/gateway/bank/pay.php?' +
-                'component=' + component +
+                'sesskey=' + M.cfg.sesskey +
+                '&component=' + component +
                 '&paymentarea=' + paymentArea +
                 '&itemid=' + itemId +
                 '&description=' + description;
