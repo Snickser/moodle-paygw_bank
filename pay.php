@@ -211,6 +211,7 @@ if ($confirm == 0 && !bank_helper::has_openbankentry($itemid, $USER->id)) {
                 }
                 else
                 {
+                    $name = format_string($course->shortname).' - '.$groups.' - '.$bank_entry->id.' - ' . $name;
                     foreach ($files as $f) {
                         $filename = $f->get_filename();
                         if($name == $filename) {
@@ -231,7 +232,7 @@ if ($confirm == 0 && !bank_helper::has_openbankentry($itemid, $USER->id)) {
                             'component' => 'paygw_bank',
                             'filearea' => 'transfer',
                             'filepath' => '/',
-                            'filename' => format_string($course->shortname).' - '.$groups.' - '.$name,
+                            'filename' => $name,
                             'itemid' => $bank_entry->id,
                             'userid' => $USER->id,
                             'author' => fullname($USER)
@@ -306,7 +307,7 @@ if ($sendteachermail) {
                 }
                 else
                 {
-                    echo $i.'. '.$f->get_filename();
+                    echo $i.'. '.$f->get_mimetype();
                 }
                 echo '</li>';
             }
