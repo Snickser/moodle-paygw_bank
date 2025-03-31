@@ -206,9 +206,9 @@ if ($confirm == 0 && !bank_helper::has_openbankentry($itemid, $USER->id)) {
                 else
                 {
                     foreach ($files as $f) {
-                        $filename= $f->get_filename();
-                        if($name==$filename) {
-                            $isalreadyuplooaded=true;
+                        $filename = $f->get_filename();
+                        if($name == $filename) {
+                            $isalreadyuplooaded = true;
                         }
                     }
                     if($isalreadyuplooaded) {
@@ -296,8 +296,7 @@ if ($sendteachermail) {
                 echo '<li class="list-group-item">';
                 $url = moodle_url::make_pluginfile_url($f->get_contextid(), $f->get_component(), $f->get_filearea(), $f->get_itemid(), $f->get_filepath(), $f->get_filename(), false);
                 if (str_ends_with($f->get_filename(), ".png")|| str_ends_with($f->get_filename(), ".jpeg") || str_ends_with($f->get_filename(), ".jpg")|| str_ends_with($f->get_filename(), ".svg") || str_ends_with($f->get_filename(), ".gif")) {           
-                    echo $i.'. '.$f->get_filename();
-                    echo "<br><img style='max-height:100px' src='".$url."'>";
+                    echo $i.". <img style='max-height:100px' src='".$url."'><br>";
                 }
                 else
                 {
