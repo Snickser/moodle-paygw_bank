@@ -292,7 +292,7 @@ if($filter == 'showarchived' && has_capability('paygw/bank:managepayments', $con
 
             $hasfiles .= '
             <div class="modal fade" id="staticBackdrop' . $bank_entry->id . '" aria-labelledby="staticBackdropLabel' . $bank_entry->id . '" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
                 <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel' . $bank_entry->id . '">' . get_string('files') . ' (' .count($files) . ')</h5>
