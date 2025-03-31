@@ -89,7 +89,7 @@ if ($bank_entry->component == "enrol_yafee") {
         $paymentarea = $bank_entry->paymentarea;
         $itemid = $bank_entry->itemid;
         $description = $bank_entry->description;
-        $urlpay = new moodle_url('/payment/gateway/bank/pay.php', array('component' => $component,'paymentarea' => $paymentarea,'itemid' => $itemid,'description' => $description));
+        $urlpay = new moodle_url('/payment/gateway/bank/pay.php', array('sesskey' => sesskey(), 'component' => $component,'paymentarea' => $paymentarea,'itemid' => $itemid,'description' => $description));
 if (count($files) < $maxnumberfiles){
         $buttongo = '<a class="btn btn-primary btn-block" href="'.$urlpay.'">'.get_string('edit').'</a>';
 } else {
@@ -112,7 +112,7 @@ if (count($files) < $maxnumberfiles){
             $buttons=$buttongo.$buttondeny;
         }
         $buttons = '<div class="d-grid gap-2">'.$buttons.'</div>';
-        $dataarray = array(date('Y-m-d, H:i', $bank_entry->timecreated), $bank_entry->code,
+        $dataarray = array(date('Y.m.d, H:i', $bank_entry->timecreated), $bank_entry->code,
         format_string($course->fullname),
         $bank_entry->description,
         $amount, $unpaid);

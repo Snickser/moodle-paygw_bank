@@ -12,20 +12,34 @@ $maxnumberfiles = get_config('paygw_bank', 'maxnumberfiles');
 if(!$maxnumberfiles) {
     $maxnumberfiles=3;
 }
+
 require_login();
+require_sesskey();
+
 $context = context_system::instance(); // Because we "have no scope".
 $PAGE->set_context($context);
+
 $component = required_param('component', PARAM_COMPONENT);
 $paymentarea = required_param('paymentarea', PARAM_AREA);
 $itemid = required_param('itemid', PARAM_INT);
 $description = required_param('description', PARAM_TEXT);
-$description=json_decode('"'.$description.'"');
+$description = json_decode('"'.$description.'"');
+
 $params = [
+    'sesskey' => sesskey(),
     'component' => $component,
     'paymentarea' => $paymentarea,
     'itemid' => $itemid,
     'description' => $description
 ];
+
+$PAGE->set_url('/payment/gateway/bank/pay.php', $params);
+$PAGE->set_title(format_string(get_string('pluginname', 'paygw_bank')));
+//$PAGE->set_heading($description);
+$PAGE->set_cacheable(false);
+$PAGE->set_periodic_refresh_delay(120);
+$PAGE->set_pagelayout('standard');
+
 $mform = new pay_form(null, array('confirm' => 1, 'component' => $component, 'paymentarea' => $paymentarea, 'itemid' => $itemid, 'description' => $description));
 $mform->set_data($params);
 $at_form = new attachtransfer_form();
@@ -48,19 +62,9 @@ if ($at_dataform != null) {
     $confirm = $at_dataform->confirm;
 }
 
-$context = context_system::instance(); // Because we "have no scope".
-$PAGE->set_context($context);
-
-$PAGE->set_url('/payment/gateway/bank/pay.php', $params);
-$PAGE->set_pagelayout('standard');
-$pagetitle = $description;
-$PAGE->set_title($pagetitle);
-//$PAGE->set_heading($pagetitle);
-$PAGE->set_cacheable(false);
-$PAGE->set_periodic_refresh_delay(120);
-
 $cid = bank_helper::get_courseid($paymentarea, $component, $itemid);
 $course = $DB->get_record('course', ['id' => $cid], '*', MUST_EXIST);
+
 $PAGE->navbar->add($course->fullname, '/course/view.php?id='.$cid);
 $PAGE->navbar->add(get_string('pluginname', 'paygw_bank'));
 
@@ -108,6 +112,7 @@ if ($component == "enrol_yafee") {
 // Add surcharge if there is any.
 $surcharge = helper::get_gateway_surcharge('bank');
 $amount = helper::get_rounded_cost($cost, $currency, $surcharge);
+
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('gatewayname', 'paygw_bank'), 2);
@@ -206,9 +211,9 @@ if ($confirm == 0 && !bank_helper::has_openbankentry($itemid, $USER->id)) {
                 else
                 {
                     foreach ($files as $f) {
-                        $filename= $f->get_filename();
-                        if($name==$filename) {
-                            $isalreadyuplooaded=true;
+                        $filename = $f->get_filename();
+                        if($name == $filename) {
+                            $isalreadyuplooaded = true;
                         }
                     }
                     if($isalreadyuplooaded) {
@@ -296,8 +301,7 @@ if ($sendteachermail) {
                 echo '<li class="list-group-item">';
                 $url = moodle_url::make_pluginfile_url($f->get_contextid(), $f->get_component(), $f->get_filearea(), $f->get_itemid(), $f->get_filepath(), $f->get_filename(), false);
                 if (str_ends_with($f->get_filename(), ".png")|| str_ends_with($f->get_filename(), ".jpeg") || str_ends_with($f->get_filename(), ".jpg")|| str_ends_with($f->get_filename(), ".svg") || str_ends_with($f->get_filename(), ".gif")) {           
-                    echo $i.'. '.$f->get_filename();
-                    echo "<br><img style='max-height:100px' src='".$url."'>";
+                    echo $i.". <img style='max-height:100px' src='".$url."'><br>";
                 }
                 else
                 {

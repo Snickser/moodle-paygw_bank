@@ -67,6 +67,7 @@ if ($filter == 'showarchived') {
 
 // Delete uploaded files.
 if ($action == 'deletefiles' && $id && has_capability('paygw/bank:managepayments', $context)) {
+    require_sesskey();
     bank_helper::deletefiles($id);
     $id = 0;
 }
@@ -261,7 +262,11 @@ if($filter != 'showarchived') {
         <input type="hidden" name="id" value="' . $bank_entry->id . '">
         <input type="hidden" name="action" value="D">
         <input type="hidden" name="confirm" value="1">
-        <input class="btn btn-danger form-submit" type="submit" value="' . get_string('deny', 'paygw_bank') . '"></input>
+
+            <button type="submit" class="btn btn-danger" data-modal="confirmation"
+            data-modal-title-str=\'["deny", "paygw_bank"]\' data-modal-content-str=\'["areyousure"]\'
+            data-modal-yes-button-str=\'["yes", "core"]\'">'.get_string('deny', 'paygw_bank').'</button>
+
         </form>';
 }
         $files = "-";
@@ -281,7 +286,7 @@ if($filter == 'showarchived' && has_capability('paygw/bank:managepayments', $con
     	    <input type="hidden" name="action" value="deletefiles">
             <button type="submit" class="btn btn-secondary" data-modal="confirmation"
             data-modal-title-str=\'["delete", "core"]\' data-modal-content-str=\'["areyousure"]\'
-            data-modal-yes-button-str=\'["delete", "core"]\'">'.get_string('delete').'</button>
+            data-modal-yes-button-str=\'["yes", "core"]\'">'.get_string('delete').'</button>
             </form>';
 }
 
@@ -301,6 +306,7 @@ if($filter == 'showarchived' && has_capability('paygw/bank:managepayments', $con
                 // $f is an instance of stored_file
                 $url = moodle_url::make_pluginfile_url($f->get_contextid(), $f->get_component(), $f->get_filearea(), $f->get_itemid(), $f->get_filepath(), $f->get_filename(), false);
                 $hasfiles .= $i.'. <a href="' . $url . '" target="_blank">' . $f->get_filename() . '</a><br>';
+            	$hasfiles .= get_string('size').': '. round($f->get_filesize()/1024,1) . ' Kbyte.<br>';
                 if (str_ends_with($f->get_filename(), ".png") || str_ends_with($f->get_filename(), ".jpeg") || str_ends_with($f->get_filename(), ".jpg") || str_ends_with($f->get_filename(), ".gif")) {
                     $hasfiles .= "<img style='max-width: 100%; object-fit: contain;' src=$url class=\"mt-2 mb-2\"><br>";
                 }
@@ -308,7 +314,7 @@ if($filter == 'showarchived' && has_capability('paygw/bank:managepayments', $con
             $hasfiles .= '
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">'.get_string('close', 'admin').'</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">'.get_string('close', 'admin').'</button>
                 </div>
                 </div>
             </div>
