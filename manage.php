@@ -71,7 +71,7 @@ if ($action == 'deletefiles' && $id && has_capability('paygw/bank:managepayments
     $id = 0;
 }
 
-if ($confirm == 1 && $id > 0) {
+if ($confirm && $id) {
     require_sesskey();
     // Check what has already been aprobed.
     if ( $DB->record_exists('paygw_bank', ['id' => $id, 'status' => 'P']) ){
@@ -203,6 +203,14 @@ if ($filter == 'showarchived') {
 	}
 
         $config = (object) helper::get_gateway_configuration($bank_entry->component, $bank_entry->paymentarea, $bank_entry->itemid, 'bank');
+
+	$groups = bank_helper::get_course_usergroups($cid, $bank_entry->userid);
+        if ($config->onlyingroup && !has_capability('moodle/site:accessallgroups', $context)) {
+            if (!bank_helper::check_teacheringroup($cid, $USER->id, $groups)) {
+                continue;
+    	    }
+	}
+
         $payable = helper::get_payable($bank_entry->component, $bank_entry->paymentarea, $bank_entry->itemid);
         $currency = $payable->get_currency();
         $customer = $DB->get_record('user', array('id' => $bank_entry->userid));
@@ -210,6 +218,7 @@ if ($filter == 'showarchived') {
 
         $amount = helper::get_rounded_cost($bank_entry->totalamount, $currency, 0);
         $surcharge = helper::get_gateway_surcharge('bank');
+
 
 $unpaid = '-';
 $primary = 'primary';
