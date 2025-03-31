@@ -64,6 +64,7 @@ if ($at_dataform != null) {
 
 $cid = bank_helper::get_courseid($paymentarea, $component, $itemid);
 $course = $DB->get_record('course', ['id' => $cid], '*', MUST_EXIST);
+$groups = bank_helper::get_course_usergroups($cid, $USER->id);
 
 $PAGE->navbar->add($course->fullname, '/course/view.php?id='.$cid);
 $PAGE->navbar->add(get_string('pluginname', 'paygw_bank'));
@@ -210,6 +211,7 @@ if ($confirm == 0 && !bank_helper::has_openbankentry($itemid, $USER->id)) {
                 }
                 else
                 {
+                    $name = format_string($course->shortname).' - '.$groups.' - '.$bank_entry->id.' - ' . $name;
                     foreach ($files as $f) {
                         $filename = $f->get_filename();
                         if($name == $filename) {
@@ -230,7 +232,7 @@ if ($confirm == 0 && !bank_helper::has_openbankentry($itemid, $USER->id)) {
                             'component' => 'paygw_bank',
                             'filearea' => 'transfer',
                             'filepath' => '/',
-                            'filename' =>  $name,
+                            'filename' => $name,
                             'itemid' => $bank_entry->id,
                             'userid' => $USER->id,
                             'author' => fullname($USER)
@@ -305,7 +307,7 @@ if ($sendteachermail) {
                 }
                 else
                 {
-                    echo $i.'. '.$f->get_filename();
+                    echo $i.'. '.$f->get_mimetype();
                 }
                 echo '</li>';
             }
