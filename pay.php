@@ -76,6 +76,8 @@ $bank_entry = null;
 
 // Add support for enrol_yafee.
 $cost = $payable->get_amount();
+$plugin = \core_plugin_manager::instance()->get_plugin_info('enrol_yafee');
+$ver = 2025040100;
 if ($component == "enrol_yafee") {
     $cs = $DB->get_record('enrol', ['id' => $itemid, 'enrol' => 'yafee']);
     // Check uninterrupted cost.
@@ -95,14 +97,20 @@ if ($component == "enrol_yafee") {
                     $price = $cost / $cs->enrolperiod;
                     $delta = ceil((($ctime - $data->timestart) / $cs->enrolperiod)+0) * $cs->enrolperiod +
                              $data->timestart - $data->timeend;
+if($plugin->versiondisk < $ver) {
                     $cost = $delta * $price;
+}
                 } else if ($cs->customchar1 == 'month' && $cs->customint7 > 0) {
                     $delta = ($t2['year'] - $t1['year']) * 12 + $t2['mon'] - $t1['mon'] + 1;
+if($plugin->versiondisk < $ver) {
                     $cost = $delta * $cost;
+}
                     $timeend = strtotime("+$delta month", $data->timeend);
                 } else if ($cs->customchar1 == 'year' && $cs->customint7 > 0) {
                     $delta = ($t2['year'] - $t1['year']) + 1;
+if($plugin->versiondisk < $ver) {
                     $cost = $delta * $cost;
+}
                     $timeend = strtotime("+$delta year", $data->timeend);
                 }
             }
