@@ -74,13 +74,11 @@ $payable = helper::get_payable($component, $paymentarea, $itemid);
 $currency = $payable->get_currency();
 $bank_entry = null;
 
-// Add support for enrol_yafee.
 $cost = $payable->get_amount();
-$plugin = \core_plugin_manager::instance()->get_plugin_info('enrol_yafee');
-$ver = 2025040100;
+
+// Add support for enrol_yafee.
 if ($component == "enrol_yafee") {
     $cs = $DB->get_record('enrol', ['id' => $itemid, 'enrol' => 'yafee']);
-    // Check uninterrupted cost.
     if ($cs->customint5) {
         if ($data = $DB->get_record('user_enrolments', ['userid' => $USER->id, 'enrolid' => $cs->id])) {
             // Prepare month and year.
@@ -93,24 +91,11 @@ if ($component == "enrol_yafee") {
             $t2 = getdate($ctime);
             // Check periods.
             if ($data->timeend < $ctime && $data->timestart) {
-                if ($cs->enrolperiod) {
-                    $price = $cost / $cs->enrolperiod;
-                    $delta = ceil((($ctime - $data->timestart) / $cs->enrolperiod)+0) * $cs->enrolperiod +
-                             $data->timestart - $data->timeend;
-if($plugin->versiondisk < $ver) {
-                    $cost = $delta * $price;
-}
-                } else if ($cs->customchar1 == 'month' && $cs->customint7 > 0) {
+                if ($cs->customchar1 == 'month' && $cs->customint7 > 0) {
                     $delta = ($t2['year'] - $t1['year']) * 12 + $t2['mon'] - $t1['mon'] + 1;
-if($plugin->versiondisk < $ver) {
-                    $cost = $delta * $cost;
-}
                     $timeend = strtotime("+$delta month", $data->timeend);
                 } else if ($cs->customchar1 == 'year' && $cs->customint7 > 0) {
                     $delta = ($t2['year'] - $t1['year']) + 1;
-if($plugin->versiondisk < $ver) {
-                    $cost = $delta * $cost;
-}
                     $timeend = strtotime("+$delta year", $data->timeend);
                 }
             }
@@ -132,7 +117,6 @@ if (bank_helper::has_openbankentry($itemid, $USER->id)) {
 } else {
     if ($confirm != 0) {
         $totalamount = $amount;
-///        $data = $mform->get_data();
         $bank_entry = bank_helper::create_bankentry($itemid, $USER->id, $totalamount, $currency, $component, $paymentarea, $description);
         \core\notification::info(get_string('transfer_process_initiated', 'paygw_bank'));
         $confirm = 0;
