@@ -95,14 +95,14 @@ if ($component == "enrol_yafee") {
                     $price = $cost / $cs->enrolperiod;
                     $delta = ceil((($ctime - $data->timestart) / $cs->enrolperiod)+0) * $cs->enrolperiod +
                              $data->timestart - $data->timeend;
-                    $cost = $delta * $price;
+//                    $cost = $delta * $price;
                 } else if ($cs->customchar1 == 'month' && $cs->customint7 > 0) {
                     $delta = ($t2['year'] - $t1['year']) * 12 + $t2['mon'] - $t1['mon'] + 1;
-                    $cost = $delta * $cost;
+//                    $cost = $delta * $cost;
                     $timeend = strtotime("+$delta month", $data->timeend);
                 } else if ($cs->customchar1 == 'year' && $cs->customint7 > 0) {
                     $delta = ($t2['year'] - $t1['year']) + 1;
-                    $cost = $delta * $cost;
+//                    $cost = $delta * $cost;
                     $timeend = strtotime("+$delta year", $data->timeend);
                 }
             }
