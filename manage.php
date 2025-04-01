@@ -300,8 +300,9 @@ if($filter == 'showarchived' && has_capability('paygw/bank:managepayments', $con
                 </div>
                 <div class="modal-body">
               ';
+
 	    $hasfilesbody = '<ol>';
-	    $hasfilesimg = '';
+	    $hasfilesimg = false;
             foreach ($files as $f) {
                 // $f is an instance of stored_file
                 $url = moodle_url::make_pluginfile_url($f->get_contextid(), $f->get_component(), $f->get_filearea(), $f->get_itemid(), $f->get_filepath(), $f->get_filename(), false);
@@ -311,7 +312,12 @@ if($filter == 'showarchived' && has_capability('paygw/bank:managepayments', $con
                     $hasfilesimg .= "<p align=center><img style='max-width: 100%; object-fit: contain;' src=$url class=\"mt-2 mb-2\"></p>";
                 }
             }
-            $hasfiles .= $hasfilesbody . '</ol>' . $hasfilesimg . '
+
+            $hasfiles .= $hasfilesbody . '</ol>';
+            if ($hasfilesimg) {
+        	$hasfiles .= '<hr width="50%">' . $hasfilesimg;
+            }
+            $hasfiles .= '
                 </div>
 		<div class="modal-footer">
                     <!-- button type="button" class="btn btn-secondary" data-dismiss="modal">'.get_string('close', 'admin').'</button -->
