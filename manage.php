@@ -301,7 +301,7 @@ if($filter == 'showarchived' && has_capability('paygw/bank:managepayments', $con
                 <div class="modal-body">
               ';
 
-	    $hasfilesbody = '<ol class="pt-3 pb-3 rounded" style="background-color: #f2f3f4;">';
+	    $hasfilesbody = '<ol class="pt-3 pb-3 rounded" style="background-color: #f2f3f4; font-size: 1.15em;">';
 	    $hasfilesimg = false;
             foreach ($files as $f) {
                 // $f is an instance of stored_file
