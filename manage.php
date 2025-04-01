@@ -265,7 +265,7 @@ if($filter != 'showarchived') {
 
             <button type="submit" class="btn btn-danger" data-modal="confirmation"
             data-modal-title-str=\'["deny", "paygw_bank"]\' data-modal-content-str=\'["areyousure"]\'
-            data-modal-yes-button-str=\'["yes", "core"]\'">'.get_string('deny', 'paygw_bank').'</button>
+            data-modal-yes-button-str=\'["confirm", "core"]\'">'.get_string('deny', 'paygw_bank').'</button>
 
         </form>';
 }
@@ -286,7 +286,7 @@ if($filter == 'showarchived' && has_capability('paygw/bank:managepayments', $con
     	    <input type="hidden" name="action" value="deletefiles">
             <button type="submit" class="btn btn-secondary" data-modal="confirmation"
             data-modal-title-str=\'["delete", "core"]\' data-modal-content-str=\'["areyousure"]\'
-            data-modal-yes-button-str=\'["yes", "core"]\'">'.get_string('delete').'</button>
+            data-modal-yes-button-str=\'["confirm", "core"]\'">'.get_string('delete').'</button>
             </form>';
 }
 
@@ -296,7 +296,7 @@ if($filter == 'showarchived' && has_capability('paygw/bank:managepayments', $con
                 <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel' . $bank_entry->id . '">' . get_string('files') . '</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
               ';
