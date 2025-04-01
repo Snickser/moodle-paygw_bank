@@ -265,7 +265,7 @@ if($filter != 'showarchived') {
 
             <button type="submit" class="btn btn-danger" data-modal="confirmation"
             data-modal-title-str=\'["deny", "paygw_bank"]\' data-modal-content-str=\'["areyousure"]\'
-            data-modal-yes-button-str=\'["yes", "core"]\'">'.get_string('deny', 'paygw_bank').'</button>
+            data-modal-yes-button-str=\'["confirm", "core"]\'">'.get_string('deny', 'paygw_bank').'</button>
 
         </form>';
 }
@@ -286,7 +286,7 @@ if($filter == 'showarchived' && has_capability('paygw/bank:managepayments', $con
     	    <input type="hidden" name="action" value="deletefiles">
             <button type="submit" class="btn btn-secondary" data-modal="confirmation"
             data-modal-title-str=\'["delete", "core"]\' data-modal-content-str=\'["areyousure"]\'
-            data-modal-yes-button-str=\'["yes", "core"]\'">'.get_string('delete').'</button>
+            data-modal-yes-button-str=\'["confirm", "core"]\'">'.get_string('delete').'</button>
             </form>';
 }
 
@@ -296,26 +296,26 @@ if($filter == 'showarchived' && has_capability('paygw/bank:managepayments', $con
                 <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel' . $bank_entry->id . '">' . get_string('files') . '</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
               ';
 
-	    $hasfilesbody = '<ol class="bg-light pt-3 pb-1">';
+	    $hasfilesbody = '<ol class="pt-3 pb-3 rounded" style="background-color: #f2f3f4;">';
 	    $hasfilesimg = false;
             foreach ($files as $f) {
                 // $f is an instance of stored_file
                 $url = moodle_url::make_pluginfile_url($f->get_contextid(), $f->get_component(), $f->get_filearea(), $f->get_itemid(), $f->get_filepath(), $f->get_filename(), false);
-                $hasfilesbody .= '<li><p><a href="' . $url . '" download><b>' . $f->get_filename() . '</b></a><br>';
-            	$hasfilesbody .= get_string('size').': '. round($f->get_filesize()/1024,2) . ' KB</p></li>';
+                $hasfilesbody .= '<li class="mb-2"><a href="' . $url . '" download><b>' . $f->get_filename() . '</b></a><br>';
+            	$hasfilesbody .= get_string('size').': '. round($f->get_filesize()/1024,2) . ' KB</li>';
                 if (str_ends_with($f->get_filename(), ".png") || str_ends_with($f->get_filename(), ".jpeg") || str_ends_with($f->get_filename(), ".jpg") || str_ends_with($f->get_filename(), ".gif")) {
-                    $hasfilesimg .= "<p align=center><img style='max-width: 100%; object-fit: contain;' src='$url'></p>";
+                    $hasfilesimg .= "<p align=center class='pt-3'><img class='rounded shadow' style='max-width: 100%; object-fit: contain;' src='$url'></p>";
                 }
             }
 
             $hasfiles .= $hasfilesbody . '</ol>';
             if ($hasfilesimg) {
-        	$hasfiles .= '<hr width="50%">' . $hasfilesimg;
+        	$hasfiles .= $hasfilesimg;
             }
             $hasfiles .= '
                 </div>
