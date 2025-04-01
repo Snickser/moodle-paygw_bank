@@ -292,29 +292,29 @@ if($filter == 'showarchived' && has_capability('paygw/bank:managepayments', $con
 
             $hasfiles .= '
             <div class="modal fade" id="staticBackdrop' . $bank_entry->id . '" aria-labelledby="staticBackdropLabel' . $bank_entry->id . '" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
                 <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel' . $bank_entry->id . '">' . get_string('files') . ' (' .count($files) . ')</h5>
+                    <h5 class="modal-title" id="staticBackdropLabel' . $bank_entry->id . '">' . get_string('files') . '</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
               ';
-            $i = 0;
+	    $hasfilesbody = '<ol>';
+	    $hasfilesimg = '';
             foreach ($files as $f) {
-	        $i++;
                 // $f is an instance of stored_file
                 $url = moodle_url::make_pluginfile_url($f->get_contextid(), $f->get_component(), $f->get_filearea(), $f->get_itemid(), $f->get_filepath(), $f->get_filename(), false);
-                $hasfiles .= $i.'. <a href="' . $url . '" download>' . $f->get_filename() . '</a><br>';
-            	$hasfiles .= get_string('size').': '. round($f->get_filesize()/1024,1) . ' KB<br>';
+                $hasfilesbody .= '<li><p><a href="' . $url . '" download>' . $f->get_filename() . '</a><br>';
+            	$hasfilesbody .= get_string('size').': '. round($f->get_filesize()/1024,2) . ' KB</p></li>';
                 if (str_ends_with($f->get_filename(), ".png") || str_ends_with($f->get_filename(), ".jpeg") || str_ends_with($f->get_filename(), ".jpg") || str_ends_with($f->get_filename(), ".gif")) {
-                    $hasfiles .= "<img style='max-width: 100%; object-fit: contain;' src=$url class=\"mt-2 mb-2\"><br>";
+                    $hasfilesimg .= "<p align=center><img style='max-width: 100%; object-fit: contain;' src=$url class=\"mt-2 mb-2\"></p>";
                 }
             }
-            $hasfiles .= '
+            $hasfiles .= $hasfilesbody . '</ol>' . $hasfilesimg . '
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">'.get_string('close', 'admin').'</button>
+		<div class="modal-footer">
+                    <!-- button type="button" class="btn btn-secondary" data-dismiss="modal">'.get_string('close', 'admin').'</button -->
                 </div>
                 </div>
             </div>
