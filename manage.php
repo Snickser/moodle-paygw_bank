@@ -301,12 +301,12 @@ if($filter == 'showarchived' && has_capability('paygw/bank:managepayments', $con
                 <div class="modal-body">
               ';
 
-	    $hasfilesbody = '<ol>';
+	    $hasfilesbody = '<ol class="bg-light pt-3 pb-1">';
 	    $hasfilesimg = false;
             foreach ($files as $f) {
                 // $f is an instance of stored_file
                 $url = moodle_url::make_pluginfile_url($f->get_contextid(), $f->get_component(), $f->get_filearea(), $f->get_itemid(), $f->get_filepath(), $f->get_filename(), false);
-                $hasfilesbody .= '<li><p><a href="' . $url . '" download>' . $f->get_filename() . '</a><br>';
+                $hasfilesbody .= '<li><p><a href="' . $url . '" download><b>' . $f->get_filename() . '</b></a><br>';
             	$hasfilesbody .= get_string('size').': '. round($f->get_filesize()/1024,2) . ' KB</p></li>';
                 if (str_ends_with($f->get_filename(), ".png") || str_ends_with($f->get_filename(), ".jpeg") || str_ends_with($f->get_filename(), ".jpg") || str_ends_with($f->get_filename(), ".gif")) {
                     $hasfilesimg .= "<p align=center><img style='max-width: 100%; object-fit: contain;' src='$url'></p>";
