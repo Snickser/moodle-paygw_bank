@@ -301,7 +301,7 @@ if ($sendteachermail) {
                 // $f is an instance of stored_file
                 echo '<li class="list-group-item">';
                 $url = moodle_url::make_pluginfile_url($f->get_contextid(), $f->get_component(), $f->get_filearea(), $f->get_itemid(), $f->get_filepath(), $f->get_filename(), false);
-                if (str_ends_with($f->get_filename(), ".png")|| str_ends_with($f->get_filename(), ".jpeg") || str_ends_with($f->get_filename(), ".jpg")|| str_ends_with($f->get_filename(), ".svg") || str_ends_with($f->get_filename(), ".gif")) {           
+                if (str_ends_with($f->get_filename(), ".png")|| str_ends_with($f->get_filename(), ".jpeg") || str_ends_with($f->get_filename(), ".jpg")|| str_ends_with($f->get_filename(), ".gif")) {           
                     echo $i.". <img style='max-height:100px' src='".$url."'><br>";
                 }
                 else
