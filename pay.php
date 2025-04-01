@@ -92,7 +92,7 @@ if ($component == "enrol_yafee") {
             // Check periods.
             if ($data->timeend < $ctime && $data->timestart) {
                 if ($cs->enrolperiod) {
-                    $price = $cost / $cs->enrolperiod;
+//                    $price = $cost / $cs->enrolperiod;
                     $delta = ceil((($ctime - $data->timestart) / $cs->enrolperiod)+0) * $cs->enrolperiod +
                              $data->timestart - $data->timeend;
 //                    $cost = $delta * $price;
