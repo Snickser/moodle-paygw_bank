@@ -309,7 +309,7 @@ if($filter == 'showarchived' && has_capability('paygw/bank:managepayments', $con
                 $hasfilesbody .= '<li><p><a href="' . $url . '" download>' . $f->get_filename() . '</a><br>';
             	$hasfilesbody .= get_string('size').': '. round($f->get_filesize()/1024,2) . ' KB</p></li>';
                 if (str_ends_with($f->get_filename(), ".png") || str_ends_with($f->get_filename(), ".jpeg") || str_ends_with($f->get_filename(), ".jpg") || str_ends_with($f->get_filename(), ".gif")) {
-                    $hasfilesimg .= "<p align=center><img style='max-width: 100%; object-fit: contain;' src=$url class=\"mt-2 mb-2\"></p>";
+                    $hasfilesimg .= "<p align=center><img style='max-width: 100%; object-fit: contain;' src='$url'></p>";
                 }
             }
 
@@ -320,7 +320,6 @@ if($filter == 'showarchived' && has_capability('paygw/bank:managepayments', $con
             $hasfiles .= '
                 </div>
 		<div class="modal-footer">
-                    <!-- button type="button" class="btn btn-secondary" data-dismiss="modal">'.get_string('close', 'admin').'</button -->
                 </div>
                 </div>
             </div>
