@@ -301,7 +301,7 @@ if($filter == 'showarchived' && has_capability('paygw/bank:managepayments', $con
                 <div class="modal-body">
               ';
 
-	    $hasfilesbody = '<ol class="bg-light pt-3 pb-1">';
+	    $hasfilesbody = '<ol class="bg-light pt-3 pb-1 rounded">';
 	    $hasfilesimg = false;
             foreach ($files as $f) {
                 // $f is an instance of stored_file
@@ -309,7 +309,7 @@ if($filter == 'showarchived' && has_capability('paygw/bank:managepayments', $con
                 $hasfilesbody .= '<li><p><a href="' . $url . '" download><b>' . $f->get_filename() . '</b></a><br>';
             	$hasfilesbody .= get_string('size').': '. round($f->get_filesize()/1024,2) . ' KB</p></li>';
                 if (str_ends_with($f->get_filename(), ".png") || str_ends_with($f->get_filename(), ".jpeg") || str_ends_with($f->get_filename(), ".jpg") || str_ends_with($f->get_filename(), ".gif")) {
-                    $hasfilesimg .= "<p align=center><img style='max-width: 100%; object-fit: contain;' src='$url'></p>";
+                    $hasfilesimg .= "<p align=center><img class='rounded' style='max-width: 100%; object-fit: contain;' src='$url'></p>";
                 }
             }
 
