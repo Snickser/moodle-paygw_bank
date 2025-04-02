@@ -10,7 +10,7 @@ This plugin, is a moodle payment gateway that provides support to payments made 
 
 ## Instalation.
 
-This plugin is tested in Moodle 4.3 and 4.5.
+This plugin is tested in Moodle 4.x
 
 You can download the zip file and install directly in "Site administration" > Plugins > "Install plugins"
 
