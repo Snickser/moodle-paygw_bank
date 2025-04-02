@@ -151,13 +151,13 @@ if ($bank_entry != null) {
     echo '<ul class="list-group list-group-flush">';
 }
 
-echo '<li class="list-group-item"><h4 class="card-title">' . get_string('concept', 'paygw_bank') . ':</h4>';
+echo '<li class="list-group-item"><h4 class="card-title">' . get_string('concept', 'paygw_bank') . '</h4>';
 echo '<div>' . $description . '</div>';
 echo '</li>';
 
 $aceptform = "";
 
-echo '<li class="list-group-item"><h4 class="card-title">' . get_string('total_cost', 'paygw_bank') . ':</h4>';
+echo '<li class="list-group-item"><h4 class="card-title">' . get_string('amount', 'paygw_bank') . '</h4>';
 if ($surcharge > 0) {
     $a = ['fee' => helper::get_cost_as_string($amount, $currency), 'surcharge' => $surcharge];
     echo '<div id="price">' . get_string('feeincludesurcharge', 'payment', $a) . '</div>';

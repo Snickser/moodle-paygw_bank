@@ -29,7 +29,7 @@ $string['are_you_sure_cancel'] = 'Вы точно уверены что хоти
 $string['cancel_process'] = 'Отменить';
 $string['code'] = 'Код платежа';
 $string['codeprefix'] = 'Префикс кода платежа';
-$string['concept'] = 'Описание';
+$string['concept'] = 'Описание:';
 $string['cost'] = 'Цена';
 $string['deny'] = 'Отказать';
 $string['file_already_uploaded'] = 'Файл с таким именем уже загружен';
@@ -87,3 +87,4 @@ $string['email_notifications_new_user'] = 'Уважаемый(ая) {$a->userful
 {$a->url}';
 $string['send_teacher_mail_help'] = 'Также в настройках платёжного интерфеса можно включить ограничение по группам для учителей.';
 $string['suggest'] = 'Рекомендуемая цена';
+$string['amount'] = 'Сумма:';

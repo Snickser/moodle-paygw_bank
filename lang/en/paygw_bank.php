@@ -23,7 +23,7 @@
  */
 $string['gatewaydescription'] = 'bank is an authorised payment gateway provider for processing credit card transactions.';
 $string['gatewayname'] = 'Bank Transference';
-$string['concept'] = 'Concept';
+$string['concept'] = 'Concept:';
 $string['cost'] = 'Cost';
 $string['code'] = 'Code';
 $string['total_cost'] = 'Invoice cost';
@@ -113,3 +113,4 @@ Code: {$a->code}
 
 {$a->url}';
 $string['suggest'] = 'Suggested cost';
+$string['amount'] = 'Suggested cost';
