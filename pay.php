@@ -93,6 +93,11 @@ if (isset($config->maxcost) && $config->maxcost && $cost > $config->maxcost) {
     $amount = helper::get_rounded_cost($cost, $currency, $surcharge);
 }
 
+// Set fixdesc.
+if (isset($config->fixdesc) && $config->fixdesc) {
+    $description = $config->fixdesc;
+}
+
 // Add support for enrol_yafee.
 if ($component == "enrol_yafee") {
     $cs = $DB->get_record('enrol', ['id' => $itemid, 'enrol' => 'yafee']);

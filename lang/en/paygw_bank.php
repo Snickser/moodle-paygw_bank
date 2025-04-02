@@ -116,3 +116,5 @@ $string['maxcost'] = 'Maximum cost';
 $string['suggest'] = 'Suggested cost';
 $string['suggest_help'] = 'Suggested cost';
 $string['amount'] = 'Suggested cost';
+$string['fixdesc'] = 'Fixed payment comment';
+$string['fixdesc_help'] = 'This setting sets a fixed comment for all payments.';
