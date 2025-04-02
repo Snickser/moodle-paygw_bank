@@ -86,3 +86,4 @@ $string['email_notifications_new_user'] = 'Уважаемый(ая) {$a->userful
 
 {$a->url}';
 $string['send_teacher_mail_help'] = 'Также в настройках платёжного интерфеса можно включить ограничение по группам для учителей.';
+$string['suggest'] = 'Рекомендуемая цена';

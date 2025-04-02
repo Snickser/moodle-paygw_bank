@@ -112,3 +112,4 @@ Amount: {$a->fee}
 Code: {$a->code}
 
 {$a->url}';
+$string['suggest'] = 'Suggested cost';

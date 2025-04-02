@@ -76,6 +76,16 @@ $bank_entry = null;
 
 $cost = $payable->get_amount();
 
+// Add surcharge if there is any.
+$surcharge = helper::get_gateway_surcharge('bank');
+
+// Check suggest.
+if (isset($config->suggest) && $cost < $config->suggest) {
+    $amount = helper::get_rounded_cost($config->suggest, $currency, $surcharge);
+} else {
+    $amount = helper::get_rounded_cost($cost, $currency, $surcharge);
+}
+
 // Add support for enrol_yafee.
 if ($component == "enrol_yafee") {
     $cs = $DB->get_record('enrol', ['id' => $itemid, 'enrol' => 'yafee']);
@@ -102,10 +112,6 @@ if ($component == "enrol_yafee") {
         }
     }
 }
-
-// Add surcharge if there is any.
-$surcharge = helper::get_gateway_surcharge('bank');
-$amount = helper::get_rounded_cost($cost, $currency, $surcharge);
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('gatewayname', 'paygw_bank'), 2);
