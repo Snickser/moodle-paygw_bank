@@ -206,7 +206,7 @@ if ($filter == 'showarchived') {
         $config = (object) helper::get_gateway_configuration($bank_entry->component, $bank_entry->paymentarea, $bank_entry->itemid, 'bank');
 
 	$groups = bank_helper::get_course_usergroups($cid, $bank_entry->userid);
-        if ($config->onlyingroup && !has_capability('moodle/site:accessallgroups', $context)) {
+        if (isset($config->onlyingroup) && $config->onlyingroup && !has_capability('moodle/site:accessallgroups', $context)) {
             if (!bank_helper::check_teacheringroup($cid, $USER->id, $groups)) {
                 continue;
     	    }
