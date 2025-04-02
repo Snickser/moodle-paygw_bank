@@ -187,9 +187,9 @@ if (isset($config->unfixcost) && $config->unfixcost && $bank_entry == null) {
 	$config->suggest = $cost;
     }
 
- echo '<input type="number" id="inputcostself"
+ echo '<input class="form-control" type="number" id="inputcostself"
  value="'.$amount.'" min="'.$config->suggest.'" max="'.$config->maxcost.'" step="0.01"
- style="width: 6em;">';
+ style="width: 7em;">';
 
 } else {
 
@@ -233,14 +233,27 @@ if ($confirm == 0 && !bank_helper::has_openbankentry($itemid, $USER->id)) {
     $mform->display();
 
 if (isset($config->unfixcost) && $config->unfixcost) {
-    echo "<script>
+?>
+<script>
 const inputcostself = document.querySelector('#inputcostself');
 const costself = document.querySelector('input[name=costself]');
 costself.value = Number(inputcostself.value);
 inputcostself.addEventListener('input', function() {
+<?php 
+if($config->maxcost){
+echo "
+    if(inputcostself.value > $config->maxcost){
+	inputcostself.value = $config->maxcost;
+    }";
+}
+?>
+    if(inputcostself.value < 0.01){
+	inputcostself.value = 0.01;
+    }
     costself.value = Number(inputcostself.value);
 });
-</script>";
+</script>
+<?php
 }
 
 } else {

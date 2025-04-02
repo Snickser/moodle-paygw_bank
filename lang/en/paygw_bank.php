@@ -113,8 +113,10 @@ Code: {$a->code}
 
 {$a->url}';
 $string['maxcost'] = 'Maximum cost';
+$string['maxcosterror'] = 'The maximum price must be higher than the recommended price, and greater than zero';
 $string['suggest'] = 'Suggested cost';
 $string['suggest_help'] = 'Suggested cost';
+$string['suggesterror'] = 'Suggested price must be higher than zero';
 $string['amount'] = 'Suggested cost';
 $string['fixdesc'] = 'Fixed payment comment';
 $string['fixdesc_help'] = 'This setting sets a fixed comment for all payments.';
