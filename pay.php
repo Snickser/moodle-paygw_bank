@@ -140,7 +140,7 @@ echo '<div class="card-body">';
 if ($bank_entry != null) {
     $instructions = format_text($config->postinstructionstext['text']);
     echo '<div class="ml-2 mr-2" id="bankinstructions">' . $instructions . '</div>';
-    echo '<br><ul class="list-group">';
+    echo '<ul class="list-group">';
 } else {
     echo '<ul class="list-group list-group-flush">';
 }
