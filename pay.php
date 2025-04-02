@@ -101,10 +101,12 @@ if (isset($config->fixdesc) && $config->fixdesc) {
 }
 
 // Add support for enrol_yafee.
+$uninterrupted = false;
 if ($component == "enrol_yafee") {
     $cs = $DB->get_record('enrol', ['id' => $itemid, 'enrol' => 'yafee']);
     if ($cs->customint5) {
         if ($data = $DB->get_record('user_enrolments', ['userid' => $USER->id, 'enrolid' => $cs->id])) {
+            $uninterrupted = true;
             // Prepare month and year.
             $ctime = time();
             $timeend = $ctime;
@@ -179,7 +181,11 @@ echo '<li class="list-group-item"><h4 class="card-title">' . get_string('amount'
 
 if (isset($config->unfixcost) && $config->unfixcost && $bank_entry == null) {
 
-    $config->suggest = $amount;
+    if ($uninterrupted) {
+	$config->suggest = $amount;
+    } else {
+	$config->suggest = $cost;
+    }
 
  echo '<input type="number" id="inputcostself"
  value="'.$amount.'" min="'.$config->suggest.'" max="'.$config->maxcost.'" step="0.01"
