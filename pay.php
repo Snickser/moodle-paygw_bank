@@ -80,8 +80,15 @@ $cost = $payable->get_amount();
 $surcharge = helper::get_gateway_surcharge('bank');
 
 // Check suggest.
-if (isset($config->suggest) && $cost < $config->suggest) {
+if (isset($config->suggest) && $config->suggest && $cost < $config->suggest) {
     $amount = helper::get_rounded_cost($config->suggest, $currency, $surcharge);
+} else {
+    $amount = helper::get_rounded_cost($cost, $currency, $surcharge);
+}
+
+// Check maxcost.
+if (isset($config->maxcost) && $config->maxcost && $cost > $config->maxcost) {
+    $amount = helper::get_rounded_cost($config->maxcost, $currency, $surcharge);
 } else {
     $amount = helper::get_rounded_cost($cost, $currency, $surcharge);
 }

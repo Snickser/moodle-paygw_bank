@@ -112,5 +112,7 @@ Amount: {$a->fee}
 Code: {$a->code}
 
 {$a->url}';
+$string['maxcost'] = 'Maximum cost';
 $string['suggest'] = 'Suggested cost';
+$string['suggest_help'] = 'Suggested cost';
 $string['amount'] = 'Suggested cost';
