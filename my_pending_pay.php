@@ -69,7 +69,7 @@ if ($bank_entry->component == "enrol_yafee") {
         if ($data = $DB->get_record('user_enrolments', ['userid' => $bank_entry->userid, 'enrolid' => $cs->id])) {
          if (isset($data->timeend) || isset($data->timestart)) {
             if ($cs->customint5 && $cs->enrolperiod && $data->timeend < time() && $data->timestart) {
-                $unpaid = (round(((time() - $data->timeend) / $cs->enrolperiod)) * $cs->cost);
+                $unpaid = (ceil(((time() - $data->timeend) / $cs->enrolperiod)) * $cs->cost);
                 // Add surcharge.
                 $unpaid = helper::get_rounded_cost($unpaid, $currency, $surcharge);
             }
@@ -120,7 +120,7 @@ if (count($files) < $maxnumberfiles){
         if($canuploadfiles) {
             $hasfiles = "<font color=red><b>".get_string('no')."</b></font>";
             if (count($files)) {
-                $hasfiles = get_string('yes');
+                $hasfiles = '<font color=green>'.get_string('yes').'</font>';
             }
             array_push($dataarray, $hasfiles);
         }

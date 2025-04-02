@@ -37,7 +37,7 @@ $PAGE->set_url('/payment/gateway/bank/pay.php', $params);
 $PAGE->set_title(format_string(get_string('pluginname', 'paygw_bank')));
 //$PAGE->set_heading($description);
 $PAGE->set_cacheable(false);
-$PAGE->set_periodic_refresh_delay(120);
+$PAGE->set_periodic_refresh_delay(180);
 $PAGE->set_pagelayout('standard');
 
 $mform = new pay_form(null, array('confirm' => 1, 'component' => $component, 'paymentarea' => $paymentarea, 'itemid' => $itemid, 'description' => $description));
@@ -285,7 +285,7 @@ if ($sendteachermail) {
         $files = bank_helper::files($bank_entry->id);
         if(count($files)>0) {
             echo '<h5>'.get_string('files').':</h5>';
-            echo '<ul class="list-group">';
+            echo '<ul class="list-group mb-1">';
             $i = 0;
             foreach ($files as $f) {
         	$i++;
@@ -302,10 +302,10 @@ if ($sendteachermail) {
                 }
                 echo '</li>';
             }
+            echo '</ul>';
             if(count($files) < $maxnumberfiles){
-        	echo get_string('maxattachments', 'forum').': '.$maxnumberfiles;
+        	echo '<p>'.get_string('maxattachments', 'forum').': '.$maxnumberfiles.'</p>';
             }
-            echo '</ul><br>';
         }
         if(count($files) < $maxnumberfiles) {
             $at_form->display();
