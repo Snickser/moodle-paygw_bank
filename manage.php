@@ -311,6 +311,9 @@ if($filter == 'showarchived' && has_capability('paygw/bank:managepayments', $con
                 if (str_ends_with($f->get_filename(), ".png") || str_ends_with($f->get_filename(), ".jpeg") || str_ends_with($f->get_filename(), ".jpg") || str_ends_with($f->get_filename(), ".gif")) {
                     $hasfilesimg .= "<p align=center class='pt-3'><img class='rounded shadow' style='max-width: 100%; object-fit: contain;' src='$url'></p>";
                 }
+                if (str_ends_with($f->get_filename(), ".pdf")) {
+                    $hasfilesimg .= "<p align=center class='pt-3'><embed class='rounded shadow' style='width: 100%; height: 600px;' src='$url'/></p>";
+                }
             }
 
             $hasfiles .= $hasfilesbody . '</ol>';
