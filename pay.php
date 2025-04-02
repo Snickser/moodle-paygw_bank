@@ -25,19 +25,20 @@ $itemid = required_param('itemid', PARAM_INT);
 $description = required_param('description', PARAM_TEXT);
 $description = json_decode('"'.$description.'"');
 
+$costself = optional_param('costself', 0, PARAM_FLOAT);
+
 $params = [
     'sesskey' => sesskey(),
     'component' => $component,
     'paymentarea' => $paymentarea,
     'itemid' => $itemid,
-    'description' => $description
+    'description' => $description,
 ];
 
 $PAGE->set_url('/payment/gateway/bank/pay.php', $params);
 $PAGE->set_title(format_string(get_string('pluginname', 'paygw_bank')));
 //$PAGE->set_heading($description);
 $PAGE->set_cacheable(false);
-$PAGE->set_periodic_refresh_delay(180);
 $PAGE->set_pagelayout('standard');
 
 $mform = new pay_form(null, array('confirm' => 1, 'component' => $component, 'paymentarea' => $paymentarea, 'itemid' => $itemid, 'description' => $description));
@@ -47,6 +48,7 @@ $at_form->set_data($params);
 $dataform = $mform->get_data();
 $at_dataform = $at_form->get_data();
 $confirm = 0;
+
 if ($dataform != null) {
     $component = $dataform->component;
     $paymentarea = $dataform->paymentarea;
@@ -74,23 +76,23 @@ $payable = helper::get_payable($component, $paymentarea, $itemid);
 $currency = $payable->get_currency();
 $bank_entry = null;
 
+//if (!$config->unfixcost) {
+    $PAGE->set_periodic_refresh_delay(180);
+//}
+
 $cost = $payable->get_amount();
 
 // Add surcharge if there is any.
 $surcharge = helper::get_gateway_surcharge('bank');
+$amount = helper::get_rounded_cost($cost, $currency, $surcharge);
 
 // Check suggest.
 if (isset($config->suggest) && $config->suggest && $cost < $config->suggest) {
     $amount = helper::get_rounded_cost($config->suggest, $currency, $surcharge);
-} else {
-    $amount = helper::get_rounded_cost($cost, $currency, $surcharge);
 }
-
 // Check maxcost.
 if (isset($config->maxcost) && $config->maxcost && $cost > $config->maxcost) {
     $amount = helper::get_rounded_cost($config->maxcost, $currency, $surcharge);
-} else {
-    $amount = helper::get_rounded_cost($cost, $currency, $surcharge);
 }
 
 // Set fixdesc.
@@ -135,6 +137,10 @@ if (bank_helper::has_openbankentry($itemid, $USER->id)) {
 } else {
     if ($confirm != 0) {
         $totalamount = $amount;
+	if ($costself && isset($config->unfixcost) && $config->unfixcost) {
+	    $totalamount = $costself;
+	    $amount = $costself;
+	}
         $bank_entry = bank_helper::create_bankentry($itemid, $USER->id, $totalamount, $currency, $component, $paymentarea, $description);
         \core\notification::info(get_string('transfer_process_initiated', 'paygw_bank'));
         $confirm = 0;
@@ -170,6 +176,17 @@ echo '</li>';
 $aceptform = "";
 
 echo '<li class="list-group-item"><h4 class="card-title">' . get_string('amount', 'paygw_bank') . '</h4>';
+
+if (isset($config->unfixcost) && $config->unfixcost && $bank_entry == null) {
+
+    $config->suggest = $amount;
+
+ echo '<input type="number" id="inputcostself"
+ value="'.$amount.'" min="'.$config->suggest.'" max="'.$config->maxcost.'" step="0.01"
+ style="width: 6em;">';
+
+} else {
+
 if ($surcharge > 0) {
     $a = ['fee' => helper::get_cost_as_string($amount, $currency), 'surcharge' => $surcharge];
     echo '<div id="price">' . get_string('feeincludesurcharge', 'payment', $a) . '</div>';
@@ -177,6 +194,7 @@ if ($surcharge > 0) {
     echo '<div id="price">' .helper::get_cost_as_string($amount, $currency). ' </div>';
 }
 echo '</li>';
+}
 
 if ($bank_entry != null) {
     echo '<li class="list-group-item"><h4 class="card-title">' . get_string('transfer_code', 'paygw_bank') . ':</h4>';
@@ -205,7 +223,20 @@ if ($bank_entry == null) {
 echo '</ul><br><div class="ml-2 mr-2">';
 
 if ($confirm == 0 && !bank_helper::has_openbankentry($itemid, $USER->id)) {
+
     $mform->display();
+
+if (isset($config->unfixcost) && $config->unfixcost) {
+    echo "<script>
+const inputcostself = document.querySelector('#inputcostself');
+const costself = document.querySelector('input[name=costself]');
+costself.value = Number(inputcostself.value);
+inputcostself.addEventListener('input', function() {
+    costself.value = Number(inputcostself.value);
+});
+</script>";
+}
+
 } else {
     if ($canuploadfiles) {
         if ($at_form != null) {
@@ -327,6 +358,8 @@ if ($sendteachermail) {
         }
         if(count($files) < $maxnumberfiles) {
             $at_form->display();
+            
+
         }
     }
 }

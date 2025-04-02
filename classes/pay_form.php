@@ -39,10 +39,13 @@ class pay_form extends \moodleform
     public function definition()
     {
         $mform = $this->_form;
+
         $mform->setDisableShortforms(true);
         $mform->addElement('hidden', 'confirm');
+
         $mform->setDefault('confirm', 1);
         $mform->setType('confirm', PARAM_INT);
+
         $mform->addElement('hidden', 'component');
         $mform->setType('component', PARAM_TEXT);
 
@@ -51,6 +54,9 @@ class pay_form extends \moodleform
 
         $mform->addElement('hidden', 'itemid');
         $mform->setType('itemid', PARAM_INT);
+
+        $mform->addElement('hidden', 'costself');
+        $mform->setType('costself', PARAM_FLOAT);
 
         $mform->addElement('hidden', 'description');
         $mform->setType('description', PARAM_TEXT);

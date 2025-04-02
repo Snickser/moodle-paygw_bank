@@ -118,3 +118,5 @@ $string['suggest_help'] = 'Suggested cost';
 $string['amount'] = 'Suggested cost';
 $string['fixdesc'] = 'Fixed payment comment';
 $string['fixdesc_help'] = 'This setting sets a fixed comment for all payments.';
+$string['unfixcost'] = 'Unfixed price mode';
+$string['unfixcost_help'] = 'Enable the ability for students to pay with an arbitrary amount.';
