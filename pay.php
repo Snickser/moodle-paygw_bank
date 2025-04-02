@@ -76,6 +76,16 @@ $bank_entry = null;
 
 $cost = $payable->get_amount();
 
+// Add surcharge if there is any.
+$surcharge = helper::get_gateway_surcharge('bank');
+
+// Check suggest.
+if (isset($config->suggest) && $cost < $config->suggest) {
+    $amount = helper::get_rounded_cost($config->suggest, $currency, $surcharge);
+} else {
+    $amount = helper::get_rounded_cost($cost, $currency, $surcharge);
+}
+
 // Add support for enrol_yafee.
 if ($component == "enrol_yafee") {
     $cs = $DB->get_record('enrol', ['id' => $itemid, 'enrol' => 'yafee']);
@@ -102,10 +112,6 @@ if ($component == "enrol_yafee") {
         }
     }
 }
-
-// Add surcharge if there is any.
-$surcharge = helper::get_gateway_surcharge('bank');
-$amount = helper::get_rounded_cost($cost, $currency, $surcharge);
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('gatewayname', 'paygw_bank'), 2);
@@ -140,18 +146,18 @@ echo '<div class="card-body">';
 if ($bank_entry != null) {
     $instructions = format_text($config->postinstructionstext['text']);
     echo '<div class="ml-2 mr-2" id="bankinstructions">' . $instructions . '</div>';
-    echo '<br><ul class="list-group">';
+    echo '<ul class="list-group">';
 } else {
     echo '<ul class="list-group list-group-flush">';
 }
 
-echo '<li class="list-group-item"><h4 class="card-title">' . get_string('concept', 'paygw_bank') . ':</h4>';
+echo '<li class="list-group-item"><h4 class="card-title">' . get_string('concept', 'paygw_bank') . '</h4>';
 echo '<div>' . $description . '</div>';
 echo '</li>';
 
 $aceptform = "";
 
-echo '<li class="list-group-item"><h4 class="card-title">' . get_string('total_cost', 'paygw_bank') . ':</h4>';
+echo '<li class="list-group-item"><h4 class="card-title">' . get_string('amount', 'paygw_bank') . '</h4>';
 if ($surcharge > 0) {
     $a = ['fee' => helper::get_cost_as_string($amount, $currency), 'surcharge' => $surcharge];
     echo '<div id="price">' . get_string('feeincludesurcharge', 'payment', $a) . '</div>';

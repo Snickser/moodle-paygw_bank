@@ -62,21 +62,27 @@ class gateway extends \core_payment\gateway
         $mform->addElement('advcheckbox', 'onlyingroup', get_string('onlyingroup', 'paygw_bank'));
 
 //        $mform->addElement('checkbox', 'upload', get_string('instructionstext', 'paygw_bank'));
-        $mform->setType('instructionstext', PARAM_RAW);
+//        $mform->setType('instructionstext', PARAM_RAW);
+
         $mform->addElement('editor', 'instructionstext', get_string('instructionstext', 'paygw_bank'));
         $mform->setType('instructionstext', PARAM_RAW);
+
         $mform->addElement('editor', 'postinstructionstext', get_string('postinstructionstext', 'paygw_bank'));
         $mform->setType('postinstructionstext', PARAM_RAW);
+
         $mform->addElement('text', 'codeprefix', get_string('codeprefix', 'paygw_bank'));
         $mform->setType('codeprefix', PARAM_RAW);
+
         //add default value to codeprefix
         $mform->setDefault('codeprefix', 'code');
+
+        $mform->addElement('text', 'suggest', get_string('suggest', 'paygw_bank'), ['size' => 10]);
+        $mform->setType('suggest', PARAM_TEXT);
 
         $mform->addElement('html', '<hr>');
         $plugininfo = \core_plugin_manager::instance()->get_plugin_info('paygw_bank');
         $donate = get_string('donate', 'paygw_bank', $plugininfo);
         $mform->addElement('html', $donate);
-
     }
 
     /**

@@ -29,12 +29,12 @@ $string['are_you_sure_cancel'] = 'Вы точно уверены что хоти
 $string['cancel_process'] = 'Отменить';
 $string['code'] = 'Код платежа';
 $string['codeprefix'] = 'Префикс кода платежа';
-$string['concept'] = 'Описание';
+$string['concept'] = 'Описание:';
 $string['cost'] = 'Цена';
 $string['deny'] = 'Отказать';
 $string['file_already_uploaded'] = 'Файл с таким именем уже загружен';
 $string['file_uploaded'] = 'Файл загружен';
-$string['gatewaydescription'] = 'Bank Transfer - это ручной способ оплаты и денежных переводов по реквизитам, с возможным предоставлением подтверждающих документов.';
+$string['gatewaydescription'] = 'Bank Transference - обеспечивает поддержку платежей, осуществляемых посредством денежных переводов по реквизитам или других методов ручной оплаты.';
 $string['hasfiles'] = 'Файлы';
 $string['mails_sent'] = 'Письма отправлены';
 $string['mail_confirm_pay'] = 'Уважаемый(ая) {$a->username},
@@ -78,7 +78,7 @@ $string['unpaidtimeend'] = 'Конечная дата';
 $string['pendingrequests'] = 'Все активные запросы';
 $string['onlyingroup'] = 'Отправлять уведомления учителям только в пределах их групп';
 $string['maxnumberoffilesreached'] = 'Достигнуто максимальное количество загруженных файлов';
-$string['messegesubject'] = 'Bank Transfer уведомление';
+$string['messegesubject'] = 'Bank Transference уведомление';
 $string['email_notifications_new_user'] = 'Уважаемый(ая) {$a->userfullname},
 уведомляем вас о создании новой заявки на оплату в курсе «{$a->course}», при оплате укажите в платеже сумму и код.
 Сумма: {$a->amount} {$a->currency}
@@ -86,3 +86,5 @@ $string['email_notifications_new_user'] = 'Уважаемый(ая) {$a->userful
 
 {$a->url}';
 $string['send_teacher_mail_help'] = 'Также в настройках платёжного интерфеса можно включить ограничение по группам для учителей.';
+$string['suggest'] = 'Рекомендуемая цена';
+$string['amount'] = 'Сумма:';
