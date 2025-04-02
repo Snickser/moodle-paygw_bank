@@ -34,7 +34,7 @@ $string['cost'] = 'Цена';
 $string['deny'] = 'Отказать';
 $string['file_already_uploaded'] = 'Файл с таким именем уже загружен';
 $string['file_uploaded'] = 'Файл загружен';
-$string['gatewaydescription'] = 'Bank Transference - обеспечивает поддержку платежей, осуществляемых посредством денежных переводов по реквизитам или других методов ручной оплаты.';
+$string['gatewaydescription'] = 'Bank Transfers - обеспечивает поддержку платежей, осуществляемых посредством денежных переводов по реквизитам или других методов ручной оплаты.';
 $string['hasfiles'] = 'Файлы';
 $string['mails_sent'] = 'Письма отправлены';
 $string['mail_confirm_pay'] = 'Уважаемый(ая) {$a->username},
@@ -78,7 +78,7 @@ $string['unpaidtimeend'] = 'Конечная дата';
 $string['pendingrequests'] = 'Все активные запросы';
 $string['onlyingroup'] = 'Отправлять уведомления учителям только в пределах их групп';
 $string['maxnumberoffilesreached'] = 'Достигнуто максимальное количество загруженных файлов';
-$string['messegesubject'] = 'Bank Transference уведомление';
+$string['messegesubject'] = 'Bank Transfers уведомление';
 $string['email_notifications_new_user'] = 'Уважаемый(ая) {$a->userfullname},
 уведомляем вас о создании новой заявки на оплату в курсе «{$a->course}», при оплате укажите в платеже сумму и код.
 Сумма: {$a->amount} {$a->currency}
