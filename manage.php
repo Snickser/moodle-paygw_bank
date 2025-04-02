@@ -309,7 +309,7 @@ if($filter == 'showarchived' && has_capability('paygw/bank:managepayments', $con
                 $hasfilesbody .= '<li class="mb-2"><a href="' . $url . '" download><b>' . $f->get_filename() . '</b></a><br>';
             	$hasfilesbody .= get_string('size').': '. round($f->get_filesize()/1024,2) . ' KB</li>';
                 if (str_ends_with($f->get_filename(), ".png") || str_ends_with($f->get_filename(), ".jpeg") || str_ends_with($f->get_filename(), ".jpg") || str_ends_with($f->get_filename(), ".gif")) {
-                    $hasfilesimg .= "<p align=center class='pt-3'><img class='rounded shadow' style='max-width: 100%; object-fit: contain;' src='$url'></p>";
+                    $hasfilesimg .= "<p align=center class='pt-3'><img class='rounded shadow' style='max-width: 100%; max-height: 800px; object-fit: contain;' src='$url'></p>";
                 }
                 if (str_ends_with($f->get_filename(), ".pdf")) {
                     $hasfilesimg .= "<p align=center class='pt-3'><object type='application/pdf' class='rounded shadow' style='width: 96%; height: 600px;' data='$url'></object></p>";
