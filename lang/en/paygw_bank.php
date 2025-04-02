@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 $string['gatewaydescription'] = 'bank is an authorised payment gateway provider for processing credit card transactions.';
-$string['gatewayname'] = 'Bank Transference';
+$string['gatewayname'] = 'Bank Transfers';
 $string['concept'] = 'Concept:';
 $string['cost'] = 'Cost';
 $string['code'] = 'Code';
@@ -30,9 +30,9 @@ $string['total_cost'] = 'Invoice cost';
 $string['today_cost'] = 'Today cost';
 $string['transfer_code'] = 'Transfer code';
 $string['internalerror'] = 'An internal error has occurred. Please contact us.';
-$string['pluginname'] = 'Bank Transference';
-$string['pluginname_desc'] = 'The Bank Transference plugin allows to pay courses by bank transfer or other manual payment methods.';
-$string['privacy:metadata'] = 'The Bank Transference plugin does not store any personal data.';
+$string['pluginname'] = 'Bank Transfers';
+$string['pluginname_desc'] = 'The Bank Transfers plugin allows to pay courses by bank transfer or other manual payment methods.';
+$string['privacy:metadata'] = 'The Bank Transfers plugin does not store any personal data.';
 $string['instructionstext'] = 'Instructions that show previously to acept transfer payment.';
 $string['postinstructionstext'] = 'Instructions that show after acept transfer payment.';
 $string['transfer_code_explanation'] = 'This is your code to include in your transfer concept {$a}.';
@@ -105,12 +105,20 @@ $string['unpaidtimeend'] = 'Expiration date';
 $string['pendingrequests'] = 'All requests';
 $string['onlyingroup'] = 'Send notifications to teachers only within their groups';
 $string['maxnumberoffilesreached'] = 'Maximum number of files reached';
-$string['messegesubject'] = 'Bank Transference notification';
+$string['messegesubject'] = 'Bank Transfers notification';
 $string['email_notifications_new_user'] = 'Dear {$a->userfullname}.
 You make a new bank payment request.
 Amount: {$a->fee}
 Code: {$a->code}
 
 {$a->url}';
+$string['maxcost'] = 'Maximum cost';
+$string['maxcosterror'] = 'The maximum price must be higher than the recommended price, and greater than zero';
 $string['suggest'] = 'Suggested cost';
+$string['suggest_help'] = 'Suggested cost';
+$string['suggesterror'] = 'Suggested price must be higher than zero';
 $string['amount'] = 'Suggested cost';
+$string['fixdesc'] = 'Fixed payment comment';
+$string['fixdesc_help'] = 'This setting sets a fixed comment for all payments.';
+$string['unfixcost'] = 'Unfixed price mode';
+$string['unfixcost_help'] = 'Enable the ability for students to pay with an arbitrary amount.';

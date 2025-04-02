@@ -64,6 +64,11 @@ class gateway extends \core_payment\gateway
 //        $mform->addElement('checkbox', 'upload', get_string('instructionstext', 'paygw_bank'));
 //        $mform->setType('instructionstext', PARAM_RAW);
 
+        $mform->addElement('text', 'fixdesc', get_string('fixdesc', 'paygw_bank'), ['size' => 50]);
+        $mform->setType('fixdesc', PARAM_TEXT);
+        $mform->addRule('fixdesc', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
+        $mform->addHelpButton('fixdesc', 'fixdesc', 'paygw_bank');
+
         $mform->addElement('editor', 'instructionstext', get_string('instructionstext', 'paygw_bank'));
         $mform->setType('instructionstext', PARAM_RAW);
 
@@ -76,8 +81,20 @@ class gateway extends \core_payment\gateway
         //add default value to codeprefix
         $mform->setDefault('codeprefix', 'code');
 
+        $mform->addElement(
+            'advcheckbox',
+            'unfixcost',
+            get_string('unfixcost', 'paygw_bank')
+        );
+        $mform->setType('unfixcost', PARAM_INT);
+        $mform->addHelpButton('unfixcost', 'unfixcost', 'paygw_bank');
+
         $mform->addElement('text', 'suggest', get_string('suggest', 'paygw_bank'), ['size' => 10]);
         $mform->setType('suggest', PARAM_TEXT);
+        $mform->addHelpButton('suggest', 'suggest', 'paygw_bank');
+
+        $mform->addElement('text', 'maxcost', get_string('maxcost', 'paygw_bank'), ['size' => 10]);
+        $mform->setType('maxcost', PARAM_TEXT);
 
         $mform->addElement('html', '<hr>');
         $plugininfo = \core_plugin_manager::instance()->get_plugin_info('paygw_bank');
