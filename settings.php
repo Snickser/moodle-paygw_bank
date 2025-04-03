@@ -130,8 +130,14 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configcheckbox(
         'paygw_bank/sendteachermail',
         get_string('send_teacher_mail', 'paygw_bank'),
-        get_string('send_teacher_mail_help', 'paygw_bank'),
+        '',
         0
+    ));
+    $settings->add(new admin_setting_configcheckbox(
+        'paygw_bank/onlyingroup',
+        get_string('onlyingroup', 'paygw_bank'),
+        '',
+        1
     ));
 }
 
