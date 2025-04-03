@@ -170,6 +170,11 @@ class bank_helper
         payment_helper::deliver_order($record->component, $record->paymentarea, $record->itemid, $paymentid, (int) $record->userid);
         $transaction->allow_commit();
 
+	// Set default.
+	if (!isset($config->autocommit)) {
+	    $config->autocommit = false;
+	}
+
 	$cid = self::get_courseid($record->paymentarea, $record->component, $record->itemid);
 	$groups = self::get_course_usergroups($cid, $record->userid);
 
@@ -192,9 +197,9 @@ class bank_helper
 	    force_current_language($oldforcelang);
         }
 
-        $send_email = get_config('paygw_bank', 'senconfirmailtosupport');
+        $send_email = $config->sendconfirmailtosupport;
         $emailaddress = get_config('paygw_bank', 'notificationsaddress');
-	$sendteachermail = get_config('paygw_bank', 'sendteachermail');
+	$sendteachermail = $config->sendteachermail;
 
         if ($send_email) {
             $contentmessage = new stdClass;
@@ -359,9 +364,9 @@ if ($sendteachermail) {
         $mailcontent = get_string('email_notifications_new_user', 'paygw_bank', $contentmessage);
 	self::message_to_user($userid, $supportuser, $subject, $mailcontent);
 
-        $send_email = get_config('paygw_bank', 'sendnewrequestmail');
+        $send_email = $config->sendnewrequestmail;
         $emailaddress = get_config('paygw_bank', 'notificationsaddress');
-	$sendteachermail = get_config('paygw_bank', 'sendteachermail');
+	$sendteachermail = $config->sendteachermail;
 
         if ($send_email) {
 	    $groups = self::get_course_usergroups($cid, $userid);

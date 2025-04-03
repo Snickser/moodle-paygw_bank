@@ -44,6 +44,12 @@ if ($ADMIN->fulltree) {
     \core_payment\helper::add_common_gateway_settings($settings, 'paygw_bank');
 
     $settings->add(new admin_setting_configcheckbox(
+        'paygw_bank/autocommit',
+        get_string('autocommit', 'paygw_bank'),
+        '',
+        0
+    ));
+    $settings->add(new admin_setting_configcheckbox(
         'paygw_bank/usercanuploadfiles',
         get_string('allow_users_add_files', 'paygw_bank'),
         '',
@@ -116,7 +122,7 @@ if ($ADMIN->fulltree) {
         0
     ));
     $settings->add(new admin_setting_configcheckbox(
-        'paygw_bank/senconfirmailtosupport',
+        'paygw_bank/sendconfirmailtosupport',
         get_string('send_confirm_mail_to_support', 'paygw_bank'),
         '',
         0
@@ -124,8 +130,14 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configcheckbox(
         'paygw_bank/sendteachermail',
         get_string('send_teacher_mail', 'paygw_bank'),
-        get_string('send_teacher_mail_help', 'paygw_bank'),
+        '',
         0
+    ));
+    $settings->add(new admin_setting_configcheckbox(
+        'paygw_bank/onlyingroup',
+        get_string('onlyingroup', 'paygw_bank'),
+        '',
+        1
     ));
 }
 

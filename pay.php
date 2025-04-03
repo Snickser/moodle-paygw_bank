@@ -76,6 +76,11 @@ $payable = helper::get_payable($component, $paymentarea, $itemid);
 $currency = $payable->get_currency();
 $bank_entry = null;
 
+// Set default.
+if (!isset($config->autocommit)) {
+    $config->autocommit = false;
+}
+
 //if (!$config->unfixcost) {
     $PAGE->set_periodic_refresh_delay(180);
 //}
@@ -128,6 +133,7 @@ if ($component == "enrol_yafee") {
         }
     }
 }
+
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('gatewayname', 'paygw_bank'), 2);
@@ -298,9 +304,9 @@ echo "
                         );
                         $fs->create_file_from_pathname($fileinfo, $fullpath);
                         bank_helper::check_hasfiles($bank_entry->id);
-                        $send_email = get_config('paygw_bank', 'sendnewattachmentsmail');
+                        $send_email = $config->sendnewattachmentsmail;
                         $emailaddress = get_config('paygw_bank', 'notificationsaddress');
-                        $sendteachermail = get_config('paygw_bank', 'sendteachermail');
+                        $sendteachermail = $config->sendteachermail;
 
                         if ($send_email) {
     			    $cid = bank_helper::get_courseid($bank_entry->paymentarea, $bank_entry->component, $bank_entry->itemid);
@@ -350,8 +356,26 @@ if ($sendteachermail) {
                 }
             }
         }
+
         $files = bank_helper::files($bank_entry->id);
         if(count($files)>0) {
+
+    if ($config->autocommit) {
+	$url = helper::get_success_url($component, $paymentarea, $itemid);
+	echo '<h3>'.get_string('autocommittext', 'paygw_bank').'</h3><br>';
+	bank_helper::aprobe_pay($bank_entry->id);
+	echo $OUTPUT->single_button($url, get_string('continue'), 'get', ['type' => 'primary']);
+	echo "
+    <script>
+        var timer = setTimeout(function() {
+            window.location='$url'
+        }, 300000);
+    </script>
+    ";
+	echo $OUTPUT->footer();
+	die; // End.
+    }
+
             echo '<h5>'.get_string('files').':</h5>';
             echo '<ul class="list-group mb-1">';
             $i = 0;
@@ -375,10 +399,9 @@ if ($sendteachermail) {
         	echo '<p>'.get_string('maxattachments', 'forum').': '.$maxnumberfiles.'</p>';
             }
         }
+
         if(count($files) < $maxnumberfiles) {
             $at_form->display();
-            
-
         }
     }
 }
