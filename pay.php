@@ -129,6 +129,7 @@ if ($component == "enrol_yafee") {
     }
 }
 
+
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('gatewayname', 'paygw_bank'), 2);
 
@@ -207,7 +208,7 @@ if ($bank_entry != null) {
     echo '<div id="transfercode">' . $bank_entry->code . '</div>';
     echo '</li>';
 
-    if (isset($cs->customint5) && $cs->customint5 && isset($timeend)) {
+    if (isset($cs->customint5) && $cs->customint5 && isset($timeend) && !(isset($config->autocommit) && $config->autocommit)) {
 	echo '<li class="list-group-item"><h4 class="card-title">' . get_string('unpaidtimeend', 'paygw_bank') . ':</h4>';
 	echo '<div id="transfercode">';
 	echo userdate($timeend, get_string('strftimedate', 'core_langconfig')) . ' ' . date('H:i', $timeend);
@@ -350,8 +351,26 @@ if ($sendteachermail) {
                 }
             }
         }
+
         $files = bank_helper::files($bank_entry->id);
         if(count($files)>0) {
+
+    if (isset($config->autocommit) && $config->autocommit) {
+	$url = helper::get_success_url($component, $paymentarea, $itemid);
+	echo '<h3>'.get_string('autocommittext', 'paygw_bank').'</h3><br>';
+	bank_helper::aprobe_pay($bank_entry->id);
+	echo $OUTPUT->single_button($url, get_string('continue'), 'get', ['type' => 'primary']);
+	echo "
+    <script>
+        var timer = setTimeout(function() {
+            window.location='$url'
+        }, 30000);
+    </script>
+    ";
+	echo $OUTPUT->footer();
+	die; // End.
+    }
+
             echo '<h5>'.get_string('files').':</h5>';
             echo '<ul class="list-group mb-1">';
             $i = 0;
@@ -375,10 +394,9 @@ if ($sendteachermail) {
         	echo '<p>'.get_string('maxattachments', 'forum').': '.$maxnumberfiles.'</p>';
             }
         }
+
         if(count($files) < $maxnumberfiles) {
             $at_form->display();
-            
-
         }
     }
 }

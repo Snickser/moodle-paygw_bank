@@ -64,6 +64,8 @@ class gateway extends \core_payment\gateway
 //        $mform->addElement('checkbox', 'upload', get_string('instructionstext', 'paygw_bank'));
 //        $mform->setType('instructionstext', PARAM_RAW);
 
+        $mform->addElement('advcheckbox', 'autocommit', get_string('autocommit', 'paygw_bank'));
+
         $mform->addElement('text', 'fixdesc', get_string('fixdesc', 'paygw_bank'), ['size' => 50]);
         $mform->setType('fixdesc', PARAM_TEXT);
         $mform->addRule('fixdesc', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
@@ -118,6 +120,12 @@ class gateway extends \core_payment\gateway
     ): void {
         if (!$data->enabled) {
             $errors['enabled'] = get_string('gatewaycannotbeenabled', 'payment');
+        }
+        if ($data->suggest < 0 && $data->suggest) {
+            $errors['suggest'] = get_string('suggesterror', 'paygw_bank');
+        }
+        if ($data->maxcost < 0 && $data->maxcost || $data->maxcost < $data->suggest) {
+            $errors['maxcost'] = get_string('maxcosterror', 'paygw_bank');
         }
     }
 }

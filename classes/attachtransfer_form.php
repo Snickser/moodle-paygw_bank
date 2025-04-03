@@ -70,6 +70,7 @@ class attachtransfer_form extends \moodleform
         $mform->addRule('userfile', null, 'required');
 
         $mform->addElement('submit', 'submitbutton', get_string('upload'));
+
     }
     public function validation($data, $files)
     {
