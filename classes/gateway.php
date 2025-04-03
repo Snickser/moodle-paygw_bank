@@ -61,8 +61,6 @@ class gateway extends \core_payment\gateway
 
         $mform->addElement('advcheckbox', 'autocommit', get_string('autocommit', 'paygw_bank'));
 
-        $mform->addElement('advcheckbox', 'onlyingroup', get_string('onlyingroup', 'paygw_bank'));
-
 //        $mform->addElement('checkbox', 'upload', get_string('instructionstext', 'paygw_bank'));
 //        $mform->setType('instructionstext', PARAM_RAW);
 
@@ -82,6 +80,29 @@ class gateway extends \core_payment\gateway
 
         //add default value to codeprefix
         $mform->setDefault('codeprefix', 'code');
+
+        $mform->addElement(
+            'advcheckbox',
+            'sendnewrequestmail',
+            get_string('send_new_request_mail', 'paygw_bank')
+        );
+        $mform->addElement(
+            'advcheckbox',
+            'sendnewattachmentsmail',
+            get_string('send_new_attachments_mail', 'paygw_bank')
+        );
+        $mform->addElement(
+            'advcheckbox',
+            'sendconfirmailtosupport',
+            get_string('send_confirm_mail_to_support', 'paygw_bank')
+        );
+        $mform->addElement(
+            'advcheckbox',
+            'sendteachermail',
+            get_string('send_teacher_mail', 'paygw_bank')
+        );
+
+        $mform->addElement('advcheckbox', 'onlyingroup', get_string('onlyingroup', 'paygw_bank'));
 
         $mform->addElement(
             'advcheckbox',

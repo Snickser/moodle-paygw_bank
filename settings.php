@@ -122,7 +122,7 @@ if ($ADMIN->fulltree) {
         0
     ));
     $settings->add(new admin_setting_configcheckbox(
-        'paygw_bank/senconfirmailtosupport',
+        'paygw_bank/sendconfirmailtosupport',
         get_string('send_confirm_mail_to_support', 'paygw_bank'),
         '',
         0

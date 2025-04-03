@@ -304,9 +304,9 @@ echo "
                         );
                         $fs->create_file_from_pathname($fileinfo, $fullpath);
                         bank_helper::check_hasfiles($bank_entry->id);
-                        $send_email = get_config('paygw_bank', 'sendnewattachmentsmail');
+                        $send_email = $config->sendnewattachmentsmail;
                         $emailaddress = get_config('paygw_bank', 'notificationsaddress');
-                        $sendteachermail = get_config('paygw_bank', 'sendteachermail');
+                        $sendteachermail = $config->sendteachermail;
 
                         if ($send_email) {
     			    $cid = bank_helper::get_courseid($bank_entry->paymentarea, $bank_entry->component, $bank_entry->itemid);
