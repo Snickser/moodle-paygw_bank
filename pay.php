@@ -76,6 +76,11 @@ $payable = helper::get_payable($component, $paymentarea, $itemid);
 $currency = $payable->get_currency();
 $bank_entry = null;
 
+// Set default.
+if (!isset($config->autocommit)) {
+    $config->autocommit = false;
+}
+
 //if (!$config->unfixcost) {
     $PAGE->set_periodic_refresh_delay(180);
 //}
@@ -208,7 +213,7 @@ if ($bank_entry != null) {
     echo '<div id="transfercode">' . $bank_entry->code . '</div>';
     echo '</li>';
 
-    if (isset($cs->customint5) && $cs->customint5 && isset($timeend) && !(isset($config->autocommit) && $config->autocommit)) {
+    if (isset($cs->customint5) && $cs->customint5 && isset($timeend)) {
 	echo '<li class="list-group-item"><h4 class="card-title">' . get_string('unpaidtimeend', 'paygw_bank') . ':</h4>';
 	echo '<div id="transfercode">';
 	echo userdate($timeend, get_string('strftimedate', 'core_langconfig')) . ' ' . date('H:i', $timeend);
@@ -355,7 +360,7 @@ if ($sendteachermail) {
         $files = bank_helper::files($bank_entry->id);
         if(count($files)>0) {
 
-    if (isset($config->autocommit) && $config->autocommit) {
+    if ($config->autocommit) {
 	$url = helper::get_success_url($component, $paymentarea, $itemid);
 	echo '<h3>'.get_string('autocommittext', 'paygw_bank').'</h3><br>';
 	bank_helper::aprobe_pay($bank_entry->id);
@@ -364,7 +369,7 @@ if ($sendteachermail) {
     <script>
         var timer = setTimeout(function() {
             window.location='$url'
-        }, 30000);
+        }, 300000);
     </script>
     ";
 	echo $OUTPUT->footer();

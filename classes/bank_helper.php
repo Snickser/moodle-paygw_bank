@@ -170,6 +170,11 @@ class bank_helper
         payment_helper::deliver_order($record->component, $record->paymentarea, $record->itemid, $paymentid, (int) $record->userid);
         $transaction->allow_commit();
 
+	// Set default.
+	if (!isset($config->autocommit)) {
+	    $config->autocommit = false;
+	}
+
 	$cid = self::get_courseid($record->paymentarea, $record->component, $record->itemid);
 	$groups = self::get_course_usergroups($cid, $record->userid);
 

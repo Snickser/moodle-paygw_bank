@@ -59,12 +59,12 @@ class gateway extends \core_payment\gateway
     {
         $mform = $form->get_mform();
 
+        $mform->addElement('advcheckbox', 'autocommit', get_string('autocommit', 'paygw_bank'));
+
         $mform->addElement('advcheckbox', 'onlyingroup', get_string('onlyingroup', 'paygw_bank'));
 
 //        $mform->addElement('checkbox', 'upload', get_string('instructionstext', 'paygw_bank'));
 //        $mform->setType('instructionstext', PARAM_RAW);
-
-        $mform->addElement('advcheckbox', 'autocommit', get_string('autocommit', 'paygw_bank'));
 
         $mform->addElement('text', 'fixdesc', get_string('fixdesc', 'paygw_bank'), ['size' => 50]);
         $mform->setType('fixdesc', PARAM_TEXT);
