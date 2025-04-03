@@ -109,36 +109,6 @@ if ($ADMIN->fulltree) {
         '',
         PARAM_EMAIL
     ));
-    $settings->add(new admin_setting_configcheckbox(
-        'paygw_bank/sendnewrequestmail',
-        get_string('send_new_request_mail', 'paygw_bank'),
-        '',
-        0
-    ));
-    $settings->add(new admin_setting_configcheckbox(
-        'paygw_bank/sendnewattachmentsmail',
-        get_string('send_new_attachments_mail', 'paygw_bank'),
-        '',
-        0
-    ));
-    $settings->add(new admin_setting_configcheckbox(
-        'paygw_bank/sendconfirmailtosupport',
-        get_string('send_confirm_mail_to_support', 'paygw_bank'),
-        '',
-        0
-    ));
-    $settings->add(new admin_setting_configcheckbox(
-        'paygw_bank/sendteachermail',
-        get_string('send_teacher_mail', 'paygw_bank'),
-        '',
-        0
-    ));
-    $settings->add(new admin_setting_configcheckbox(
-        'paygw_bank/onlyingroup',
-        get_string('onlyingroup', 'paygw_bank'),
-        '',
-        1
-    ));
 }
 
 $systemcontext = \context_system::instance();
