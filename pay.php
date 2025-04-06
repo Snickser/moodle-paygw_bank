@@ -7,6 +7,7 @@ use paygw_bank\attachtransfer_form;
 
 require_once __DIR__ . '/../../../config.php';
 require_once './lib.php';
+
 $canuploadfiles = get_config('paygw_bank', 'usercanuploadfiles');
 $maxnumberfiles = get_config('paygw_bank', 'maxnumberfiles');
 if(!$maxnumberfiles) {
@@ -267,11 +268,10 @@ echo "
 } else {
     if ($canuploadfiles) {
         if ($at_form != null) {
+	    $isuploaded = false;
 
-$isuploaded = false;
-
-$fs = get_file_storage();
-$files = $fs->get_area_files(context_system::instance()->id, 'paygw_bank', 'transfer', $bank_entry->id);
+	    $fs = get_file_storage();
+	    $files = $fs->get_area_files(context_system::instance()->id, 'paygw_bank', 'transfer', $bank_entry->id);
 
             if ((count($files)-1)<=0 || $editfiles) {
 
@@ -310,6 +310,8 @@ $files = $fs->get_area_files(context_system::instance()->id, 'paygw_bank', 'tran
 	}
 
 	bank_helper::check_hasfiles($bank_entry->id);
+    } else {
+	$DB->update_record('paygw_bank', ['id' => $bank_entry->id, 'hasfiles' => 0]);
     }
 
             }
