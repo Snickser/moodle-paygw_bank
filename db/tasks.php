@@ -1,5 +1,5 @@
 <?php
-// This file is part of the bank paymnts module for Moodle - http://moodle.org/
+// This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -15,18 +15,23 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version information
- *
+ * Task definition for paygw_bank.
  * @package   paygw_bank
- * @copyright UNESCO/IESALC
- * @author    Carlos Vicente Corral <c.vicente@unesco.org>
+ * @copyright 2024 Alex Orlov <snickser@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 3025040600;        // The current plugin version (Date: YYYYMMDDXX).
-$plugin->requires  = 2021051100;        // Requires this Moodle version.
-$plugin->component = 'paygw_bank';      // Full name of the plugin (used for diagnostics).
-$plugin->maturity  = MATURITY_STABLE;
-$plugin->release   = '2.0';
+$tasks = [
+    [
+        'classname' => '\paygw_bank\task\autocommit',
+        'blocking' => 0,
+        'minute' => '*/10',
+        'hour' => '*',
+        'day' => '*',
+        'month' => '*',
+        'dayofweek' => '*',
+        'disabled' => 0,
+    ]
+];

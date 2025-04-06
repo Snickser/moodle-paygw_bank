@@ -41,6 +41,7 @@ class attachtransfer_form extends \moodleform
     {
         global $CFG;
 
+        $maxfiles = get_config('paygw_bank', 'maxnumberfiles');
         $maxbytes = $CFG->maxbytes;
         $accepted_types = array('.zip', '.png', '.jpg', '.jpeg', '.doc', '.docx', '.pdf', '.odt');
         $cfgallowedfiletypes = get_config('paygw_bank', 'allowedfiletypes');
@@ -60,16 +61,25 @@ class attachtransfer_form extends \moodleform
         $mform->setType('itemid', PARAM_INT);
         $mform->addElement('hidden', 'description');
         $mform->setType('description', PARAM_TEXT);
+        $mform->addElement('hidden', 'editfiles');
+        $mform->setType('editfiles', PARAM_INT);
+
         $mform->addElement(
-            'filepicker',
+            'filemanager',
             'userfile',
             get_string('file'),
 	    null,
-            array('maxbytes' => $maxbytes, 'accepted_types' => $accepted_types)
+            [
+        	'maxbytes' => $maxbytes,
+        	'accepted_types' => $accepted_types,
+                'subdirs' => 0,
+                'maxfiles' => $maxfiles,
+                'areamaxbytes' => $maxbytes,
+            ]
         );
         $mform->addRule('userfile', null, 'required');
 
-        $mform->addElement('submit', 'submitbutton', get_string('upload'));
+        $mform->addElement('submit', 'submitbutton', get_string('savefiles', 'paygw_bank'));
 
     }
     public function validation($data, $files)

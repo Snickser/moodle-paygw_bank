@@ -102,42 +102,13 @@ if ($ADMIN->fulltree) {
         get_string('email_notifications', 'paygw_bank'),
         get_string('email_notifications_help', 'paygw_bank'),
     ));
+
     $settings->add(new admin_setting_configtext(
         'paygw_bank/notificationsaddress',
         get_string('email_to_notify', 'paygw_bank'),
-        '',
+        get_string('email_to_notify_desc', 'paygw_bank'),
         '',
         PARAM_EMAIL
-    ));
-    $settings->add(new admin_setting_configcheckbox(
-        'paygw_bank/sendnewrequestmail',
-        get_string('send_new_request_mail', 'paygw_bank'),
-        '',
-        0
-    ));
-    $settings->add(new admin_setting_configcheckbox(
-        'paygw_bank/sendnewattachmentsmail',
-        get_string('send_new_attachments_mail', 'paygw_bank'),
-        '',
-        0
-    ));
-    $settings->add(new admin_setting_configcheckbox(
-        'paygw_bank/sendconfirmailtosupport',
-        get_string('send_confirm_mail_to_support', 'paygw_bank'),
-        '',
-        0
-    ));
-    $settings->add(new admin_setting_configcheckbox(
-        'paygw_bank/sendteachermail',
-        get_string('send_teacher_mail', 'paygw_bank'),
-        '',
-        0
-    ));
-    $settings->add(new admin_setting_configcheckbox(
-        'paygw_bank/onlyingroup',
-        get_string('onlyingroup', 'paygw_bank'),
-        '',
-        1
     ));
 }
 
