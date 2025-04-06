@@ -278,23 +278,20 @@ $files = $fs->get_area_files(context_system::instance()->id, 'paygw_bank', 'tran
     $draftitemid = file_get_submitted_draft_itemid('userfile');
 
     if (isset($bank_entry->hasfiles) && $bank_entry->hasfiles) {
-    file_prepare_draft_area(
-        $draftitemid,
-        context_system::instance()->id,
-        'paygw_bank',
-        'transfer',
-        $bank_entry->id,
-        ['subdirs' => 0, 'maxfiles' => $maxnumberfiles]
-    );
-    $at_form->userfile = $draftitemid;
-    $at_form->set_data($at_form);
+	file_prepare_draft_area(
+    	    $draftitemid,
+    	    context_system::instance()->id,
+    	    'paygw_bank',
+    	    'transfer',
+    	    $bank_entry->id,
+    	    ['subdirs' => 0, 'maxfiles' => $maxnumberfiles]
+	);
+	$at_form->userfile = $draftitemid;
+	$at_form->set_data($at_form);
     }
-
 
     file_save_draft_area_files($draftitemid, context_system::instance()->id, 'paygw_bank', 'transfer',
 	$bank_entry->id, array('subdirs' => 0));
-
-    bank_helper::check_hasfiles($bank_entry->id);
 
     $files = $fs->get_area_files(context_system::instance()->id, 'paygw_bank', 'transfer', $bank_entry->id);
 
@@ -304,58 +301,21 @@ $files = $fs->get_area_files(context_system::instance()->id, 'paygw_bank', 'tran
 	foreach ($files as $f) {
 	    if ($f->get_filename() === '.' ) { continue; }
 	    $i++;
-//echo $f->get_filename().'<br>';
 	    $ext = pathinfo($f->get_filename())['extension'];
 	    $newname = format_string($course->shortname)." - $groups - ".$bank_entry->id." - file".
 		sprintf("%02d", $i)." - ". bin2hex(random_bytes(4)).".".$ext;
 	    if($f->get_filename() != $newname) {
-//echo $newname.'<br>';
 		$f->rename('/', $newname);
 	    }
 	}
+
+	bank_helper::check_hasfiles($bank_entry->id);
     }
 
-}
-
-//echo serialize($at_form->get_data());
-
+            }
 
 	    if ($isuploaded && ($editfiles == 0 || $editfiles == 2)) {
-/*
 
-                $isalreadyuplooaded = false;
-                    foreach ($files as $f) {
-                	if($f->get_filename() === '.'){
-                	    continue;
-                	}
-                        $filename = $f->get_filename();
-                        if($name == $filename) {
-                            $isalreadyuplooaded = true;
-                        }
-                    }
-
-                    if($isalreadyuplooaded) {
-                        \core\notification::warning(get_string('file_already_uploaded', 'paygw_bank'));
-                    }
-                    else
-                    {
-                        $tempdir = make_request_directory();
-                        $fullpath = $tempdir . '/' . $name;
-                        $override = false; // Define $override variable
-                        $success = $at_form->save_file('userfile', $fullpath, $override);
-                        $fileinfo = array(
-                            'contextid' => context_system::instance()->id,
-                            'component' => 'paygw_bank',
-                            'filearea' => 'transfer',
-                            'filepath' => '/',
-                            'filename' => $name,
-                            'itemid' => $bank_entry->id,
-                            'userid' => $USER->id,
-                            'author' => fullname($USER)
-                        );
-                        $fs->create_file_from_pathname($fileinfo, $fullpath);
-                        bank_helper::check_hasfiles($bank_entry->id);
-*/
                         $send_email = $config->sendnewattachmentsmail;
                         $emailaddress = get_config('paygw_bank', 'notificationsaddress');
                         $sendteachermail = $config->sendteachermail;
@@ -447,12 +407,7 @@ if($f->get_filename() === '.'){
                 echo '</li>';
             }
             echo '</ul><br>';
-            if(count($files) < $maxnumberfiles){
-//        	echo '<p>'.get_string('maxattachments', 'forum').': '.$maxnumberfiles.'</p>';
-            }
         }
-
-//echo serialize($at_form->get_data());
 
 	if((count($files)-1) <= 0 || $editfiles == 1) {
 	    if($editfiles) {
