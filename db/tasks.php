@@ -27,7 +27,7 @@ $tasks = [
     [
         'classname' => '\paygw_bank\task\autocommit',
         'blocking' => 0,
-        'minute' => '*/15',
+        'minute' => '*/10',
         'hour' => '*',
         'day' => '*',
         'month' => '*',
