@@ -102,6 +102,7 @@ if ($ADMIN->fulltree) {
         get_string('email_notifications', 'paygw_bank'),
         get_string('email_notifications_help', 'paygw_bank'),
     ));
+
     $settings->add(new admin_setting_configtext(
         'paygw_bank/notificationsaddress',
         get_string('email_to_notify', 'paygw_bank'),

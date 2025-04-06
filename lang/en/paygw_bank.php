@@ -125,3 +125,4 @@ $string['unfixcost'] = 'Unfixed price mode';
 $string['unfixcost_help'] = 'Enable the ability for students to pay with an arbitrary amount.';
 $string['autocommit'] = 'Automatically approve request after file(s) are uploaded';
 $string['autocommittext'] = 'Thank you, you can start learning.';
+$string['savefiles'] = 'Save uploaded files';

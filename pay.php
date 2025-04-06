@@ -26,6 +26,7 @@ $description = required_param('description', PARAM_TEXT);
 $description = json_decode('"'.$description.'"');
 
 $costself = optional_param('costself', 0, PARAM_FLOAT);
+$editfiles = optional_param('editfiles', 0, PARAM_INT);
 
 $params = [
     'sesskey' => sesskey(),
@@ -33,6 +34,7 @@ $params = [
     'paymentarea' => $paymentarea,
     'itemid' => $itemid,
     'description' => $description,
+    'editfiles' => $editfiles,
 ];
 
 $PAGE->set_url('/payment/gateway/bank/pay.php', $params);
@@ -265,24 +267,73 @@ echo "
 } else {
     if ($canuploadfiles) {
         if ($at_form != null) {
-            $content = $at_form->get_file_content('userfile');
-            $name = $at_form->get_new_filename('userfile');
-            if ($name) {
-                $fs = get_file_storage();
+
+$isuploaded = false;
+
+$fs = get_file_storage();
+$files = $fs->get_area_files(context_system::instance()->id, 'paygw_bank', 'transfer', $bank_entry->id);
+
+            if ((count($files)-1)<=0 || $editfiles) {
+
+    $draftitemid = file_get_submitted_draft_itemid('userfile');
+
+    if (isset($bank_entry->hasfiles) && $bank_entry->hasfiles) {
+    file_prepare_draft_area(
+        $draftitemid,
+        context_system::instance()->id,
+        'paygw_bank',
+        'transfer',
+        $bank_entry->id,
+        ['subdirs' => 0, 'maxfiles' => $maxnumberfiles]
+    );
+    $at_form->userfile = $draftitemid;
+    $at_form->set_data($at_form);
+    }
+
+
+    file_save_draft_area_files($draftitemid, context_system::instance()->id, 'paygw_bank', 'transfer',
+	$bank_entry->id, array('subdirs' => 0));
+
+    bank_helper::check_hasfiles($bank_entry->id);
+
+    $files = $fs->get_area_files(context_system::instance()->id, 'paygw_bank', 'transfer', $bank_entry->id);
+
+    if ((count($files)-1) > 0) {
+	$isuploaded = true;
+	$i = 0;
+	foreach ($files as $f) {
+	    if ($f->get_filename() === '.' ) { continue; }
+	    $i++;
+//echo $f->get_filename().'<br>';
+	    $ext = pathinfo($f->get_filename())['extension'];
+	    $newname = format_string($course->shortname)." - $groups - ".$bank_entry->id." - file".
+		sprintf("%02d", $i)." - ". bin2hex(random_bytes(4)).".".$ext;
+	    if($f->get_filename() != $newname) {
+//echo $newname.'<br>';
+		$f->rename('/', $newname);
+	    }
+	}
+    }
+
+}
+
+//echo serialize($at_form->get_data());
+
+
+	    if ($isuploaded && ($editfiles == 0 || $editfiles == 2)) {
+/*
+
                 $isalreadyuplooaded = false;
-                $files = bank_helper::files($bank_entry->id);
-                if(count($files) >= $maxnumberfiles) {
-                    \core\notification::error(get_string('maxnumberoffilesreached', 'paygw_bank'));
-                }
-                else
-                {
-                    $name = format_string($course->shortname).' - '.$groups.' - '.$bank_entry->id.' - ' . $name;
                     foreach ($files as $f) {
+                	if($f->get_filename() === '.'){
+                	    continue;
+                	}
                         $filename = $f->get_filename();
                         if($name == $filename) {
                             $isalreadyuplooaded = true;
                         }
                     }
+
                     if($isalreadyuplooaded) {
                         \core\notification::warning(get_string('file_already_uploaded', 'paygw_bank'));
                     }
@@ -304,6 +355,7 @@ echo "
                         );
                         $fs->create_file_from_pathname($fileinfo, $fullpath);
                         bank_helper::check_hasfiles($bank_entry->id);
+*/
                         $send_email = $config->sendnewattachmentsmail;
                         $emailaddress = get_config('paygw_bank', 'notificationsaddress');
                         $sendteachermail = $config->sendteachermail;
@@ -352,14 +404,11 @@ if ($sendteachermail) {
 
                         }
                         \core\notification::info(get_string('file_uploaded', 'paygw_bank'));
-                    }
-                }
             }
         }
 
-        $files = bank_helper::files($bank_entry->id);
-        if(count($files)>0) {
-
+        if(count($files)) {
+/*
     if ($config->autocommit) {
 	$url = helper::get_success_url($component, $paymentarea, $itemid);
 	echo '<h3>'.get_string('autocommittext', 'paygw_bank').'</h3><br>';
@@ -375,11 +424,14 @@ if ($sendteachermail) {
 	echo $OUTPUT->footer();
 	die; // End.
     }
-
+*/
             echo '<h5>'.get_string('files').':</h5>';
             echo '<ul class="list-group mb-1">';
             $i = 0;
             foreach ($files as $f) {
+if($f->get_filename() === '.'){
+                            continue;
+                        }
         	$i++;
                 $hasfiles = true;
                 // $f is an instance of stored_file
@@ -394,15 +446,25 @@ if ($sendteachermail) {
                 }
                 echo '</li>';
             }
-            echo '</ul>';
+            echo '</ul><br>';
             if(count($files) < $maxnumberfiles){
-        	echo '<p>'.get_string('maxattachments', 'forum').': '.$maxnumberfiles.'</p>';
+//        	echo '<p>'.get_string('maxattachments', 'forum').': '.$maxnumberfiles.'</p>';
             }
         }
 
-        if(count($files) < $maxnumberfiles) {
-            $at_form->display();
-        }
+//echo serialize($at_form->get_data());
+
+	if((count($files)-1) <= 0 || $editfiles == 1) {
+	    if($editfiles) {
+    		$at_form->editfiles = 2;
+		$at_form->set_data($at_form);
+	    }
+    	    $at_form->display();
+    	} else {
+            $params['editfiles'] = 1;
+            $url = new moodle_url('/payment/gateway/bank/pay.php', $params);
+    	    echo $OUTPUT->single_button($url, get_string('editfiles'), 'post', ['type' => 'primary']);
+    	}
     }
 }
 echo "</div>";
