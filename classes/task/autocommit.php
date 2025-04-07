@@ -65,7 +65,7 @@ class autocommit extends \core\task\scheduled_task {
 
 	    $file = reset($files);
 
-	    if ($file->timemodified + 300 > time()) {
+	    if ($file->timemodified + 300 < time()) {
 	        $config = (object) helper::get_gateway_configuration($item->component, $item->paymentarea, $item->itemid, 'bank');
 	        if (!$config->autocommit) {
 		    echo " disabled\n";
