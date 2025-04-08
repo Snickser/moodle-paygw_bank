@@ -19,7 +19,7 @@
 
 ## Instalation.
 
-This plugin is tested in Moodle 4.x
+This plugin is tested in Moodle 4.3+
 
 You can download the zip file and install directly in "Site administration" > Plugins > "Install plugins"
 
