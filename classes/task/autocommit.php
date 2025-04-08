@@ -58,27 +58,29 @@ class autocommit extends \core\task\scheduled_task {
 	    if (!$item->hasfiles) {
 		continue;
 	    }
-	    echo $item->id;
+
+    	    $config = (object) helper::get_gateway_configuration($item->component, $item->paymentarea, $item->itemid, 'bank');
+
+	    $delay = 0;
+    	    if (isset($config->delayautocommit)) {
+    		$delay = $config->delayautocommit;
+    	    }
+
+            if (!$config->autocommit) {
+		continue;
+	    }
 
 	    $files = $DB->get_records('files', ['component' => 'paygw_bank',
 		'itemid' => $item->id], 'timecreated DESC');
 
 	    $file = reset($files);
 
-	    if ($file->timemodified + 300 < time()) {
-	        $config = (object) helper::get_gateway_configuration($item->component, $item->paymentarea, $item->itemid, 'bank');
-	        if (!$config->autocommit) {
-		    echo " disabled\n";
-		    continue;
-		}
-
-		echo " commited\n";
+	    if ($file->timemodified + $delay < time()) {
+		mtrace($item->id . ' commited');
 		bank_helper::aprobe_pay($item->id);
-	    } else {
-		echo " new\n";
 	    }
-	}
 
+	}
         mtrace('end.');
     }
 }

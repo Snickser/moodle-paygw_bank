@@ -126,3 +126,5 @@ $string['unfixcost_help'] = 'Enable the ability for students to pay with an arbi
 $string['autocommit'] = 'Automatically approve request after file(s) are uploaded';
 $string['autocommittext'] = 'Thank you, you can start learning.';
 $string['savefiles'] = 'Save uploaded files';
+$string['delayautocommit'] = 'Minimum delay before auto approval';
+$string['delayautocommit_help'] = 'The minimum delay depends on how regularly the scheduler task is run.';

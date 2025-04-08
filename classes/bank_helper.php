@@ -308,7 +308,9 @@ if ($sendteachermail) {
     public static function get_user_pending($userid): array
     {
         global $DB;
-        $records = $DB->get_records('paygw_bank', ['status' => 'P', 'userid' => $userid]);
+        $order = 'timecreated DESC';
+        $params = ['P', $userid];
+        $records = $DB->get_records_select('paygw_bank', "status=? AND userid=?", $params, $order);
         return $records;
     }
     public static function has_openbankentry($itemid, $userid): bool

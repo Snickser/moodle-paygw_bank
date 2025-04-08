@@ -36,7 +36,9 @@ if ($requestMethod == 'POST') {
         }
     }
 }
-$bank_entries= bank_helper::get_user_pending($USER->id);
+
+$bank_entries = bank_helper::get_user_pending($USER->id);
+
 if (!$bank_entries) {
     $match = array();
     echo '</br><h5>'.(get_string('noentriesfound', 'paygw_bank')).'</h5>';
@@ -89,12 +91,16 @@ if ($bank_entry->component == "enrol_yafee") {
         $paymentarea = $bank_entry->paymentarea;
         $itemid = $bank_entry->itemid;
         $description = $bank_entry->description;
+
+if($bank_entry->status == 'P') {
+
         $urlpay = new moodle_url('/payment/gateway/bank/pay.php', array('sesskey' => sesskey(), 'component' => $component,'paymentarea' => $paymentarea,'itemid' => $itemid,'description' => $description, 'editfiles' => 1));
 if (count($files) < $maxnumberfiles){
         $buttongo = '<a class="btn btn-primary btn-block" href="'.$urlpay.'">'.get_string('edit').'</a>';
 } else {
         $buttongo = '<a class="btn btn-secondary btn-block" href="'.$urlpay.'">'.get_string('view').'</a>';
 }
+
         $buttondeny = '<form action="my_pending_pay.php" id="cancel_' . $bank_entry->id . '" method="POST">
         <input type="hidden" name="sesskey" value="' .sesskey(). '">
         <input type="hidden" name="id" value="' . $bank_entry->id . '">
@@ -103,6 +109,10 @@ if (count($files) < $maxnumberfiles){
         <input class="btn btn-danger mt-3 btn-block" type="submit" data-modal="confirmation" data-modal-title-str=\'["cancel_process", "paygw_bank"]\'
         data-modal-content-str=\'["are_you_sure_cancel","paygw_bank"]\' data-modal-destination="javascript:document.getElementById(\'cancel_' . $bank_entry->id . '\').submit()" data-modal-yes-button-str=\'["yes", "core"]\' value="' . get_string("cancel_process", "paygw_bank") . '"></input>
         </form>';
+} else {
+	$buttongo = '';
+	$buttondeny = '';
+}
 
         $courseid = bank_helper::get_courseid($bank_entry->paymentarea, $bank_entry->component, $bank_entry->itemid);
         $course = get_course($courseid);
