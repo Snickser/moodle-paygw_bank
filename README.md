@@ -2,11 +2,20 @@
 
 [![](https://img.shields.io/github/v/release/Snickser/moodle-paygw_bank.svg)](https://github.com/Snickser/moodle-paygw_bank/releases)
 
-This plugin, is a moodle payment gateway that provides support to payments made by bank transferences, or another manual payment methods that need to be approved by a person.
+Этот плагин представляет собой платежный шлюз Moodle, который обеспечивает поддержку платежей, осуществляемых посредством денежных переводов или других методов ручной оплаты, которые могут быть одобрены человеком.
 
-- Supports my [enrol_yafee](https://moodle.org/plugins/enrol_yafee) plugin.
-- Course teachers can manage requests if they have the appropriate role permissions (paygw/bank:manageincourse).
-- Notifications in courses are sent to everyone who has an administrative role. It must be enabled on the global "Notification Settings" page.
+- Поддержка моего [enrol_yafee](https://moodle.org/plugins/enrol_yafee) плагина.
+- Преподаватели курса могут управлять запросами, если у них есть соответствующие разрешения роли (paygw/bank:manageincourse).
+- Можно настроить рассылку уведомлений не только на выделенный адрес, а также обладателям правами в роли, и ограничить рассылку внутри групп.
+- Уведомления настраиваются независсимо для каждого инстанса платёжного шлюза.
+- Доступ к архиву загруженных файлов в утверждённых заявках с возможностью удаления.
+- Загруженные файлы имеют единую структуру имени.
+- Предпросмотр pdf файлов в модальном окне.
+- Режим автоматического утверждения заявок по таймеру, в которых имеются загруженные файлы.
+- Возможность студенту заменять файлы в заявке.
+- Режим рекомендованной нефиксированной цены с ограничение максимума.
+- Фиксированный комментарий платежа.
+
 
 ## Instalation.
 
@@ -21,6 +30,8 @@ The plugin has the following configurations in the plugin section:
 - Surcharge. The surcharge is an additional percentage charged to users who choose to pay using this payment gateway.
 - Send confirmation email. An email is sent to user if the payment is approved.
 - Send denied email an email is sent to user if the payment is denied.
+- Automatically approve request after file(s) are uploaded.
+ 
 
 The mail texts are in the language strings of the plugin.
 

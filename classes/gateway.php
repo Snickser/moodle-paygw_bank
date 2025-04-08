@@ -61,6 +61,11 @@ class gateway extends \core_payment\gateway
 
         $mform->addElement('advcheckbox', 'autocommit', get_string('autocommit', 'paygw_bank'));
 
+        $mform->addElement('duration', 'delayautocommit', get_string('delayautocommit', 'paygw_bank'));
+        $mform->disabledIf('delayautocommit', 'autocommit', "ne", 1);
+        $mform->setDefault('delayautocommit', 300);
+        $mform->addHelpButton('delayautocommit', 'delayautocommit', 'paygw_bank');
+
 //        $mform->addElement('checkbox', 'upload', get_string('instructionstext', 'paygw_bank'));
 //        $mform->setType('instructionstext', PARAM_RAW);
 
