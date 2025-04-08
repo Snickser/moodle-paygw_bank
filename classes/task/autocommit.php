@@ -61,14 +61,14 @@ class autocommit extends \core\task\scheduled_task {
 
     	    $config = (object) helper::get_gateway_configuration($item->component, $item->paymentarea, $item->itemid, 'bank');
 
+            if (!$config->autocommit) {
+		continue;
+	    }
+
 	    $delay = 0;
     	    if (isset($config->delayautocommit)) {
     		$delay = $config->delayautocommit;
     	    }
-
-            if (!$config->autocommit) {
-		continue;
-	    }
 
 	    $files = $DB->get_records('files', ['component' => 'paygw_bank',
 		'itemid' => $item->id], 'timecreated DESC');
