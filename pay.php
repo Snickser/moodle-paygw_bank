@@ -303,7 +303,7 @@ echo "
 	    $i++;
 	    $ext = pathinfo($f->get_filename())['extension'];
 	    $newname = format_string($course->shortname)." - $groups - ".$bank_entry->id." - file".
-		sprintf("%02d", $i)." - ". bin2hex(random_bytes(4)).".".$ext;
+		sprintf("%02d", $i)." - ". bin2hex(random_bytes(5)).".".$ext;
 	    if($f->get_filename() != $newname) {
 		$f->rename('/', $newname);
 	    }
