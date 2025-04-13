@@ -329,6 +329,13 @@ if ($sendteachermail) {
             return null;
         }
         $config = (object) payment_helper::get_gateway_configuration($component, $paymentarea, $itemid, 'bank');
+	if (!isset($config->sendnewrequestmail)) {
+	    $config->sendnewrequestmail = get_config('paygw_bank', 'sendnewrequestmail');
+	}
+	if (!isset($config->sendteachermail)) {
+	    $config->sendteachermail = get_config('paygw_bank', 'sendteachermail');
+	}
+
 
         $user = bank_helper::get_user($userid);
 
