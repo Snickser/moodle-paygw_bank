@@ -38,7 +38,7 @@ $params = [
     'editfiles' => $editfiles,
 ];
 
-$PAGE->set_url('/payment/gateway/bank/pay.php', $params);
+$PAGE->set_url(new moodle_url('/payment/gateway/bank/pay.php', $params));
 $PAGE->set_title(format_string(get_string('pluginname', 'paygw_bank')));
 //$PAGE->set_heading($description);
 $PAGE->set_cacheable(false);
@@ -85,7 +85,7 @@ if (!isset($config->autocommit)) {
 }
 
 //if (!$config->unfixcost) {
-    $PAGE->set_periodic_refresh_delay(180);
+//    $PAGE->set_periodic_refresh_delay(180);
 //}
 
 $cost = $payable->get_amount();
@@ -198,7 +198,7 @@ if (isset($config->unfixcost) && $config->unfixcost && $bank_entry == null) {
 
  echo '<input class="form-control" type="number" id="inputcostself"
  value="'.$amount.'" min="'.$config->suggest.'" max="'.$config->maxcost.'" step="0.01"
- style="width: 7em;">';
+ style="width: 9em;">';
 
 } else {
 
