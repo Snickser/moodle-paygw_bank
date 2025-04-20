@@ -22,6 +22,8 @@ use paygw_bank\attachtransfer_form;
 require_once __DIR__ . '/../../../config.php';
 require_once './lib.php';
 
+defined('MOODLE_INTERNAL') || die();
+
 $canuploadfiles = get_config('paygw_bank', 'usercanuploadfiles');
 $maxnumberfiles = get_config('paygw_bank', 'maxnumberfiles');
 if (!$maxnumberfiles) {

@@ -15,10 +15,11 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Bank payment gateway management interface.
+ * Plugin version and other meta-data are defined here.
  *
  * @package    paygw_bank
- * @copyright  2023 Your Name <your@email.com>
+ * @copyright  UNESCO/IESALC
+ * @author     Carlos Vicente Corral <c.vicente@unesco.org>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -32,6 +33,8 @@ require_once(__DIR__ . '/../../../config.php');
 require_once('./lib.php');
 
 global $CFG, $USER, $DB;
+
+defined('MOODLE_INTERNAL') || die();
 
 // Require login and get parameters.
 require_login();
@@ -267,7 +270,7 @@ if (!$bankentries) {
 
         $unpaid = '-';
         $primary = 'primary';
-        
+
         // Check for unpaid fees (specific to enrol_yafee).
         if ($bankentry->component == "enrol_yafee" && $filter != 'showarchived') {
             $cs = $DB->get_record('enrol', ['id' => $bankentry->itemid, 'enrol' => 'yafee']);
@@ -302,7 +305,7 @@ if (!$bankentries) {
                 <input type="hidden" name="confirm" value="1">
                 <input class="btn btn-block btn-' . $primary . ' mb-2 form-submit" type="submit" value="' . get_string('approve', 'paygw_bank') . '"></input>
             </form>';
-            
+
             $buttondeny = '<form name="formaprovepay' . $bankentry->id . '" method="POST">
                 <input type="hidden" name="sesskey" value="' . sesskey() . '">
                 <input type="hidden" name="id" value="' . $bankentry->id . '">
@@ -320,7 +323,7 @@ if (!$bankentries) {
         $hasfiles = get_string('no');
         $fs = get_file_storage();
         $files = bank_helper::files($bankentry->id);
-        
+
         if ($bankentry->hasfiles > 0 || count($files) > 0) {
             $hasfiles = '<button type="button" class="btn btn-primary btn-block mb-2" data-toggle="modal" data-target="#staticBackdrop' . $bankentry->id . '" id="launchmodal' . $bankentry->id . '">&nbsp;' . get_string('view') . '&nbsp;</button>';
 
@@ -354,10 +357,12 @@ if (!$bankentries) {
                 $url = moodle_url::make_pluginfile_url($f->get_contextid(), $f->get_component(), $f->get_filearea(), $f->get_itemid(), $f->get_filepath(), $f->get_filename(), false);
                 $hasfilesbody .= '<li class="mb-2"><a href="' . $url . '" download><b>' . $f->get_filename() . '</b></a><br>';
                 $hasfilesbody .= get_string('size') . ': ' . round($f->get_filesize() / 1024, 2) . ' KB</li>';
-                
+
                 // Handle image and PDF previews.
-                if (str_ends_with($f->get_filename(), ".png") || str_ends_with($f->get_filename(), ".jpeg") || 
-                    str_ends_with($f->get_filename(), ".jpg") || str_ends_with($f->get_filename(), ".gif")) {
+                if (
+                    str_ends_with($f->get_filename(), ".png") || str_ends_with($f->get_filename(), ".jpeg") ||
+                    str_ends_with($f->get_filename(), ".jpg") || str_ends_with($f->get_filename(), ".gif")
+                ) {
                     $hasfilesimg .= "<p align=center class='pt-3'><img class='rounded shadow' style='max-width: 100%; max-height: 800px; object-fit: contain;' src='$url'></p>";
                 }
                 if (str_ends_with($f->get_filename(), ".pdf")) {
@@ -394,7 +399,7 @@ if (!$bankentries) {
                 date('d.m.Y, H:i', $bankentry->timechecked),
             );
         }
-        
+
         array_push(
             $tabledata,
             $bankentry->code,
@@ -418,7 +423,7 @@ if (!$bankentries) {
             $groupnames,
             html_writer::link($url, $bankentry->description, ['target' => '_blank']),
         );
-        
+
         if ($filter == 'showarchived') {
             array_push(
                 $tabledata,
@@ -432,7 +437,7 @@ if (!$bankentries) {
                 $currency,
             );
         }
-        
+
         array_push(
             $tabledata,
             $hasfiles,
@@ -447,7 +452,7 @@ if (!$bankentries) {
 
         $table->data[] = $tabledata;
     }
-    
+
     // Display the table if there's data.
     if (count($table->data)) {
         echo html_writer::table($table);

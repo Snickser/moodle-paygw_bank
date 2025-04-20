@@ -26,10 +26,10 @@
 use core_payment\helper;
 use paygw_bank\bank_helper;
 
-defined('MOODLE_INTERNAL') || die();
-
 require_once(__DIR__ . '/../../../config.php');
 require_once('./lib.php');
+
+defined('MOODLE_INTERNAL') || die();
 
 require_login();
 
