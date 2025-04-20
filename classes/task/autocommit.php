@@ -52,35 +52,34 @@ class autocommit extends \core\task\scheduled_task {
 
         mtrace('start');
 
-	$items = bank_helper::get_pending('P');
+        $items = bank_helper::get_pending('P');
 
-	foreach($items as $item){
-	    if (!$item->hasfiles) {
-		continue;
-	    }
+        foreach ($items as $item) {
+            if (!$item->hasfiles) {
+                continue;
+            }
 
-    	    $config = (object) helper::get_gateway_configuration($item->component, $item->paymentarea, $item->itemid, 'bank');
+            $config = (object) helper::get_gateway_configuration($item->component, $item->paymentarea, $item->itemid, 'bank');
 
             if (!$config->autocommit) {
-		continue;
-	    }
+                continue;
+            }
 
-	    $delay = 0;
-    	    if (isset($config->delayautocommit)) {
-    		$delay = $config->delayautocommit;
-    	    }
+            $delay = 0;
+            if (isset($config->delayautocommit)) {
+                $delay = $config->delayautocommit;
+            }
 
-	    $files = $DB->get_records('files', ['component' => 'paygw_bank',
-		'itemid' => $item->id], 'timecreated DESC');
+            $files = $DB->get_records('files', ['component' => 'paygw_bank',
+            'itemid' => $item->id], 'timecreated DESC');
 
-	    $file = reset($files);
+            $file = reset($files);
 
-	    if ($file->timemodified + $delay < time()) {
-		mtrace($item->id . ' commited');
-		bank_helper::aprobe_pay($item->id);
-	    }
-
-	}
+            if ($file->timemodified + $delay < time()) {
+                mtrace($item->id . ' commited');
+                bank_helper::aprobe_pay($item->id);
+            }
+        }
         mtrace('end.');
     }
 }

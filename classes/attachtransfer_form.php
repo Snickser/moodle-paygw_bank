@@ -32,21 +32,19 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once $CFG->libdir . '/formslib.php';
 
-class attachtransfer_form extends \moodleform
-{
+class attachtransfer_form extends \moodleform {
     /**
      * form definition
      */
-    public function definition()
-    {
+    public function definition() {
         global $CFG;
 
         $maxfiles = get_config('paygw_bank', 'maxnumberfiles');
         $maxbytes = $CFG->maxbytes;
-        $accepted_types = array('.zip', '.png', '.jpg', '.jpeg', '.doc', '.docx', '.pdf', '.odt');
+        $acceptedtypes = ['.zip', '.png', '.jpg', '.jpeg', '.doc', '.docx', '.pdf', '.odt'];
         $cfgallowedfiletypes = get_config('paygw_bank', 'allowedfiletypes');
         if (!empty($cfgallowedfiletypes)) {
-            $accepted_types = explode(',', str_replace(' ', '', $cfgallowedfiletypes));
+            $acceptedtypes = explode(',', str_replace(' ', '', $cfgallowedfiletypes));
         }
         $mform = $this->_form;
         $mform->setDisableShortforms(true);
@@ -68,22 +66,19 @@ class attachtransfer_form extends \moodleform
             'filemanager',
             'userfile',
             get_string('file'),
-	    null,
+            null,
             [
-        	'maxbytes' => $maxbytes,
-        	'accepted_types' => $accepted_types,
+            'maxbytes' => $maxbytes,
+            'accepted_types' => $acceptedtypes,
                 'subdirs' => 0,
                 'maxfiles' => $maxfiles,
-                'areamaxbytes' => $maxbytes,
             ]
         );
         $mform->addRule('userfile', null, 'required');
 
         $mform->addElement('submit', 'submitbutton', get_string('savefiles', 'paygw_bank'));
-
     }
-    public function validation($data, $files)
-    {
+    public function validation($data, $files) {
         global $DB;
         $errors = parent::validation($data, $files);
         return $errors;

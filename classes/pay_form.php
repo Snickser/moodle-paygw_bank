@@ -31,13 +31,11 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once $CFG->libdir . '/formslib.php';
 
-class pay_form extends \moodleform
-{
+class pay_form extends \moodleform {
     /**
      * form definition
      */
-    public function definition()
-    {
+    public function definition() {
         $mform = $this->_form;
 
         $mform->setDisableShortforms(true);
@@ -63,8 +61,7 @@ class pay_form extends \moodleform
 
         $mform->addElement('submit', 'submitbutton', get_string('start_process', 'paygw_bank'));
     }
-    public function validation($data, $files)
-    {
+    public function validation($data, $files) {
         global $DB;
         $errors = parent::validation($data, $files);
         return $errors;

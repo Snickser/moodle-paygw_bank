@@ -34,76 +34,69 @@ use core_payment\helper as payment_helper;
 use stdClass;
 use moodle_url;
 
-class bank_helper
-{
-    public static function deletefiles($id): bool
-    {
-	global $DB;
+class bank_helper {
+    public static function deletefiles($id): bool {
+        global $DB;
 
         $files = self::files($id);
         foreach ($files as $file) {
-	    $file->delete();
+            $file->delete();
         }
-    	$DB->update_record('paygw_bank', ['id' => $id, 'hasfiles' => 0]);
-	return true;
+        $DB->update_record('paygw_bank', ['id' => $id, 'hasfiles' => 0]);
+        return true;
     }
-    public static function check_teacheringroup($courseid, $teacherid, $groups): bool
-    {
-	$tgs = self::get_course_usergroups($courseid, $teacherid);
-	foreach (explode(',', $tgs) as $tg) {
-	    foreach (explode(',', $groups) as $g) {
-	        if ($tg == $g) {
-		    return true;
-		}
-	    }
-	}
-	return false;
+    public static function check_teacheringroup($courseid, $teacherid, $groups): bool {
+        $tgs = self::get_course_usergroups($courseid, $teacherid);
+        foreach (explode(',', $tgs) as $tg) {
+            foreach (explode(',', $groups) as $g) {
+                if ($tg == $g) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
-    public static function get_course_usergroups($courseid = null, $userid = 0): string
-    {
-	$groupnames = '-';
-	if (!empty($courseid)) {
-	    if ($gs = groups_get_user_groups($courseid, $userid, true)) {
-    		foreach ($gs as $gr) {
-        	    foreach ($gr as $g) {
-            		$groups[$g] = groups_get_group_name($g);
-        	    }
-    		}
-    		if (isset($groups)) {
-    		    sort($groups);
-        	    $groupnames = implode(',', $groups);
-    		}
-	    }
-	}
-	return $groupnames;
+    public static function get_course_usergroups($courseid = null, $userid = 0): string {
+        $groupnames = '-';
+        if (!empty($courseid)) {
+            if ($gs = groups_get_user_groups($courseid, $userid, true)) {
+                foreach ($gs as $gr) {
+                    foreach ($gr as $g) {
+                        $groups[$g] = groups_get_group_name($g);
+                    }
+                }
+                if (isset($groups)) {
+                    sort($groups);
+                    $groupnames = implode(',', $groups);
+                }
+            }
+        }
+        return $groupnames;
     }
-    public static function get_courseid($paymentarea, $component, $itemid): string
-    {
-	global $DB;
+    public static function get_courseid($paymentarea, $component, $itemid): string {
+        global $DB;
 
-	$cid = false;
+        $cid = false;
         if ($paymentarea == 'fee') {
-	    $cid = $DB->get_field('enrol', 'courseid', ['id' => $itemid]);
-    	} else if ($component == 'mod_gwpayments') {
-	    $cid = $DB->get_field('gwpayments', 'course', ['id' => $itemid]);
-	} else if ($paymentarea == 'cmfee') {
-	    $cid = $DB->get_field('course_modules', 'course', ['id' => $itemid]);
-	} else if ($paymentarea == 'sectionfee') {
-	    $cid = $DB->get_field('course_sections', 'course', ['id' => $itemid]);
-	}
+            $cid = $DB->get_field('enrol', 'courseid', ['id' => $itemid]);
+        } else if ($component == 'mod_gwpayments') {
+            $cid = $DB->get_field('gwpayments', 'course', ['id' => $itemid]);
+        } else if ($paymentarea == 'cmfee') {
+            $cid = $DB->get_field('course_modules', 'course', ['id' => $itemid]);
+        } else if ($paymentarea == 'sectionfee') {
+            $cid = $DB->get_field('course_sections', 'course', ['id' => $itemid]);
+        }
         return $cid;
     }
-    public static function message_to_teachers($context, $from, $subject, $text): bool
-    {
-        $teachers = get_enrolled_users($context,'paygw/bank:manageincourse');
-        foreach ($teachers as $teacher){
-    	    self::message_to_user($teacher->id, $from, $subject, $text);
+    public static function message_to_teachers($context, $from, $subject, $text): bool {
+        $teachers = get_enrolled_users($context, 'paygw/bank:manageincourse');
+        foreach ($teachers as $teacher) {
+            self::message_to_user($teacher->id, $from, $subject, $text);
         }
         return true;
     }
-    public static function message_to_user($userid, $from, $subject, $text): bool
-    {
-	global $CFG;
+    public static function message_to_user($userid, $from, $subject, $text): bool {
+        global $CFG;
 
         // Get the user object for messaging and fullname.
         $user = \core_user::get_user($userid);
@@ -111,28 +104,26 @@ class bank_helper
             return false;
         }
 
-	$message = new \core\message\message();
-	$message->component = 'paygw_bank'; // Your plugin's name.
-	$message->name = 'payment_receipt'; // Your notification name from message.php.
-	$message->userfrom = $from;
-	$message->userto = $user;
-	$message->subject = $subject;
-	$message->fullmessage = $text;
-	$message->fullmessageformat = FORMAT_MARKDOWN;
-	$message->notification = 1; // Because this is a notification generated from Moodle, not a user-to-user message.
+        $message = new \core\message\message();
+        $message->component = 'paygw_bank'; // Your plugin's name.
+        $message->name = 'payment_receipt'; // Your notification name from message.php.
+        $message->userfrom = $from;
+        $message->userto = $user;
+        $message->subject = $subject;
+        $message->fullmessage = $text;
+        $message->fullmessageformat = FORMAT_MARKDOWN;
+        $message->notification = 1; // Because this is a notification generated from Moodle, not a user-to-user message.
 
-	message_send($message);
+        message_send($message);
 
-	return true;
+        return true;
     }
-    public static function get_openbankentry($itemid, $userid): \stdClass
-    {
+    public static function get_openbankentry($itemid, $userid): \stdClass {
         global $DB;
         $record = $DB->get_record('paygw_bank', ['itemid' => $itemid, 'userid' => $userid, 'status' => 'P']);
         return $record;
     }
-    public static function check_hasfiles($id): \stdClass
-    {
+    public static function check_hasfiles($id): \stdClass {
         global $DB, $USER;
         $transaction = $DB->start_delegated_transaction();
         $record = $DB->get_record('paygw_bank', ['id' => $id]);
@@ -145,8 +136,7 @@ class bank_helper
         $transaction->rollback();
         return null;
     }
-    public static function aprobe_pay($id): \stdClass
-    {
+    public static function aprobe_pay($id): \stdClass {
         global $DB, $USER;
         $transaction = $DB->start_delegated_transaction();
         $record = $DB->get_record('paygw_bank', ['id' => $id]);
@@ -170,102 +160,100 @@ class bank_helper
         payment_helper::deliver_order($record->component, $record->paymentarea, $record->itemid, $paymentid, (int) $record->userid);
         $transaction->allow_commit();
 
-	// Set default.
-	if (!isset($config->autocommit)) {
-	    $config->autocommit = false;
-	}
+        // Set default.
+        if (!isset($config->autocommit)) {
+            $config->autocommit = false;
+        }
 
-	$cid = self::get_courseid($record->paymentarea, $record->component, $record->itemid);
-	$groups = self::get_course_usergroups($cid, $record->userid);
+        $cid = self::get_courseid($record->paymentarea, $record->component, $record->itemid);
+        $groups = self::get_course_usergroups($cid, $record->userid);
 
-        $send_email = get_config('paygw_bank', 'sendconfmail');
-        if ($send_email) {
+        $sendemail = get_config('paygw_bank', 'sendconfmail');
+        if ($sendemail) {
             $supportuser = core_user::get_support_user();
-            $paymentuser = bank_helper::get_user($record->userid);
+            $paymentuser = self::get_user($record->userid);
             $fullname = fullname($paymentuser, true);
             $oldforcelang = force_current_language($paymentuser->lang);
             $subject = get_string('mail_confirm_pay_subject', 'paygw_bank');
-            $contentmessage = new stdClass;
+            $contentmessage = new stdClass();
             $contentmessage->username = $fullname;
             $contentmessage->code = $record->code;
             $contentmessage->concept = $record->description;
             $contentmessage->useremail = $paymentuser->email;
-	    $contentmessage->userfullname = fullname($paymentuser, true);
-	    $contentmessage->url = new moodle_url('/course/view.php', ['id' => $cid]);
+            $contentmessage->userfullname = fullname($paymentuser, true);
+            $contentmessage->url = new moodle_url('/course/view.php', ['id' => $cid]);
             $mailcontent = get_string('mail_confirm_pay', 'paygw_bank', $contentmessage);
             self::message_to_user($record->userid, $supportuser, $subject, $mailcontent);
-	    force_current_language($oldforcelang);
+            force_current_language($oldforcelang);
         }
 
-        $send_email = $config->sendconfirmailtosupport;
+        $sendemail = $config->sendconfirmailtosupport;
         $emailaddress = get_config('paygw_bank', 'notificationsaddress');
-	$sendteachermail = $config->sendteachermail;
+        $sendteachermail = $config->sendteachermail;
 
-        if ($send_email) {
-            $contentmessage = new stdClass;
-            $paymentuser = bank_helper::get_user($record->userid);
+        if ($sendemail) {
+            $contentmessage = new stdClass();
+            $paymentuser = self::get_user($record->userid);
             $contentmessage->code = $record->code;
             $contentmessage->concept = $record->description;
             $contentmessage->useremail = $paymentuser->email;
             $contentmessage->userfullname = fullname($paymentuser, true);
-	    $contentmessage->teacher = fullname($USER);
-if ($emailaddress) {
-            $supportuser = core_user::get_support_user();
-            $subject = get_string('email_notifications_subject_confirm', 'paygw_bank');
-	    $contentmessage->course = format_string($DB->get_field('course', 'fullname', ['id' => $cid]));
-            $mailcontent = get_string('email_notifications_confirm', 'paygw_bank', $contentmessage);
-            $emailuser = new stdClass();
-            $emailuser->email = $emailaddress;
-            $emailuser->id = -99;
-            email_to_user($emailuser, $supportuser, $subject, $mailcontent);
-}
-if ($sendteachermail) {
-            $context = \context_course::instance($cid, MUST_EXIST);
-    	    $teachers = get_enrolled_users($context,'paygw/bank:manageincourse');
-    	    foreach ($teachers as $teacher){
-                if ($config->onlyingroup) {
-                    if (!self::check_teacheringroup($cid, $teacher->id, $groups)) {
-                        continue;
+            $contentmessage->teacher = fullname($USER);
+            if ($emailaddress) {
+                        $supportuser = core_user::get_support_user();
+                        $subject = get_string('email_notifications_subject_confirm', 'paygw_bank');
+                    $contentmessage->course = format_string($DB->get_field('course', 'fullname', ['id' => $cid]));
+                        $mailcontent = get_string('email_notifications_confirm', 'paygw_bank', $contentmessage);
+                        $emailuser = new stdClass();
+                        $emailuser->email = $emailaddress;
+                        $emailuser->id = -99;
+                        email_to_user($emailuser, $supportuser, $subject, $mailcontent);
+            }
+            if ($sendteachermail) {
+                        $context = \context_course::instance($cid, MUST_EXIST);
+                        $teachers = get_enrolled_users($context, 'paygw/bank:manageincourse');
+                foreach ($teachers as $teacher) {
+                    if ($config->onlyingroup) {
+                        if (!self::check_teacheringroup($cid, $teacher->id, $groups)) {
+                            continue;
+                        }
                     }
+                    $oldforcelang = force_current_language($teacher->lang);
+                    $supportuser = core_user::get_support_user();
+                    $subject = get_string('email_notifications_subject_confirm', 'paygw_bank');
+                    $contentmessage->course = format_string($DB->get_field('course', 'fullname', ['id' => $cid]));
+                    $mailcontent = get_string('email_notifications_confirm', 'paygw_bank', $contentmessage);
+                    self::message_to_user($teacher->id, $supportuser, $subject, $mailcontent);
+                    force_current_language($oldforcelang);
                 }
-	        $oldforcelang = force_current_language($teacher->lang);
-        	$supportuser = core_user::get_support_user();
-        	$subject = get_string('email_notifications_subject_confirm', 'paygw_bank');
-		$contentmessage->course = format_string($DB->get_field('course', 'fullname', ['id' => $cid]));
-        	$mailcontent = get_string('email_notifications_confirm', 'paygw_bank', $contentmessage);
-    		self::message_to_user($teacher->id, $supportuser, $subject, $mailcontent);
-    		force_current_language($oldforcelang);
-    	    }
-}
+            }
         }
 
         return $record;
     }
-    public static function files($id): array
-    {
+    public static function files($id): array {
         $fs = get_file_storage();
         $files = $fs->get_area_files(\context_system::instance()->id, 'paygw_bank', 'transfer', $id);
-        $realfiles=array();
+        $realfiles = [];
         foreach ($files as $f) {
-            if($f->get_filename()!='.') {
+            if ($f->get_filename() != '.') {
                 array_push($realfiles, $f);
             }
         }
         return $realfiles;
     }
-    public static function get_user($userid)
-    {
+    public static function get_user($userid) {
         global $DB;
         return $DB->get_record('user', ['id' => $userid]);
     }
-    public static function deny_pay($id, $canceledbyuser = false): \stdClass
-    {
+    public static function deny_pay($id, $canceledbyuser = false): \stdClass {
         global $DB, $USER;
-        $transaction = $DB->start_delegated_transaction();;
+        $transaction = $DB->start_delegated_transaction();
+        ;
         $record = $DB->get_record('paygw_bank', ['id' => $id]);
         $config = (object) payment_helper::get_gateway_configuration($record->component, $record->paymentarea, $record->itemid, 'bank');
         $payable = payment_helper::get_payable($record->component, $record->paymentarea, $record->itemid);
-        $paymentuser = bank_helper::get_user($record->userid);
+        $paymentuser = self::get_user($record->userid);
         $record->timechecked = time();
         $record->status = 'D';
         $record->usercheck = $USER->id;
@@ -273,48 +261,45 @@ if ($sendteachermail) {
         $DB->update_record('paygw_bank', $record);
         $transaction->allow_commit();
         self::deletefiles($id);
-        $send_email = get_config('paygw_bank', 'senddenmail');
-        if ($send_email && $record->userid != $USER->id) {
+        $sendemail = get_config('paygw_bank', 'senddenmail');
+        if ($sendemail && $record->userid != $USER->id) {
             $oldforcelang = force_current_language($paymentuser->lang);
             $supportuser = core_user::get_support_user();
             $fullname = fullname($paymentuser, true);
             $subject = get_string('mail_denied_pay_subject', 'paygw_bank');
-            $contentmessage = new stdClass;
+            $contentmessage = new stdClass();
             $contentmessage->username = $fullname;
             $contentmessage->useremail = $paymentuser->email;
             $contentmessage->code = $record->code;
             $contentmessage->concept = $record->description;
             $mailcontent = get_string('mail_denied_pay', 'paygw_bank', $contentmessage);
             self::message_to_user($record->userid, $supportuser, $subject, $mailcontent);
-	    force_current_language($oldforcelang);
+            force_current_language($oldforcelang);
         }
         return $record;
     }
 
-    public static function get_pending($status = 'P', $id = false): array
-    {
+    public static function get_pending($status = 'P', $id = false): array {
         global $DB;
         $order = 'id ASC';
-        if($status == 'A') {
-    	    $order = 'timecreated DESC';
+        if ($status == 'A') {
+            $order = 'timecreated DESC';
         }
         $params = ['status' => $status];
-        if($id) {
-    	    $params['id'] = $id;
+        if ($id) {
+            $params['id'] = $id;
         }
         $records = $DB->get_records('paygw_bank', $params, $order, '*', 0, 1000);
         return $records;
     }
-    public static function get_user_pending($userid): array
-    {
+    public static function get_user_pending($userid): array {
         global $DB;
         $order = 'timecreated DESC';
         $params = ['P', $userid];
         $records = $DB->get_records_select('paygw_bank', "status=? AND userid=?", $params, $order);
         return $records;
     }
-    public static function has_openbankentry($itemid, $userid): bool
-    {
+    public static function has_openbankentry($itemid, $userid): bool {
         global $DB;
         if ($DB->count_records('paygw_bank', ['itemid' => $itemid, 'userid' => $userid, 'status' => 'P']) > 0) {
             return true;
@@ -322,22 +307,20 @@ if ($sendteachermail) {
             return false;
         }
     }
-    public static function create_bankentry($itemid, $userid, $totalamount, $currency, $component, $paymentarea, $description): \stdClass
-    {
+    public static function create_bankentry($itemid, $userid, $totalamount, $currency, $component, $paymentarea, $description): \stdClass {
         global $DB;
-        if (bank_helper::has_openbankentry($itemid, $userid)) {
+        if (self::has_openbankentry($itemid, $userid)) {
             return null;
         }
         $config = (object) payment_helper::get_gateway_configuration($component, $paymentarea, $itemid, 'bank');
-	if (!isset($config->sendnewrequestmail)) {
-	    $config->sendnewrequestmail = get_config('paygw_bank', 'sendnewrequestmail');
-	}
-	if (!isset($config->sendteachermail)) {
-	    $config->sendteachermail = get_config('paygw_bank', 'sendteachermail');
-	}
+        if (!isset($config->sendnewrequestmail)) {
+            $config->sendnewrequestmail = get_config('paygw_bank', 'sendnewrequestmail');
+        }
+        if (!isset($config->sendteachermail)) {
+            $config->sendteachermail = get_config('paygw_bank', 'sendteachermail');
+        }
 
-
-        $user = bank_helper::get_user($userid);
+        $user = self::get_user($userid);
 
         $record = new \stdClass();
         $record->itemid = $itemid;
@@ -354,102 +337,95 @@ if ($sendteachermail) {
         $id = $DB->insert_record('paygw_bank', $record);
         $record->id = $id;
         $codeprefix = $config->codeprefix;
-        $record->code = bank_helper::create_code($id, $codeprefix);
+        $record->code = self::create_code($id, $codeprefix);
         $DB->update_record('paygw_bank', $record);
 
-	$cid = self::get_courseid($record->paymentarea, $record->component, $record->itemid);
+        $cid = self::get_courseid($record->paymentarea, $record->component, $record->itemid);
 
-	// Send to user.
+        // Send to user.
         $supportuser = core_user::get_support_user();
-        $contentmessage = new stdClass;
+        $contentmessage = new stdClass();
         $contentmessage->code = $record->code;
         $contentmessage->amount = format_float($totalamount, 2);
         $contentmessage->currency = $currency;
         $contentmessage->url = new moodle_url('/payment/gateway/bank/my_pending_pay.php');
         $contentmessage->userfullname = fullname($user);
-	$contentmessage->course = format_string($DB->get_field('course', 'fullname', ['id' => $cid]));
+        $contentmessage->course = format_string($DB->get_field('course', 'fullname', ['id' => $cid]));
         $contentmessage->concept = $record->description;
         $subject = get_string('email_notifications_subject_new', 'paygw_bank');
         $mailcontent = get_string('email_notifications_new_user', 'paygw_bank', $contentmessage);
-	self::message_to_user($userid, $supportuser, $subject, $mailcontent);
+        self::message_to_user($userid, $supportuser, $subject, $mailcontent);
 
-        $send_email = $config->sendnewrequestmail;
+        $sendemail = $config->sendnewrequestmail;
         $emailaddress = get_config('paygw_bank', 'notificationsaddress');
-	$sendteachermail = $config->sendteachermail;
+        $sendteachermail = $config->sendteachermail;
 
-        if ($send_email) {
-	    $groups = self::get_course_usergroups($cid, $userid);
+        if ($sendemail) {
+            $groups = self::get_course_usergroups($cid, $userid);
             $contentmessage->useremail = $user->email;
             $contentmessage->groups = $groups;
             $contentmessage->url = new moodle_url('/payment/gateway/bank/manage.php', ['cid' => $cid, 'id' => $record->id]);
-if ($emailaddress) {
-            $mailcontent = get_string('email_notifications_new_request', 'paygw_bank', $contentmessage);
-            $emailuser = new stdClass();
-            $emailuser->email = $emailaddress;
-            $emailuser->id = -99;
-            email_to_user($emailuser, $supportuser, $subject, $mailcontent);
-}
-if ($sendteachermail) {
-            $context = \context_course::instance($cid, MUST_EXIST);
-    	    $teachers = get_enrolled_users($context,'paygw/bank:manageincourse');
-    	    foreach ($teachers as $teacher){
-                if ($config->onlyingroup) {
-                    if (!self::check_teacheringroup($cid, $teacher->id, $groups)) {
-                        continue;
+            if ($emailaddress) {
+                        $mailcontent = get_string('email_notifications_new_request', 'paygw_bank', $contentmessage);
+                        $emailuser = new stdClass();
+                        $emailuser->email = $emailaddress;
+                        $emailuser->id = -99;
+                        email_to_user($emailuser, $supportuser, $subject, $mailcontent);
+            }
+            if ($sendteachermail) {
+                        $context = \context_course::instance($cid, MUST_EXIST);
+                        $teachers = get_enrolled_users($context, 'paygw/bank:manageincourse');
+                foreach ($teachers as $teacher) {
+                    if ($config->onlyingroup) {
+                        if (!self::check_teacheringroup($cid, $teacher->id, $groups)) {
+                            continue;
+                        }
                     }
+                    $oldforcelang = force_current_language($teacher->lang);
+                    $subject = get_string('email_notifications_subject_new', 'paygw_bank');
+                    $contentmessage->course = format_string($DB->get_field('course', 'fullname', ['id' => $cid]));
+                    $mailcontent = get_string('email_notifications_new_request', 'paygw_bank', $contentmessage);
+                    self::message_to_user($teacher->id, $supportuser, $subject, $mailcontent);
+                    force_current_language($oldforcelang);
                 }
-	        $oldforcelang = force_current_language($teacher->lang);
-        	$subject = get_string('email_notifications_subject_new', 'paygw_bank');
-		$contentmessage->course = format_string($DB->get_field('course', 'fullname', ['id' => $cid]));
-        	$mailcontent = get_string('email_notifications_new_request', 'paygw_bank', $contentmessage);
-    		self::message_to_user($teacher->id, $supportuser, $subject, $mailcontent);
-    		force_current_language($oldforcelang);
-    	    }
-}
+            }
         }
         return $record;
     }
-    public static function create_code($id,$codeprefix=null): string
-    {
-        if($codeprefix) {
+    public static function create_code($id, $codeprefix = null): string {
+        if ($codeprefix) {
             return $codeprefix . "_" . $id;
-        }
-        else
-        {
+        } else {
             return "code_" . $id;
         }
     }
-    public static function get_item_key($component, $paymentarea, $itemid): string
-    {
+    public static function get_item_key($component, $paymentarea, $itemid): string {
         return $component . "." . $paymentarea . "." . $itemid;
     }
-    public static function split_item_key($key): array
-    {
-        $keyexplode= explode(".", $key);
+    public static function split_item_key($key): array {
+        $keyexplode = explode(".", $key);
         return ['component' => $keyexplode[0], 'paymentarea' => $keyexplode[1], 'itemid' => $keyexplode[2]];
     }
 
-    public static function check_in_course($cid, $paymentarea, $component, $itemid): bool
-    {
-	global $DB;
-	if ($cid) {
-	    if ($paymentarea == 'fee') {
-		$cs = $DB->get_record('enrol', ['id' => $itemid]);
-    	    } else if ($component == 'mod_gwpayments') {
-		$cs = $DB->get_record('gwpayments', ['id' => $itemid]);
-		$cs->courseid = $cs->course;
-	    } else {
-    	        return false;
-    	    }
-	    if (!isset($cs->courseid) || $cid != $cs->courseid) {
-    	        return false;
-    	    }
-	}
-	return true;
+    public static function check_in_course($cid, $paymentarea, $component, $itemid): bool {
+        global $DB;
+        if ($cid) {
+            if ($paymentarea == 'fee') {
+                $cs = $DB->get_record('enrol', ['id' => $itemid]);
+            } else if ($component == 'mod_gwpayments') {
+                $cs = $DB->get_record('gwpayments', ['id' => $itemid]);
+                $cs->courseid = $cs->course;
+            } else {
+                return false;
+            }
+            if (!isset($cs->courseid) || $cid != $cs->courseid) {
+                    return false;
+            }
+        }
+        return true;
     }
 
-    public static function get_pending_item_collections($cid = false): array
-    {
+    public static function get_pending_item_collections($cid = false): array {
         global $DB;
         $records = $DB->get_records('paygw_bank', ['status' => 'P']);
         $items = [];
@@ -459,12 +435,12 @@ if ($sendteachermail) {
             $paymentarea = $record->paymentarea;
             $itemid = $record->itemid;
 
-if (!self::check_in_course($cid, $paymentarea, $component, $itemid)) {
-    continue;
-}
+            if (!self::check_in_course($cid, $paymentarea, $component, $itemid)) {
+                continue;
+            }
 
             $description = $record->description;
-            $key = bank_helper::get_item_key($component, $paymentarea, $itemid);
+            $key = self::get_item_key($component, $paymentarea, $itemid);
             if (!in_array($key, $itemsstringarray)) {
                 array_push($itemsstringarray, $key);
                 array_push($items, ['component' => $component, 'paymentarea' => $paymentarea, 'itemid' => $itemid, 'description' => $description, 'key' => $key]);
@@ -472,18 +448,17 @@ if (!self::check_in_course($cid, $paymentarea, $component, $itemid)) {
         }
         return $items;
     }
-    public static function sendmail($id, $subject, $message): bool
-    {
+    public static function sendmail($id, $subject, $message): bool {
         global $DB;
         $record = $DB->get_record('paygw_bank', ['id' => $id]);
-	$paymentuser = bank_helper::get_user($record->userid);
-//        $fullname = fullname($paymentuser, true);
-//        $mailcontent = $message;
-	if (isset($record->userid)) {
-    	    $oldforcelang = force_current_language($paymentuser->lang);
+        $paymentuser = self::get_user($record->userid);
+        // $fullname = fullname($paymentuser, true);
+        // $mailcontent = $message;
+        if (isset($record->userid)) {
+            $oldforcelang = force_current_language($paymentuser->lang);
             $supportuser = core_user::get_support_user();
-            bank_helper::message_to_user($record->userid, $supportuser, $subject, $message);
-	    force_current_language($oldforcelang);
+            self::message_to_user($record->userid, $supportuser, $subject, $message);
+            force_current_language($oldforcelang);
         }
         return true;
     }
