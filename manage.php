@@ -250,10 +250,18 @@ if (!$bankentries) {
             continue;
         }
 
-        $config = (object) helper::get_gateway_configuration($bankentry->component, $bankentry->paymentarea, $bankentry->itemid, 'bank');
+        $config = (object) helper::get_gateway_configuration(
+            $bankentry->component,
+            $bankentry->paymentarea,
+            $bankentry->itemid,
+            'bank'
+        );
 
         $groups = bank_helper::get_course_usergroups($cid, $bankentry->userid);
-        if (isset($config->onlyingroup) && $config->onlyingroup && !has_capability('moodle/site:accessallgroups', $context)) {
+        if (
+            isset($config->onlyingroup) && $config->onlyingroup &&
+            !has_capability('moodle/site:accessallgroups', $context)
+        ) {
             if (!bank_helper::check_teacheringroup($cid, $USER->id, $groups)) {
                 continue;
             }
@@ -303,7 +311,8 @@ if (!$bankentries) {
                 <input type="hidden" name="id" value="' . $bankentry->id . '">
                 <input type="hidden" name="action" value="A">
                 <input type="hidden" name="confirm" value="1">
-                <input class="btn btn-block btn-' . $primary . ' mb-2 form-submit" type="submit" value="' . get_string('approve', 'paygw_bank') . '"></input>
+                <input class="btn btn-block btn-' . $primary . ' mb-2 form-submit" type="submit" value="' .
+                get_string('approve', 'paygw_bank') . '"></input>
             </form>';
 
             $buttondeny = '<form name="formaprovepay' . $bankentry->id . '" method="POST">
@@ -325,7 +334,9 @@ if (!$bankentries) {
         $files = bank_helper::files($bankentry->id);
 
         if ($bankentry->hasfiles > 0 || count($files) > 0) {
-            $hasfiles = '<button type="button" class="btn btn-primary btn-block mb-2" data-toggle="modal" data-target="#staticBackdrop' . $bankentry->id . '" id="launchmodal' . $bankentry->id . '">&nbsp;' . get_string('view') . '&nbsp;</button>';
+            $hasfiles = '<button type="button" class="btn btn-primary btn-block mb-2" data-toggle="modal"' .
+            ' data-target="#staticBackdrop' . $bankentry->id . '" id="launchmodal' . $bankentry->id .
+            '">&nbsp;' . get_string('view') . '&nbsp;</button>';
 
             if ($filter == 'showarchived' && has_capability('paygw/bank:managepayments', $context)) {
                 $hasfiles .= '
@@ -342,19 +353,30 @@ if (!$bankentries) {
 
             // Create modal for file viewing.
             $hasfiles .= '
-            <div class="modal fade" id="staticBackdrop' . $bankentry->id . '" aria-labelledby="staticBackdropLabel' . $bankentry->id . '" aria-hidden="true">
+            <div class="modal fade" id="staticBackdrop' . $bankentry->id . '" aria-labelledby="staticBackdropLabel' .
+            $bankentry->id . '" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel' . $bankentry->id . '">' . get_string('files') . '</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h5 class="modal-title" id="staticBackdropLabel' . $bankentry->id . '">' .
+                            get_string('files') . '</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
                         </div>
                         <div class="modal-body">';
 
             $hasfilesbody = '<ol class="pt-3 pb-3 rounded" style="background-color: #f2f3f4; font-size: 1.15em;">';
             $hasfilesimg = false;
             foreach ($files as $f) {
-                $url = moodle_url::make_pluginfile_url($f->get_contextid(), $f->get_component(), $f->get_filearea(), $f->get_itemid(), $f->get_filepath(), $f->get_filename(), false);
+                $url = moodle_url::make_pluginfile_url(
+                    $f->get_contextid(),
+                    $f->get_component(),
+                    $f->get_filearea(),
+                    $f->get_itemid(),
+                    $f->get_filepath(),
+                    $f->get_filename(),
+                    false
+                );
                 $hasfilesbody .= '<li class="mb-2"><a href="' . $url . '" download><b>' . $f->get_filename() . '</b></a><br>';
                 $hasfilesbody .= get_string('size') . ': ' . round($f->get_filesize() / 1024, 2) . ' KB</li>';
 
@@ -363,10 +385,12 @@ if (!$bankentries) {
                     str_ends_with($f->get_filename(), ".png") || str_ends_with($f->get_filename(), ".jpeg") ||
                     str_ends_with($f->get_filename(), ".jpg") || str_ends_with($f->get_filename(), ".gif")
                 ) {
-                    $hasfilesimg .= "<p align=center class='pt-3'><img class='rounded shadow' style='max-width: 100%; max-height: 800px; object-fit: contain;' src='$url'></p>";
+                    $hasfilesimg .= "<p align=center class='pt-3'><img class='rounded shadow' style='max-width: 100%;
+                    max-height: 800px; object-fit: contain;' src='$url'></p>";
                 }
                 if (str_ends_with($f->get_filename(), ".pdf")) {
-                    $hasfilesimg .= "<p align=center class='pt-3'><object type='application/pdf' class='rounded shadow' style='width: 96%; height: 800px;' data='$url'></object></p>";
+                    $hasfilesimg .= "<p align=center class='pt-3'><object type='application/pdf' class='rounded shadow'
+                    style='width: 96%; height: 800px;' data='$url'></object></p>";
                 }
             }
 
@@ -491,8 +515,10 @@ function sendmail() {
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="sendmailmodalLabel"><?php echo get_string('sendmailtoselected', 'paygw_bank'); ?></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h5 class="modal-title" id="sendmailmodalLabel"><?php
+                echo get_string('sendmailtoselected', 'paygw_bank'); ?></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
                 <form name="formsendmail" method="POST">
@@ -502,10 +528,12 @@ function sendmail() {
                     <input type="hidden" name="ids" id="ids" value="">
                     <div class="form-group">
                         <label for="subject"><?php echo get_string('subject'); ?></label>
-                        <input type="text" class="form-control" id="subject" name="subject" value="<?php echo get_string('messegesubject', 'paygw_bank'); ?>" required>
+                        <input type="text" class="form-control" id="subject" name="subject" value="<?php
+                        echo get_string('messegesubject', 'paygw_bank'); ?>" required>
                         <br>
                         <label for="message"><?php echo get_string('message'); ?></label>
-                        <textarea class="form-textarea form-control" cols="40" rows="10" id="message" name="message" required></textarea>
+                        <textarea class="form-textarea form-control" cols="40" rows="10" id="message"
+                        name="message" required></textarea>
                         <br>
                         <input type="submit" class="btn btn-primary" value="<?php echo get_string('send', 'paygw_bank'); ?>">
                     </div>
