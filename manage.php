@@ -1,4 +1,18 @@
 <?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 use core_payment\helper;
 use core_reportbuilder\external\columns\sort\get;
@@ -39,7 +53,7 @@ $PAGE->set_heading($pagetitle);
 $PAGE->set_cacheable(false);
 $PAGE->set_secondary_navigation(false);
 if ($cid) {
-    $PAGE->navbar->add($course->fullname, '/course/view.php?id='.$course->id);
+    $PAGE->navbar->add($course->fullname, '/course/view.php?id=' . $course->id);
 }
 $PAGE->navbar->add(get_string('pluginname', 'paygw_bank'));
 
@@ -48,13 +62,13 @@ echo $OUTPUT->header();
 $items = bank_helper::get_pending_item_collections($cid);
 
 echo '<form name="filteritem" method="post" action="/payment/gateway/bank/manage.php">';
-echo '<input type="hidden" name="cid" value="'.$cid.'">';
+echo '<input type="hidden" name="cid" value="' . $cid . '">';
 echo '<select class="custom-select" name="filter" id="filterkey">';
-echo '<option value="">'.get_string('pendingrequests', 'paygw_bank').'</option>';
+echo '<option value="">' . get_string('pendingrequests', 'paygw_bank') . '</option>';
 foreach ($items as $item) {
     echo '<option value="' . $item['key'] . '" >' . $item['description'] . '</option>';
 }
-echo '<option value="showarchived">'.get_string('group:archive', 'mimetypes').'</option>';
+echo '<option value="showarchived">' . get_string('group:archive', 'mimetypes') . '</option>';
 echo '</select>
 &nbsp;<input type="submit" class="btn btn-primary" value="' . get_string('show') . '">
 </form></br>';
@@ -75,44 +89,44 @@ if ($action == 'deletefiles' && $id && has_capability('paygw/bank:managepayments
 if ($confirm && $id) {
     require_sesskey();
     // Check what has already been aprobed.
-    if ( $DB->record_exists('paygw_bank', ['id' => $id, 'status' => 'P']) ){
-     if ($action == 'A') {
-        bank_helper::aprobe_pay($id);
-        $OUTPUT->notification("aprobed");
-        \core\notification::info(get_string('mail_confirm_pay_subject', 'paygw_bank'));
-     } else if ($action == 'D') {
-        bank_helper::deny_pay($id);
-        $OUTPUT->notification("denied");
-        \core\notification::info(get_string('mail_denied_pay_subject', 'paygw_bank'));
-     }
+    if ($DB->record_exists('paygw_bank', ['id' => $id, 'status' => 'P'])) {
+        if ($action == 'A') {
+            bank_helper::aprobe_pay($id);
+            $OUTPUT->notification("aprobed");
+            \core\notification::info(get_string('mail_confirm_pay_subject', 'paygw_bank'));
+        } else if ($action == 'D') {
+            bank_helper::deny_pay($id);
+            $OUTPUT->notification("denied");
+            \core\notification::info(get_string('mail_denied_pay_subject', 'paygw_bank'));
+        }
     } else {
         \core\notification::warning("Reloaded");
     }
     $id = 0;
 }
-if ($confirm==1 && $ids!='' && $action=='sendmail') {
+if ($confirm == 1 && $ids != '' && $action == 'sendmail') {
     require_sesskey();
-    $ids=explode(',', $ids);
+    $ids = explode(',', $ids);
     foreach ($ids as $i) {
-        if ($i>0) {
+        if ($i > 0) {
             bank_helper::sendmail($i, optional_param('subject', '', PARAM_TEXT), optional_param('message', '', PARAM_TEXT));
         }
     }
     \core\notification::info(get_string('mails_sent', 'paygw_bank'));
     $OUTPUT->notification(get_string('mails_sent', 'paygw_bank'));
 }
-$post_url= new moodle_url($PAGE->url, array('sesskey'=>sesskey()));
+$posturl = new moodle_url($PAGE->url, ['sesskey' => sesskey()]);
 
 $status = 'P';
 if ($filter == 'showarchived') {
     $status = 'A';
 }
 
-$bank_entries = bank_helper::get_pending($status, $id);
+$bankentries = bank_helper::get_pending($status, $id);
 
-if (!$bank_entries) {
-    $match = array();
-    echo '</br><h5>'.(get_string('noentriesfound', 'paygw_bank')).'</h5>';
+if (!$bankentries) {
+    $match = [];
+    echo '</br><h5>' . (get_string('noentriesfound', 'paygw_bank')) . '</h5>';
     $table = null;
 } else {
     $table = new html_table();
@@ -141,173 +155,181 @@ if (!$bank_entries) {
     $table->head = [];
 
 
-    array_push($table->head,
-	$checkboxcheckall,
-	get_string('timecreated'),
+    array_push(
+        $table->head,
+        $checkboxcheckall,
+        get_string('timecreated'),
     );
 
-if ($filter == 'showarchived') {
-    array_push($table->head,
-        get_string('recordapproved', 'data'),
-    );
-}
-    
-    array_push($table->head,
+    if ($filter == 'showarchived') {
+        array_push(
+            $table->head,
+            get_string('recordapproved', 'data'),
+        );
+    }
+
+    array_push(
+        $table->head,
         get_string('code', 'paygw_bank'),
     );
 
-    if(!$cid) {
-	array_push($table->head,
-    	    get_string('course'),
-	);
+    if (!$cid) {
+        array_push(
+            $table->head,
+            get_string('course'),
+        );
     }
 
-    array_push($table->head,
+    array_push(
+        $table->head,
         get_string('fullnameuser'),
         get_string('email'),
         get_string('group'),
         get_string('concept', 'paygw_bank'),
     );
 
-if ($filter == 'showarchived') {
-    array_push($table->head,
-        get_string('total_cost', 'paygw_bank'),
-        get_string('hasfiles', 'paygw_bank'),
-    );
-} else {
-    array_push($table->head,
-        get_string('total_cost', 'paygw_bank'),
-	get_string('today_cost', 'paygw_bank'),
-        get_string('currency'),
-        get_string('hasfiles', 'paygw_bank'),
-    );
-}
-
-    if($filter != 'showarchived') {
-	array_push($table->head,
-    	    get_string('actions')
-	);
+    if ($filter == 'showarchived') {
+        array_push(
+            $table->head,
+            get_string('total_cost', 'paygw_bank'),
+            get_string('hasfiles', 'paygw_bank'),
+        );
+    } else {
+        array_push(
+            $table->head,
+            get_string('total_cost', 'paygw_bank'),
+            get_string('today_cost', 'paygw_bank'),
+            get_string('currency'),
+            get_string('hasfiles', 'paygw_bank'),
+        );
     }
 
-    foreach ($bank_entries as $bank_entry) {
-        $bankentrykey = bank_helper::get_item_key($bank_entry->component, $bank_entry->paymentarea, $bank_entry->itemid);
+    if ($filter != 'showarchived') {
+        array_push(
+            $table->head,
+            get_string('actions')
+        );
+    }
+
+    foreach ($bankentries as $bankentry) {
+        $bankentrykey = bank_helper::get_item_key($bankentry->component, $bankentry->paymentarea, $bankentry->itemid);
 
         if ($filter != '' && ($bankentrykey != $filter)) {
-    	    if ($filter != 'showarchived' || !$bank_entry->hasfiles) {
-        	continue;
+            if ($filter != 'showarchived' || !$bankentry->hasfiles) {
+                continue;
             }
         }
 
-	// Check in course.
-	if (!bank_helper::check_in_course($cid, $bank_entry->paymentarea, $bank_entry->component, $bank_entry->itemid)) {
-	    continue;
-	}
+        // Check in course.
+        if (!bank_helper::check_in_course($cid, $bankentry->paymentarea, $bankentry->component, $bankentry->itemid)) {
+            continue;
+        }
 
-        $config = (object) helper::get_gateway_configuration($bank_entry->component, $bank_entry->paymentarea, $bank_entry->itemid, 'bank');
+        $config = (object) helper::get_gateway_configuration($bankentry->component, $bankentry->paymentarea, $bankentry->itemid, 'bank');
 
-	$groups = bank_helper::get_course_usergroups($cid, $bank_entry->userid);
+        $groups = bank_helper::get_course_usergroups($cid, $bankentry->userid);
         if (isset($config->onlyingroup) && $config->onlyingroup && !has_capability('moodle/site:accessallgroups', $context)) {
             if (!bank_helper::check_teacheringroup($cid, $USER->id, $groups)) {
                 continue;
-    	    }
-	}
+            }
+        }
 
-        $payable = helper::get_payable($bank_entry->component, $bank_entry->paymentarea, $bank_entry->itemid);
+        $payable = helper::get_payable($bankentry->component, $bankentry->paymentarea, $bankentry->itemid);
         $currency = $payable->get_currency();
-        $customer = $DB->get_record('user', array('id' => $bank_entry->userid));
+        $customer = $DB->get_record('user', ['id' => $bankentry->userid]);
         $fullname = fullname($customer, false);
 
-        $amount = helper::get_rounded_cost($bank_entry->totalamount, $currency, 0);
+        $amount = helper::get_rounded_cost($bankentry->totalamount, $currency, 0);
         $surcharge = helper::get_gateway_surcharge('bank');
 
 
-$unpaid = '-';
-$primary = 'primary';
-// Check uninterrupted cost.
-if ($bank_entry->component == "enrol_yafee" && $filter != 'showarchived') {
-    $cs = $DB->get_record('enrol', ['id' => $bank_entry->itemid, 'enrol' => 'yafee']);
-        if ($data = $DB->get_record('user_enrolments', ['userid' => $bank_entry->userid, 'enrolid' => $cs->id])) {
-         if (isset($data->timeend) || isset($data->timestart)) {
-            if ($cs->customint5 && $cs->enrolperiod && $data->timeend < time() && $data->timestart) {
-                $unpaid = (round(((time() - $data->timeend) / $cs->enrolperiod)) * $cs->cost);
-                // Add surcharge.
-                $unpaid = helper::get_rounded_cost($unpaid, $currency, $surcharge);
+        $unpaid = '-';
+        $primary = 'primary';
+        // Check uninterrupted cost.
+        if ($bankentry->component == "enrol_yafee" && $filter != 'showarchived') {
+            $cs = $DB->get_record('enrol', ['id' => $bankentry->itemid, 'enrol' => 'yafee']);
+            if ($data = $DB->get_record('user_enrolments', ['userid' => $bankentry->userid, 'enrolid' => $cs->id])) {
+                if (isset($data->timeend) || isset($data->timestart)) {
+                    if ($cs->customint5 && $cs->enrolperiod && $data->timeend < time() && $data->timestart) {
+                        $unpaid = (round(((time() - $data->timeend) / $cs->enrolperiod)) * $cs->cost);
+                        // Add surcharge.
+                        $unpaid = helper::get_rounded_cost($unpaid, $currency, $surcharge);
+                    }
+                }
             }
-         }
+            if ($amount < $unpaid) {
+                $unpaid = '<font color=red><b>' . $unpaid . '</b></br>' . get_string('unpaidnotice', 'paygw_bank') . '</font>';
+                $primary = 'secondary';
+            } else {
+                $unpaid = '<font color=green>' . get_string('ok') . '</font>';
+            }
         }
- if ($amount < $unpaid) {
-    $unpaid = '<font color=red><b>' . $unpaid . '</b></br>' . get_string('unpaidnotice', 'paygw_bank') . '</font>';
-    $primary = 'secondary';
- } else {
-    $unpaid = '<font color=green>' . get_string('ok') . '</font>';
- }
-}
 
-if (!$bank_entry->hasfiles) {
-    $primary = 'secondary';
-}
+        if (!$bankentry->hasfiles) {
+            $primary = 'secondary';
+        }
 
-$buttonaprobe = '';
-$buttondeny = '';
-if($filter != 'showarchived') {
-        $buttonaprobe = '<form name="formapprovepay' . $bank_entry->id . '" method="POST">
-        <input type="hidden" name="sesskey" value="' .sesskey(). '">
-        <input type="hidden" name="id" value="' . $bank_entry->id . '">
+        $buttonaprobe = '';
+        $buttondeny = '';
+        if ($filter != 'showarchived') {
+                $buttonaprobe = '<form name="formapprovepay' . $bankentry->id . '" method="POST">
+        <input type="hidden" name="sesskey" value="' . sesskey() . '">
+        <input type="hidden" name="id" value="' . $bankentry->id . '">
         <input type="hidden" name="action" value="A">
         <input type="hidden" name="confirm" value="1">
-        <input class="btn btn-block btn-'.$primary.' mb-2 form-submit" type="submit" value="' . get_string('approve', 'paygw_bank') . '"></input>
+        <input class="btn btn-block btn-' . $primary . ' mb-2 form-submit" type="submit" value="' . get_string('approve', 'paygw_bank') . '"></input>
         </form>';
-        $buttondeny = '<form name="formaprovepay' . $bank_entry->id . '" method="POST">
-        <input type="hidden" name="sesskey" value="' .sesskey(). '">
-        <input type="hidden" name="id" value="' . $bank_entry->id . '">
+                $buttondeny = '<form name="formaprovepay' . $bankentry->id . '" method="POST">
+        <input type="hidden" name="sesskey" value="' . sesskey() . '">
+        <input type="hidden" name="id" value="' . $bankentry->id . '">
         <input type="hidden" name="action" value="D">
         <input type="hidden" name="confirm" value="1">
 
             <button type="submit" class="btn btn-danger" data-modal="confirmation"
             data-modal-title-str=\'["deny", "paygw_bank"]\' data-modal-content-str=\'["areyousure"]\'
-            data-modal-yes-button-str=\'["confirm", "core"]\'">'.get_string('deny', 'paygw_bank').'</button>
+            data-modal-yes-button-str=\'["confirm", "core"]\'">' . get_string('deny', 'paygw_bank') . '</button>
 
         </form>';
-}
+        }
         $files = "-";
-        $selectitemcheckbox = '<input type="checkbox" name="selectitem" value="' . $bank_entry->id . '">';
+        $selectitemcheckbox = '<input type="checkbox" name="selectitem" value="' . $bankentry->id . '">';
         $hasfiles = get_string('no');
         $fs = get_file_storage();
-        $files = bank_helper::files($bank_entry->id);
-        if ($bank_entry->hasfiles > 0 || count($files)>0) {
-            $hasfiles = '<button type="button" class="btn btn-primary btn-block mb-2" data-toggle="modal" data-target="#staticBackdrop' . $bank_entry->id . '" id="launchmodal' . $bank_entry->id . '">&nbsp;'. get_string('view') .'&nbsp;</button>';
+        $files = bank_helper::files($bankentry->id);
+        if ($bankentry->hasfiles > 0 || count($files) > 0) {
+            $hasfiles = '<button type="button" class="btn btn-primary btn-block mb-2" data-toggle="modal" data-target="#staticBackdrop' . $bankentry->id . '" id="launchmodal' . $bankentry->id . '">&nbsp;' . get_string('view') . '&nbsp;</button>';
 
-if($filter == 'showarchived' && has_capability('paygw/bank:managepayments', $context)) {
-            $hasfiles .= '
-	    <form action="manage.php" id="deletefiles_' . $bank_entry->id . '" method="POST">
-    	    <input type="hidden" name="sesskey" value="' .sesskey(). '">
-    	    <input type="hidden" name="id" value="' . $bank_entry->id . '">
+            if ($filter == 'showarchived' && has_capability('paygw/bank:managepayments', $context)) {
+                        $hasfiles .= '
+	    <form action="manage.php" id="deletefiles_' . $bankentry->id . '" method="POST">
+    	    <input type="hidden" name="sesskey" value="' . sesskey() . '">
+    	    <input type="hidden" name="id" value="' . $bankentry->id . '">
     	    <input type="hidden" name="filter" value="showarchived">
     	    <input type="hidden" name="action" value="deletefiles">
             <button type="submit" class="btn btn-secondary" data-modal="confirmation"
             data-modal-title-str=\'["delete", "core"]\' data-modal-content-str=\'["areyousure"]\'
-            data-modal-yes-button-str=\'["confirm", "core"]\'">'.get_string('delete').'</button>
+            data-modal-yes-button-str=\'["confirm", "core"]\'">' . get_string('delete') . '</button>
             </form>';
-}
+            }
 
             $hasfiles .= '
-            <div class="modal fade" id="staticBackdrop' . $bank_entry->id . '" aria-labelledby="staticBackdropLabel' . $bank_entry->id . '" aria-hidden="true">
+            <div class="modal fade" id="staticBackdrop' . $bankentry->id . '" aria-labelledby="staticBackdropLabel' . $bankentry->id . '" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
                 <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel' . $bank_entry->id . '">' . get_string('files') . '</h5>
+                    <h5 class="modal-title" id="staticBackdropLabel' . $bankentry->id . '">' . get_string('files') . '</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
               ';
 
-	    $hasfilesbody = '<ol class="pt-3 pb-3 rounded" style="background-color: #f2f3f4; font-size: 1.15em;">';
-	    $hasfilesimg = false;
+            $hasfilesbody = '<ol class="pt-3 pb-3 rounded" style="background-color: #f2f3f4; font-size: 1.15em;">';
+            $hasfilesimg = false;
             foreach ($files as $f) {
                 // $f is an instance of stored_file
                 $url = moodle_url::make_pluginfile_url($f->get_contextid(), $f->get_component(), $f->get_filearea(), $f->get_itemid(), $f->get_filepath(), $f->get_filename(), false);
                 $hasfilesbody .= '<li class="mb-2"><a href="' . $url . '" download><b>' . $f->get_filename() . '</b></a><br>';
-            	$hasfilesbody .= get_string('size').': '. round($f->get_filesize()/1024,2) . ' KB</li>';
+                $hasfilesbody .= get_string('size') . ': ' . round($f->get_filesize() / 1024, 2) . ' KB</li>';
                 if (str_ends_with($f->get_filename(), ".png") || str_ends_with($f->get_filename(), ".jpeg") || str_ends_with($f->get_filename(), ".jpg") || str_ends_with($f->get_filename(), ".gif")) {
                     $hasfilesimg .= "<p align=center class='pt-3'><img class='rounded shadow' style='max-width: 100%; max-height: 800px; object-fit: contain;' src='$url'></p>";
                 }
@@ -318,7 +340,7 @@ if($filter == 'showarchived' && has_capability('paygw/bank:managepayments', $con
 
             $hasfiles .= $hasfilesbody . '</ol>';
             if ($hasfilesimg) {
-        	$hasfiles .= $hasfilesimg;
+                $hasfiles .= $hasfilesimg;
             }
             $hasfiles .= '
                 </div>
@@ -330,74 +352,81 @@ if($filter == 'showarchived' && has_capability('paygw/bank:managepayments', $con
             ';
         }
 
-	$url = helper::get_success_url($bank_entry->component, $bank_entry->paymentarea, $bank_entry->itemid);
+        $url = helper::get_success_url($bankentry->component, $bankentry->paymentarea, $bankentry->itemid);
 
-	$tabledata = [];
-	array_push($tabledata,
-    	    $selectitemcheckbox,
-	    date('d.m.Y, H:i', $bank_entry->timecreated),
-    	);
-
-if ($filter == 'showarchived') {
-	array_push($tabledata,
-	    date('d.m.Y, H:i', $bank_entry->timechecked),
-        );
-}
-	array_push($tabledata,
-    	    $bank_entry->code,
+        $tabledata = [];
+        array_push(
+            $tabledata,
+            $selectitemcheckbox,
+            date('d.m.Y, H:i', $bankentry->timecreated),
         );
 
-$groupnames = null;
-if(!$cid) {
-    $courseid = bank_helper::get_courseid($bank_entry->paymentarea, $bank_entry->component, $bank_entry->itemid);
-    $groupnames = bank_helper::get_course_usergroups($courseid, $bank_entry->userid);
-    $course = get_course($courseid);
-//    $courseurl = html_writer::link('/course/view.php?id='.$courseid, format_string($course->fullname), array('target' => '_blank'));
-    $courseurl = format_string($course->fullname);
-    array_push($tabledata, $courseurl);
-} else {
-    $groupnames = bank_helper::get_course_usergroups($cid, $bank_entry->userid);
-}
+        if ($filter == 'showarchived') {
+            array_push(
+                $tabledata,
+                date('d.m.Y, H:i', $bankentry->timechecked),
+            );
+        }
+        array_push(
+            $tabledata,
+            $bankentry->code,
+        );
 
-	array_push($tabledata,
-	    html_writer::link('/user/profile.php?id='.$customer->id, $fullname, array('target' => '_blank')),
+        $groupnames = null;
+        if (!$cid) {
+            $courseid = bank_helper::get_courseid($bankentry->paymentarea, $bankentry->component, $bankentry->itemid);
+            $groupnames = bank_helper::get_course_usergroups($courseid, $bankentry->userid);
+            $course = get_course($courseid);
+            // $courseurl = html_writer::link('/course/view.php?id='.$courseid, format_string($course->fullname), array('target' => '_blank'));
+            $courseurl = format_string($course->fullname);
+            array_push($tabledata, $courseurl);
+        } else {
+            $groupnames = bank_helper::get_course_usergroups($cid, $bankentry->userid);
+        }
+
+        array_push(
+            $tabledata,
+            html_writer::link('/user/profile.php?id=' . $customer->id, $fullname, ['target' => '_blank']),
             $customer->email,
-    	    $groupnames,
-            html_writer::link($url, $bank_entry->description, array('target' => '_blank')),
+            $groupnames,
+            html_writer::link($url, $bankentry->description, ['target' => '_blank']),
         );
-if ($filter == 'showarchived') {
-        array_push($tabledata,
-            helper::get_cost_as_string($amount, $currency, 0),
-        );
-} else {
-        array_push($tabledata,
-            $amount,
-            $unpaid,
-            $currency,
-        );
-}
-        array_push($tabledata,
-    	    $hasfiles,
+        if ($filter == 'showarchived') {
+                array_push(
+                    $tabledata,
+                    helper::get_cost_as_string($amount, $currency, 0),
+                );
+        } else {
+                array_push(
+                    $tabledata,
+                    $amount,
+                    $unpaid,
+                    $currency,
+                );
+        }
+        array_push(
+            $tabledata,
+            $hasfiles,
         );
 
-	if($filter != 'showarchived') {
-	    array_push($tabledata,
-        	$buttonaprobe . $buttondeny,
-    	    );
-	}
+        if ($filter != 'showarchived') {
+            array_push(
+                $tabledata,
+                $buttonaprobe . $buttondeny,
+            );
+        }
 
         $table->data[] = $tabledata;
-
     }
     if (count($table->data)) {
-	echo html_writer::table($table);
+        echo html_writer::table($table);
     } else {
-        echo '</br><h5>'.(get_string('noentriesfound', 'paygw_bank')).'</h5>';
+        echo '</br><h5>' . (get_string('noentriesfound', 'paygw_bank')) . '</h5>';
     }
 }
 
-if (count($bank_entries)) {
-?>
+if (count($bankentries)) {
+    ?>
 <div class="row">
     <div class="col">
         <button type="button" class="btn btn-secondary" onclick="sendmail()">
@@ -441,14 +470,14 @@ function sendmail() {
                         <label for="message"><?php echo get_string('message'); ?></label>
                         <textarea class="form-textarea form-control" cols="40" rows="10" id="message" name="message" required></textarea>
                         <br>
-                        <input type="submit" class="btn btn-primary" value="<?php echo get_string('send','paygw_bank'); ?>">
+                        <input type="submit" class="btn btn-primary" value="<?php echo get_string('send', 'paygw_bank'); ?>">
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
-<?php
+    <?php
 }
 
 echo $OUTPUT->footer();
