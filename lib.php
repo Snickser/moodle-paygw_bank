@@ -23,8 +23,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Adds navigation items to user profile.
  *
@@ -87,6 +85,7 @@ function paygw_bank_pluginfile($course, $cm, $context, $filearea, $args, $forced
     send_stored_file($file, 86400, 0, $forcedownload, $options);
 }
 
+if (!function_exists('str_ends_with')) {
 /**
  * Polyfill for str_ends_with for PHP versions that don't have it.
  *
@@ -94,7 +93,6 @@ function paygw_bank_pluginfile($course, $cm, $context, $filearea, $args, $forced
  * @param string $end The ending to check for
  * @return bool
  */
-if (!function_exists('str_ends_with')) {
     function str_ends_with($str, $end) {
         return (@substr_compare($str, $end, -strlen($end)) == 0);
     }

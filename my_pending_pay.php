@@ -14,11 +14,23 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
+/**
+ * Plugin version and other meta-data are defined here.
+ *
+ * @package    paygw_bank
+ * @copyright  UNESCO/IESALC
+ * @author     Carlos Vicente Corral <c.vicente@unesco.org>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 use core_payment\helper;
 use paygw_bank\bank_helper;
 
+defined('MOODLE_INTERNAL') || die();
+
 require_once(__DIR__ . '/../../../config.php');
 require_once('./lib.php');
+
 require_login();
 
 // Set context to user context since we don't have a specific scope.
@@ -65,7 +77,7 @@ if (!$bankentries) {
     // Create table to display pending payments.
     $table = new html_table();
     $canuploadfiles = get_config('paygw_bank', 'usercanuploadfiles');
-    
+
     // Set table headers.
     $headers = [
         get_string('timecreated'),
@@ -73,14 +85,14 @@ if (!$bankentries) {
         get_string('course'),
         get_string('concept', 'paygw_bank'),
         get_string('total_cost', 'paygw_bank'),
-        get_string('status')
+        get_string('status'),
     ];
-    
+
     if ($canuploadfiles) {
         $headers[] = get_string('hasfiles', 'paygw_bank');
     }
     $headers[] = get_string('actions');
-    
+
     $table->head = $headers;
 
     foreach ($bankentries as $bankentry) {
@@ -91,13 +103,13 @@ if (!$bankentries) {
             $bankentry->itemid,
             'bank'
         );
-        
+
         $payable = helper::get_payable(
             $bankentry->component,
             $bankentry->paymentarea,
             $bankentry->itemid
         );
-        
+
         $currency = $payable->get_currency();
         $customer = $DB->get_record('user', ['id' => $bankentry->userid]);
         $fullname = fullname($customer, true);
@@ -116,8 +128,8 @@ if (!$bankentries) {
                     }
                 }
             }
-            
-            $unpaid = ($bankentry->totalamount < $unpaid) 
+
+            $unpaid = ($bankentry->totalamount < $unpaid)
                 ? '<font color=red><b>' . get_string('unpaidnotice', 'paygw_bank') . '</b></font>'
                 : '<font color=green>' . get_string('ok') . '</font>';
         }
@@ -139,9 +151,9 @@ if (!$bankentries) {
                 'paymentarea' => $paymentarea,
                 'itemid' => $itemid,
                 'description' => $description,
-                'editfiles' => 1
+                'editfiles' => 1,
             ]);
-            
+
             $buttongo = (count($files) < $maxnumberfiles)
                 ? '<a class="btn btn-primary btn-block" href="' . $urlpay . '">' . get_string('edit') . '</a>'
                 : '<a class="btn btn-secondary btn-block" href="' . $urlpay . '">' . get_string('view') . '</a>';
@@ -152,12 +164,12 @@ if (!$bankentries) {
                     <input type="hidden" name="id" value="' . $bankentry->id . '">
                     <input type="hidden" name="action" value="D">
                     <input type="hidden" name="confirm" value="1">
-                    <input class="btn btn-danger mt-3 btn-block" type="submit" 
-                        data-modal="confirmation" 
+                    <input class="btn btn-danger mt-3 btn-block" type="submit"
+                        data-modal="confirmation"
                         data-modal-title-str=\'["cancel_process", "paygw_bank"]\'
-                        data-modal-content-str=\'["are_you_sure_cancel","paygw_bank"]\' 
-                        data-modal-destination="javascript:document.getElementById(\'cancel_' . $bankentry->id . '\').submit()" 
-                        data-modal-yes-button-str=\'["yes", "core"]\' 
+                        data-modal-content-str=\'["are_you_sure_cancel","paygw_bank"]\'
+                        data-modal-destination="javascript:document.getElementById(\'cancel_' . $bankentry->id . '\').submit()"
+                        data-modal-yes-button-str=\'["yes", "core"]\'
                         value="' . get_string("cancel_process", "paygw_bank") . '">
                     </input>
                 </form>';
@@ -184,7 +196,7 @@ if (!$bankentries) {
             format_string($course->fullname),
             $bankentry->description,
             $amount,
-            $unpaid
+            $unpaid,
         ];
 
         // Add files column if enabled.
@@ -198,7 +210,7 @@ if (!$bankentries) {
         $rowdata[] = $buttons;
         $table->data[] = $rowdata;
     }
-    
+
     echo html_writer::table($table);
 }
 
