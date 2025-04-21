@@ -34,6 +34,10 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . '/filelib.php');
 
+/**
+ * Contains class for bank payment gateway.
+ *
+ */
 class bank_helper {
     /**
      * Delete all files associated with a bank payment record.

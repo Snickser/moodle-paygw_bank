@@ -31,6 +31,10 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . '/formslib.php');
 
+/**
+ * Contains class for bank payment gateway.
+ *
+ */
 class attachtransfer_form extends \moodleform {
     /**
      * form definition
