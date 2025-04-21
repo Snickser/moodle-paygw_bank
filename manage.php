@@ -176,6 +176,14 @@ if (!$bankentries) {
     }
     </script>
     <?php
+/**
+ * Plugin version and other meta-data are defined here.
+ *
+ * @package    paygw_bank
+ * @copyright  UNESCO/IESALC
+ * @author     Carlos Vicente Corral <c.vicente@unesco.org>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
     $table->head = [];
     array_push(
@@ -491,7 +499,16 @@ if (count($bankentries)) {
 <div class="row">
     <div class="col">
         <button type="button" class="btn btn-secondary" onclick="sendmail()">
-            <?php echo get_string('sendmailtoselected', 'paygw_bank'); ?>
+            <?php
+            /**
+             * Plugin version and other meta-data are defined here.
+             *
+             * @package    paygw_bank
+             * @copyright  UNESCO/IESALC
+             * @author     Carlos Vicente Corral <c.vicente@unesco.org>
+             * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+             */
+            echo get_string('sendmailtoselected', 'paygw_bank'); ?>
         </button>
     </div>
 </div>
@@ -516,26 +533,80 @@ function sendmail() {
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="sendmailmodalLabel"><?php
+                /**
+                 * Plugin version and other meta-data are defined here.
+                 *
+                 * @package    paygw_bank
+                 * @copyright  UNESCO/IESALC
+                 * @author     Carlos Vicente Corral <c.vicente@unesco.org>
+                 * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+                 */
+
                 echo get_string('sendmailtoselected', 'paygw_bank'); ?></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
                 <form name="formsendmail" method="POST">
-                    <input type="hidden" name="sesskey" value="<?php echo sesskey(); ?>">
+                    <input type="hidden" name="sesskey" value="<?php
+                    /**
+                     * Plugin version and other meta-data are defined here.
+                     *
+                     * @package    paygw_bank
+                     * @copyright  UNESCO/IESALC
+                     * @author     Carlos Vicente Corral <c.vicente@unesco.org>
+                     * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+                     */
+                    echo sesskey(); ?>">
                     <input type="hidden" name="action" value="sendmail">
                     <input type="hidden" name="confirm" value="1">
                     <input type="hidden" name="ids" id="ids" value="">
                     <div class="form-group">
-                        <label for="subject"><?php echo get_string('subject'); ?></label>
+                        <label for="subject"><?php
+                        /**
+                         * Plugin version and other meta-data are defined here.
+                         *
+                         * @package    paygw_bank
+                         * @copyright  UNESCO/IESALC
+                         * @author     Carlos Vicente Corral <c.vicente@unesco.org>
+                         * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+                         */
+                        echo get_string('subject'); ?></label>
                         <input type="text" class="form-control" id="subject" name="subject"
-                        value="<?php echo get_string('messegesubject', 'paygw_bank'); ?>" required>
+                        value="<?php
+                        /**
+                         * Plugin version and other meta-data are defined here.
+                         *
+                         * @package    paygw_bank
+                         * @copyright  UNESCO/IESALC
+                         * @author     Carlos Vicente Corral <c.vicente@unesco.org>
+                         * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+                         */
+                        echo get_string('messegesubject', 'paygw_bank'); ?>" required>
                         <br>
-                        <label for="message"><?php echo get_string('message'); ?></label>
+                        <label for="message"><?php
+                        /**
+                         * Plugin version and other meta-data are defined here.
+                         *
+                         * @package    paygw_bank
+                         * @copyright  UNESCO/IESALC
+                         * @author     Carlos Vicente Corral <c.vicente@unesco.org>
+                         * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+                         */
+                        echo get_string('message'); ?></label>
                         <textarea class="form-textarea form-control" cols="40" rows="10" id="message"
                         name="message" required></textarea>
                         <br>
-                        <input type="submit" class="btn btn-primary" value="<?php echo get_string('send', 'paygw_bank'); ?>">
+                        <input type="submit" class="btn btn-primary" value="<?php
+                        /**
+                         * Plugin version and other meta-data are defined here.
+                         *
+                         * @package    paygw_bank
+                         * @copyright  UNESCO/IESALC
+                         * @author     Carlos Vicente Corral <c.vicente@unesco.org>
+                         * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+                         */
+                        echo get_string('send', 'paygw_bank'); ?>">
                     </div>
                 </form>
             </div>
@@ -543,6 +614,14 @@ function sendmail() {
     </div>
 </div>
     <?php
+    /**
+     * Plugin version and other meta-data are defined here.
+     *
+     * @package    paygw_bank
+     * @copyright  UNESCO/IESALC
+     * @author     Carlos Vicente Corral <c.vicente@unesco.org>
+     * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+     */
 }
 
 echo $OUTPUT->footer();
