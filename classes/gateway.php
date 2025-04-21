@@ -25,15 +25,18 @@
 namespace paygw_bank;
 
 /**
- * The gateway class for bank payment gateway.
+ * Contains class for bank payment gateway.
  *
+ * @package   paygw_bank
  * @copyright UNESCO/IESALC
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class gateway extends \core_payment\gateway {
+    /**
+     * Get supported_currencies.
+     *
+     */
     public static function get_supported_currencies(): array {
-        // See https://developer.bank.com/docs/api/reference/currency-codes/,
-        // 3-character ISO-4217: https://en.wikipedia.org/wiki/ISO_4217#Active_codes.
         $alternatecurrencies = get_config('paygw_bank', 'aditionalcurrencies');
         $alternatecurrencies = trim($alternatecurrencies);
         $altcurrenc = [];
@@ -63,9 +66,6 @@ class gateway extends \core_payment\gateway {
         $mform->setDefault('delayautocommit', 300);
         $mform->addHelpButton('delayautocommit', 'delayautocommit', 'paygw_bank');
 
-        // $mform->addElement('checkbox', 'upload', get_string('instructionstext', 'paygw_bank'));
-        // $mform->setType('instructionstext', PARAM_RAW);
-
         $mform->addElement('text', 'fixdesc', get_string('fixdesc', 'paygw_bank'), ['size' => 50]);
         $mform->setType('fixdesc', PARAM_TEXT);
         $mform->addRule('fixdesc', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
@@ -80,7 +80,6 @@ class gateway extends \core_payment\gateway {
         $mform->addElement('text', 'codeprefix', get_string('codeprefix', 'paygw_bank'));
         $mform->setType('codeprefix', PARAM_RAW);
 
-        // add default value to codeprefix
         $mform->setDefault('codeprefix', 'code');
 
         $mform->addElement(

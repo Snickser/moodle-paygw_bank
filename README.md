@@ -1,6 +1,7 @@
 # Impruved Bank transferences payment gateway
 
 [![](https://img.shields.io/github/v/release/Snickser/moodle-paygw_bank.svg)](https://github.com/Snickser/moodle-paygw_bank/releases)
+[![Build Status](https://github.com/Snickser/moodle-paygw_bank/actions/workflows/moodle-ci.yml/badge.svg)](https://github.com/Snickser/moodle-paygw_bank/actions/workflows/moodle-ci.yml)
 
 Этот плагин представляет собой платежный шлюз Moodle, который обеспечивает поддержку платежей, осуществляемых посредством денежных переводов или других методов ручной оплаты, которые могут быть одобрены человеком вручную.
 

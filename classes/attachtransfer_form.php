@@ -21,7 +21,6 @@
  * Encoding     UTF-8
  *
  * @package paygw_bank
- *
  * @copyright UNESCO/IESALC
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -30,8 +29,12 @@ namespace paygw_bank;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once $CFG->libdir . '/formslib.php';
+require_once($CFG->libdir . '/formslib.php');
 
+/**
+ * Contains class for bank payment gateway.
+ *
+ */
 class attachtransfer_form extends \moodleform {
     /**
      * form definition
@@ -78,6 +81,14 @@ class attachtransfer_form extends \moodleform {
 
         $mform->addElement('submit', 'submitbutton', get_string('savefiles', 'paygw_bank'));
     }
+    /**
+     * Validate form data
+     *
+     * @param array $data array of ("fieldname"=>value) of submitted data
+     * @param array $files array of uploaded files "element_name"=>tmp_file_path
+     * @return array of "element_name"=>"error_description" if there are errors,
+     *         or an empty array if everything is OK.
+     */
     public function validation($data, $files) {
         global $DB;
         $errors = parent::validation($data, $files);

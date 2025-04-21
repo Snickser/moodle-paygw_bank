@@ -33,8 +33,12 @@ use external_single_structure;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once $CFG->libdir . '/externallib.php';
+require_once($CFG->libdir . '/externallib.php');
 
+/**
+ * get_config_for_js
+ *
+ */
 class get_config_for_js extends external_api {
     /**
      * Returns description of method parameters.

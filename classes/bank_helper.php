@@ -21,20 +21,30 @@
  * @copyright UNESCO/IESALC
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 namespace paygw_bank;
 
 use curl;
 use core_user;
-
-defined('MOODLE_INTERNAL') || die();
-
-require_once $CFG->libdir . '/filelib.php';
-
 use core_payment\helper as payment_helper;
 use stdClass;
 use moodle_url;
 
+defined('MOODLE_INTERNAL') || die();
+
+require_once($CFG->libdir . '/filelib.php');
+
+/**
+ * Contains class for bank payment gateway.
+ *
+ */
 class bank_helper {
+    /**
+     * Delete all files associated with a bank payment record.
+     *
+     * @param int $id The payment record ID
+     * @return bool True if files were deleted successfully
+     */
     public static function deletefiles($id): bool {
         global $DB;
 
@@ -45,6 +55,15 @@ class bank_helper {
         $DB->update_record('paygw_bank', ['id' => $id, 'hasfiles' => 0]);
         return true;
     }
+
+    /**
+     * Check if a teacher belongs to any of the specified groups.
+     *
+     * @param int $courseid The course ID
+     * @param int $teacherid The teacher's user ID
+     * @param string $groups Comma-separated list of group IDs
+     * @return bool True if the teacher is in any of the groups
+     */
     public static function check_teacheringroup($courseid, $teacherid, $groups): bool {
         $tgs = self::get_course_usergroups($courseid, $teacherid);
         foreach (explode(',', $tgs) as $tg) {
@@ -56,6 +75,14 @@ class bank_helper {
         }
         return false;
     }
+
+    /**
+     * Get all groups a user belongs to in a course as a comma-separated string.
+     *
+     * @param int|null $courseid The course ID
+     * @param int $userid The user ID
+     * @return string Comma-separated list of group names or '-' if no groups
+     */
     public static function get_course_usergroups($courseid = null, $userid = 0): string {
         $groupnames = '-';
         if (!empty($courseid)) {
@@ -73,6 +100,15 @@ class bank_helper {
         }
         return $groupnames;
     }
+
+    /**
+     * Get the course ID for a payment item.
+     *
+     * @param string $paymentarea The payment area
+     * @param string $component The component name
+     * @param int $itemid The item ID
+     * @return string|bool The course ID or false if not found
+     */
     public static function get_courseid($paymentarea, $component, $itemid): string {
         global $DB;
 
@@ -88,6 +124,16 @@ class bank_helper {
         }
         return $cid;
     }
+
+    /**
+     * Send a message to all teachers in a context.
+     *
+     * @param context $context The context (usually course context)
+     * @param stdClass $from The sender user object
+     * @param string $subject The message subject
+     * @param string $text The message content
+     * @return bool True if messages were sent successfully
+     */
     public static function message_to_teachers($context, $from, $subject, $text): bool {
         $teachers = get_enrolled_users($context, 'paygw/bank:manageincourse');
         foreach ($teachers as $teacher) {
@@ -95,6 +141,16 @@ class bank_helper {
         }
         return true;
     }
+
+    /**
+     * Send a message to a specific user.
+     *
+     * @param int $userid The recipient's user ID
+     * @param stdClass $from The sender user object
+     * @param string $subject The message subject
+     * @param string $text The message content
+     * @return bool True if message was sent successfully
+     */
     public static function message_to_user($userid, $from, $subject, $text): bool {
         global $CFG;
 
@@ -118,11 +174,26 @@ class bank_helper {
 
         return true;
     }
+
+    /**
+     * Get an open bank payment entry for a specific item and user.
+     *
+     * @param int $itemid The item ID
+     * @param int $userid The user ID
+     * @return stdClass The payment record object
+     */
     public static function get_openbankentry($itemid, $userid): \stdClass {
         global $DB;
         $record = $DB->get_record('paygw_bank', ['itemid' => $itemid, 'userid' => $userid, 'status' => 'P']);
         return $record;
     }
+
+    /**
+     * Check if a payment record has associated files and update the record.
+     *
+     * @param int $id The payment record ID
+     * @return stdClass|null The updated payment record or null if not authorized
+     */
     public static function check_hasfiles($id): \stdClass {
         global $DB, $USER;
         $transaction = $DB->start_delegated_transaction();
@@ -136,11 +207,23 @@ class bank_helper {
         $transaction->rollback();
         return null;
     }
+
+    /**
+     * Approve a bank payment and complete the payment process.
+     *
+     * @param int $id The payment record ID
+     * @return stdClass The updated payment record
+     */
     public static function aprobe_pay($id): \stdClass {
         global $DB, $USER;
         $transaction = $DB->start_delegated_transaction();
         $record = $DB->get_record('paygw_bank', ['id' => $id]);
-        $config = (object) payment_helper::get_gateway_configuration($record->component, $record->paymentarea, $record->itemid, 'bank');
+        $config = (object) payment_helper::get_gateway_configuration(
+            $record->component,
+            $record->paymentarea,
+            $record->itemid,
+            'bank'
+        );
         $payable = payment_helper::get_payable($record->component, $record->paymentarea, $record->itemid);
         $paymentid = payment_helper::save_payment(
             $payable->get_account_id(),
@@ -157,7 +240,13 @@ class bank_helper {
         $record->usercheck = $USER->id;
         $record->paymentid = $paymentid;
         $DB->update_record('paygw_bank', $record);
-        payment_helper::deliver_order($record->component, $record->paymentarea, $record->itemid, $paymentid, (int) $record->userid);
+        payment_helper::deliver_order(
+            $record->component,
+            $record->paymentarea,
+            $record->itemid,
+            $paymentid,
+            (int) $record->userid
+        );
         $transaction->allow_commit();
 
         // Set default.
@@ -231,6 +320,13 @@ class bank_helper {
 
         return $record;
     }
+
+    /**
+     * Get all files associated with a payment record.
+     *
+     * @param int $id The payment record ID
+     * @return array Array of stored_file objects
+     */
     public static function files($id): array {
         $fs = get_file_storage();
         $files = $fs->get_area_files(\context_system::instance()->id, 'paygw_bank', 'transfer', $id);
@@ -242,16 +338,36 @@ class bank_helper {
         }
         return $realfiles;
     }
+
+    /**
+     * Get a user record.
+     *
+     * @param int $userid The user ID
+     * @return stdClass The user record
+     */
     public static function get_user($userid) {
         global $DB;
         return $DB->get_record('user', ['id' => $userid]);
     }
+
+    /**
+     * Deny a bank payment.
+     *
+     * @param int $id The payment record ID
+     * @param bool $canceledbyuser Whether the payment was canceled by the user
+     * @return stdClass The updated payment record
+     */
     public static function deny_pay($id, $canceledbyuser = false): \stdClass {
         global $DB, $USER;
         $transaction = $DB->start_delegated_transaction();
         ;
         $record = $DB->get_record('paygw_bank', ['id' => $id]);
-        $config = (object) payment_helper::get_gateway_configuration($record->component, $record->paymentarea, $record->itemid, 'bank');
+        $config = (object) payment_helper::get_gateway_configuration(
+            $record->component,
+            $record->paymentarea,
+            $record->itemid,
+            'bank'
+        );
         $payable = payment_helper::get_payable($record->component, $record->paymentarea, $record->itemid);
         $paymentuser = self::get_user($record->userid);
         $record->timechecked = time();
@@ -279,6 +395,13 @@ class bank_helper {
         return $record;
     }
 
+    /**
+     * Get pending payment records.
+     *
+     * @param string $status The payment status (default 'P' for pending)
+     * @param int|bool $id Specific payment ID to retrieve (optional)
+     * @return array Array of payment records
+     */
     public static function get_pending($status = 'P', $id = false): array {
         global $DB;
         $order = 'id ASC';
@@ -292,6 +415,13 @@ class bank_helper {
         $records = $DB->get_records('paygw_bank', $params, $order, '*', 0, 1000);
         return $records;
     }
+
+    /**
+     * Get pending payments for a specific user.
+     *
+     * @param int $userid The user ID
+     * @return array Array of pending payment records
+     */
     public static function get_user_pending($userid): array {
         global $DB;
         $order = 'timecreated DESC';
@@ -299,6 +429,14 @@ class bank_helper {
         $records = $DB->get_records_select('paygw_bank', "status=? AND userid=?", $params, $order);
         return $records;
     }
+
+    /**
+     * Check if a user has an open bank payment for a specific item.
+     *
+     * @param int $itemid The item ID
+     * @param int $userid The user ID
+     * @return bool True if an open payment exists
+     */
     public static function has_openbankentry($itemid, $userid): bool {
         global $DB;
         if ($DB->count_records('paygw_bank', ['itemid' => $itemid, 'userid' => $userid, 'status' => 'P']) > 0) {
@@ -307,7 +445,28 @@ class bank_helper {
             return false;
         }
     }
-    public static function create_bankentry($itemid, $userid, $totalamount, $currency, $component, $paymentarea, $description): \stdClass {
+
+    /**
+     * Create a new bank payment entry.
+     *
+     * @param int $itemid The item ID
+     * @param int $userid The user ID
+     * @param float $totalamount The payment amount
+     * @param string $currency The currency code
+     * @param string $component The component name
+     * @param string $paymentarea The payment area
+     * @param string $description The payment description
+     * @return stdClass The created payment record
+     */
+    public static function create_bankentry(
+        $itemid,
+        $userid,
+        $totalamount,
+        $currency,
+        $component,
+        $paymentarea,
+        $description
+    ): \stdClass {
         global $DB;
         if (self::has_openbankentry($itemid, $userid)) {
             return null;
@@ -392,6 +551,14 @@ class bank_helper {
         }
         return $record;
     }
+
+    /**
+     * Create a payment code with optional prefix.
+     *
+     * @param int $id The payment record ID
+     * @param string|null $codeprefix Optional prefix for the code
+     * @return string The generated payment code
+     */
     public static function create_code($id, $codeprefix = null): string {
         if ($codeprefix) {
             return $codeprefix . "_" . $id;
@@ -399,14 +566,39 @@ class bank_helper {
             return "code_" . $id;
         }
     }
+
+    /**
+     * Create a unique key for a payment item.
+     *
+     * @param string $component The component name
+     * @param string $paymentarea The payment area
+     * @param int $itemid The item ID
+     * @return string The generated item key
+     */
     public static function get_item_key($component, $paymentarea, $itemid): string {
         return $component . "." . $paymentarea . "." . $itemid;
     }
+
+    /**
+     * Split an item key into its components.
+     *
+     * @param string $key The item key to split
+     * @return array Array with component, paymentarea and itemid
+     */
     public static function split_item_key($key): array {
         $keyexplode = explode(".", $key);
         return ['component' => $keyexplode[0], 'paymentarea' => $keyexplode[1], 'itemid' => $keyexplode[2]];
     }
 
+    /**
+     * Check if a payment item belongs to a specific course.
+     *
+     * @param int $cid The course ID
+     * @param string $paymentarea The payment area
+     * @param string $component The component name
+     * @param int $itemid The item ID
+     * @return bool True if the item belongs to the course
+     */
     public static function check_in_course($cid, $paymentarea, $component, $itemid): bool {
         global $DB;
         if ($cid) {
@@ -425,6 +617,12 @@ class bank_helper {
         return true;
     }
 
+    /**
+     * Get all pending payment items for a course.
+     *
+     * @param int|bool $cid The course ID (optional)
+     * @return array Array of payment items with their details
+     */
     public static function get_pending_item_collections($cid = false): array {
         global $DB;
         $records = $DB->get_records('paygw_bank', ['status' => 'P']);
@@ -443,17 +641,25 @@ class bank_helper {
             $key = self::get_item_key($component, $paymentarea, $itemid);
             if (!in_array($key, $itemsstringarray)) {
                 array_push($itemsstringarray, $key);
-                array_push($items, ['component' => $component, 'paymentarea' => $paymentarea, 'itemid' => $itemid, 'description' => $description, 'key' => $key]);
+                array_push($items, ['component' => $component,
+                'paymentarea' => $paymentarea, 'itemid' => $itemid, 'description' => $description, 'key' => $key]);
             }
         }
         return $items;
     }
+
+    /**
+     * Send an email notification related to a payment.
+     *
+     * @param int $id The payment record ID
+     * @param string $subject The email subject
+     * @param string $message The email content
+     * @return bool True if email was sent successfully
+     */
     public static function sendmail($id, $subject, $message): bool {
         global $DB;
         $record = $DB->get_record('paygw_bank', ['id' => $id]);
         $paymentuser = self::get_user($record->userid);
-        // $fullname = fullname($paymentuser, true);
-        // $mailcontent = $message;
         if (isset($record->userid)) {
             $oldforcelang = force_current_language($paymentuser->lang);
             $supportuser = core_user::get_support_user();

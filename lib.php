@@ -1,5 +1,5 @@
 <?php
-// This file is part of the bank paymnts module for Moodle - http://moodle.org/
+// This file is part of the bank payments module for Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,14 +17,20 @@
 /**
  * Plugin version and other meta-data are defined here.
  *
- * @package   paygw_bank
- * @copyright UNESCO/IESALC
- * @author    Carlos Vicente Corral <c.vicente@unesco.org>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    paygw_bank
+ * @copyright  UNESCO/IESALC
+ * @author     Carlos Vicente Corral <c.vicente@unesco.org>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Adds navigation items to user profile.
+ *
+ * @param core_user\output\myprofile\tree $tree The myprofile tree object
+ * @param stdClass $user The user object
+ * @param bool $iscurrentuser Whether the user is the current user
+ * @param stdClass $course The course object
+ */
 function paygw_bank_myprofile_navigation(core_user\output\myprofile\tree $tree, $user, $iscurrentuser, $course) {
     $url = new moodle_url('/payment/gateway/bank/my_pending_pay.php');
     $category = new core_user\output\myprofile\category('payments', get_string('payments', 'paygw_bank'), null);
@@ -39,24 +45,33 @@ function paygw_bank_myprofile_navigation(core_user\output\myprofile\tree $tree, 
     $tree->add_node($node);
 }
 
+/**
+ * Handles plugin file serving.
+ *
+ * @param stdClass $course The course object
+ * @param stdClass $cm The course module object
+ * @param context $context The context object
+ * @param string $filearea The file area
+ * @param array $args Additional arguments
+ * @param bool $forcedownload Whether to force download
+ * @param array $options Additional options
+ * @return bool
+ */
 function paygw_bank_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = []) {
     if ($filearea !== 'transfer') {
         return false;
     }
 
-    // Make sure the user is logged in and has access to the module (plugins that are not course modules should leave out the 'cm' part).
+    // Require login and check access to the module.
     require_login();
     $itemid = array_shift($args); // The first item in the $args array.
 
-    // Use the itemid to retrieve any relevant data records and perform any security checks to see if the
-    // user really does have access to the file in question.
-
-    // Extract the filename / filepath from the $args array.
+    // Extract the filename/filepath from the $args array.
     $filename = array_pop($args);
     if (!$args) {
         $filepath = '/';
     } else {
-        $filepath = '/' . implode('/', $args) . '/'; // $args contains elements of the filepath
+        $filepath = '/' . implode('/', $args) . '/';
     }
 
     // Retrieve the file from the Files API.
@@ -66,30 +81,43 @@ function paygw_bank_pluginfile($course, $cm, $context, $filearea, $args, $forced
         return false; // The file does not exist.
     }
 
-    // We can now send the file back to the browser - in this case with a cache lifetime of 1 day and no filtering.
+    // Send the file back to the browser.
     send_stored_file($file, 86400, 0, $forcedownload, $options);
 }
 
 if (!function_exists('str_ends_with')) {
+    /**
+     * Polyfill for str_ends_with for PHP versions that don't have it.
+     *
+     * @param string $str The string to check
+     * @param string $end The ending to check for
+     * @return bool
+     */
     function str_ends_with($str, $end) {
         return (@substr_compare($str, $end, -strlen($end)) == 0);
     }
 }
 
+/**
+ * Extends course navigation with bank payment management link.
+ *
+ * @param navigation_node $navigation The navigation node
+ * @param stdClass $course The course object
+ * @param context $context The context object
+ */
 function paygw_bank_extend_navigation_course($navigation, $course, $context) {
     global $PAGE;
 
-    // Проверяем, что пользователь имеет право на доступ к платежному шлюзу.
+    // Check if user has capability to manage payments in course.
     if (has_capability('paygw/bank:manageincourse', $context)) {
-        // Создаем элемент меню.
         $url = new moodle_url('/payment/gateway/bank/manage.php', ['cid' => $course->id]);
         $navigation->add(
-            get_string('pluginname', 'paygw_bank'), // Название пункта меню.
-            $url, // Ссылка.
-            navigation_node::TYPE_SETTING, // Тип элемента.
-            null, // Ключ.
-            'paygw_bank', // Идентификатор.
-            new pix_icon('icon', '', 'paygw_bank') // Иконка.
+            get_string('pluginname', 'paygw_bank'),
+            $url,
+            navigation_node::TYPE_SETTING,
+            null,
+            'paygw_bank',
+            new pix_icon('icon', '', 'paygw_bank')
         );
     }
 }

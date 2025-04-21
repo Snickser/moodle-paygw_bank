@@ -22,6 +22,11 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+/**
+ * Install the plugin.
+ *
+ * @return bool always true
+ */
 function xmldb_paygw_bank_install() {
     global $CFG;
 
