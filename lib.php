@@ -86,13 +86,13 @@ function paygw_bank_pluginfile($course, $cm, $context, $filearea, $args, $forced
 }
 
 if (!function_exists('str_ends_with')) {
-/**
- * Polyfill for str_ends_with for PHP versions that don't have it.
- *
- * @param string $str The string to check
- * @param string $end The ending to check for
- * @return bool
- */
+    /**
+     * Polyfill for str_ends_with for PHP versions that don't have it.
+     *
+     * @param string $str The string to check
+     * @param string $end The ending to check for
+     * @return bool
+     */
     function str_ends_with($str, $end) {
         return (@substr_compare($str, $end, -strlen($end)) == 0);
     }

@@ -17,9 +17,8 @@
 /**
  * Plugin administration pages are defined here.
  *
- * @package     paygw_bepaid
- * @category    admin
- * @copyright   2024 Alex Orlov <snickser@gmail.com>
+ * @package     paygw_bank
+ * @copyright   2025 Alex Orlov <snickser@gmail.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
