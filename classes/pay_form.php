@@ -35,7 +35,6 @@ require_once($CFG->libdir . '/formslib.php');
  * through the Moodle payment gateway system.
  */
 class pay_form extends \moodleform {
-
     /**
      * Define the form elements
      *

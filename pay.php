@@ -275,8 +275,8 @@ costself.value = Number(inputcostself.value);
 inputcostself.addEventListener('input', function() {
         <?php
         /**
-	* @ignore
-	*/
+         * @ignore
+         */
         if ($config->maxcost) {
             echo "
     if(inputcostself.value > $config->maxcost){
@@ -292,8 +292,8 @@ inputcostself.addEventListener('input', function() {
 </script>
         <?php
         /**
-	* @ignore
-	*/
+         * @ignore
+         */
     }
 } else {
     if ($canuploadfiles) {
