@@ -17,12 +17,9 @@
 /**
  * Contains form to apply for PAYNL services through Sebsoft
  *
- * File         edit.php
- * Encoding     UTF-8
- *
- * @package paygw_bank
- * @copyright UNESCO/IESALC
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    paygw_bank
+ * @copyright  UNESCO/IESALC
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace paygw_bank;
@@ -32,11 +29,24 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/formslib.php');
 
 /**
- * form definition
+ * Form class for bank payment gateway
+ *
+ * This form collects necessary information for processing bank payments
+ * through the Moodle payment gateway system.
  */
 class pay_form extends \moodleform {
+
     /**
-     * form definition
+     * Define the form elements
+     *
+     * Adds hidden fields for payment processing and a submit button.
+     * The form includes:
+     * - confirmation flag
+     * - component identifier
+     * - payment area
+     * - item ID
+     * - cost
+     * - description
      */
     public function definition() {
         $mform = $this->_form;
@@ -64,8 +74,14 @@ class pay_form extends \moodleform {
 
         $mform->addElement('submit', 'submitbutton', get_string('start_process', 'paygw_bank'));
     }
+
     /**
-     * form definition
+     * Validate form data
+     *
+     * @param array $data array of ("fieldname"=>value) of submitted data
+     * @param array $files array of uploaded files "element_name"=>tmp_file_path
+     * @return array of "element_name"=>"error_description" if there are errors,
+     *         or an empty array if everything is OK.
      */
     public function validation($data, $files) {
         global $DB;
