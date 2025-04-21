@@ -14,24 +14,33 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
+/**
+ * Plugin version and other meta-data are defined here.
+ *
+ * @package    paygw_bank
+ * @copyright  UNESCO/IESALC
+ * @author     Carlos Vicente Corral <c.vicente@unesco.org>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 use core_payment\helper;
 use paygw_bank\bank_helper;
 use paygw_bank\pay_form;
 use paygw_bank\attachtransfer_form;
 
-require_once __DIR__ . '/../../../config.php';
-require_once './lib.php';
+require_once(__DIR__ . '/../../../config.php');
+require_once('./lib.php');
 
 defined('MOODLE_INTERNAL') || die();
+
+require_login();
+require_sesskey();
 
 $canuploadfiles = get_config('paygw_bank', 'usercanuploadfiles');
 $maxnumberfiles = get_config('paygw_bank', 'maxnumberfiles');
 if (!$maxnumberfiles) {
     $maxnumberfiles = 3;
 }
-
-require_login();
-require_sesskey();
 
 $context = context_system::instance(); // Because we "have no scope".
 $PAGE->set_context($context);
@@ -56,11 +65,11 @@ $params = [
 
 $PAGE->set_url(new moodle_url('/payment/gateway/bank/pay.php', $params));
 $PAGE->set_title(format_string(get_string('pluginname', 'paygw_bank')));
-// $PAGE->set_heading($description);
 $PAGE->set_cacheable(false);
 $PAGE->set_pagelayout('standard');
 
-$mform = new pay_form(null, ['confirm' => 1, 'component' => $component, 'paymentarea' => $paymentarea, 'itemid' => $itemid, 'description' => $description]);
+$mform = new pay_form(null, ['confirm' => 1, 'component' => $component, 'paymentarea' => $paymentarea,
+'itemid' => $itemid, 'description' => $description]);
 $mform->set_data($params);
 $atform = new attachtransfer_form();
 $atform->set_data($params);
@@ -99,10 +108,6 @@ $bankentry = null;
 if (!isset($config->autocommit)) {
     $config->autocommit = false;
 }
-
-// if (!$config->unfixcost) {
-// $PAGE->set_periodic_refresh_delay(180);
-// }
 
 $cost = $payable->get_amount();
 
@@ -168,7 +173,15 @@ if (bank_helper::has_openbankentry($itemid, $USER->id)) {
             $totalamount = $costself;
             $amount = $costself;
         }
-        $bankentry = bank_helper::create_bankentry($itemid, $USER->id, $totalamount, $currency, $component, $paymentarea, $description);
+        $bankentry = bank_helper::create_bankentry(
+            $itemid,
+            $USER->id,
+            $totalamount,
+            $currency,
+            $component,
+            $paymentarea,
+            $description
+        );
         \core\notification::info(get_string('transfer_process_initiated', 'paygw_bank'));
         $confirm = 0;
     }
@@ -334,9 +347,9 @@ inputcostself.addEventListener('input', function() {
             }
 
             if ($isuploaded && ($editfiles == 0 || $editfiles == 2)) {
-                        $sendemail = $config->sendnewattachmentsmail;
-                        $emailaddress = get_config('paygw_bank', 'notificationsaddress');
-                        $sendteachermail = $config->sendteachermail;
+                $sendemail = $config->sendnewattachmentsmail;
+                $emailaddress = get_config('paygw_bank', 'notificationsaddress');
+                $sendteachermail = $config->sendteachermail;
 
                 if ($sendemail) {
                     $cid = bank_helper::get_courseid($bankentry->paymentarea, $bankentry->component, $bankentry->itemid);
@@ -347,21 +360,24 @@ inputcostself.addEventListener('input', function() {
                     $contentmessage->concept = $bankentry->description;
                     $contentmessage->useremail = $USER->email;
                     $contentmessage->userfullname = fullname($USER);
-                    $contentmessage->url = new moodle_url('/payment/gateway/bank/manage.php', ['cid' => $cid, 'id' => $bankentry->id]);
+                    $contentmessage->url = new moodle_url(
+                        '/payment/gateway/bank/manage.php',
+                        ['cid' => $cid, 'id' => $bankentry->id]
+                    );
                     $contentmessage->groups = $groups;
                     if ($emailaddress) {
-                            $supportuser = core_user::get_support_user();
-                            $subject = get_string('email_notifications_subject_attachments', 'paygw_bank');
-                                    $contentmessage->course = format_string($DB->get_field('course', 'fullname', ['id' => $cid]));
-                            $mailcontent = get_string('email_notifications_new_attachments', 'paygw_bank', $contentmessage);
-                            $emailuser = new stdClass();
-                            $emailuser->email = $emailaddress;
-                            $emailuser->id = -99;
-                            email_to_user($emailuser, $supportuser, $subject, $mailcontent);
+                        $supportuser = core_user::get_support_user();
+                        $subject = get_string('email_notifications_subject_attachments', 'paygw_bank');
+                        $contentmessage->course = format_string($DB->get_field('course', 'fullname', ['id' => $cid]));
+                        $mailcontent = get_string('email_notifications_new_attachments', 'paygw_bank', $contentmessage);
+                        $emailuser = new stdClass();
+                        $emailuser->email = $emailaddress;
+                        $emailuser->id = -99;
+                        email_to_user($emailuser, $supportuser, $subject, $mailcontent);
                     }
                     if ($sendteachermail) {
-                                        $context = \context_course::instance($cid, MUST_EXIST);
-                                        $teachers = get_enrolled_users($context, 'paygw/bank:manageincourse');
+                        $context = \context_course::instance($cid, MUST_EXIST);
+                        $teachers = get_enrolled_users($context, 'paygw/bank:manageincourse');
                         foreach ($teachers as $teacher) {
                             if ($config->onlyingroup) {
                                 if (!bank_helper::check_teacheringroup($cid, $teacher->id, $groups)) {
@@ -379,28 +395,11 @@ inputcostself.addEventListener('input', function() {
                         }
                     }
                 }
-                        \core\notification::info(get_string('file_uploaded', 'paygw_bank'));
+                \core\notification::info(get_string('file_uploaded', 'paygw_bank'));
             }
         }
 
         if (count($files)) {
-            /*
-            if ($config->autocommit) {
-            $url = helper::get_success_url($component, $paymentarea, $itemid);
-            echo '<h3>'.get_string('autocommittext', 'paygw_bank').'</h3><br>';
-            bank_helper::aprobe_pay($bank_entry->id);
-            echo $OUTPUT->single_button($url, get_string('continue'), 'get', ['type' => 'primary']);
-            echo "
-            <script>
-            var timer = setTimeout(function() {
-            window.location='$url'
-            }, 300000);
-            </script>
-            ";
-            echo $OUTPUT->footer();
-            die; // End.
-            }
-            */
             echo '<h5>' . get_string('files') . ':</h5>';
             echo '<ul class="list-group mb-1">';
             $i = 0;
@@ -410,10 +409,20 @@ inputcostself.addEventListener('input', function() {
                 }
                 $i++;
                 $hasfiles = true;
-                // $f is an instance of stored_file
                 echo '<li class="list-group-item">';
-                $url = moodle_url::make_pluginfile_url($f->get_contextid(), $f->get_component(), $f->get_filearea(), $f->get_itemid(), $f->get_filepath(), $f->get_filename(), false);
-                if (str_ends_with($f->get_filename(), ".png") || str_ends_with($f->get_filename(), ".jpeg") || str_ends_with($f->get_filename(), ".jpg") || str_ends_with($f->get_filename(), ".gif")) {
+                $url = moodle_url::make_pluginfile_url(
+                    $f->get_contextid(),
+                    $f->get_component(),
+                    $f->get_filearea(),
+                    $f->get_itemid(),
+                    $f->get_filepath(),
+                    $f->get_filename(),
+                    false
+                );
+                if (
+                    str_ends_with($f->get_filename(), ".png") || str_ends_with($f->get_filename(), ".jpeg") ||
+                    str_ends_with($f->get_filename(), ".jpg") || str_ends_with($f->get_filename(), ".gif")
+                ) {
                     echo $i . ". <img style='max-height:100px' src='" . $url . "'><br>";
                 } else {
                     echo $i . '. ' . $f->get_mimetype();
