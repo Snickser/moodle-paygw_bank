@@ -21,18 +21,18 @@
  * @copyright UNESCO/IESALC
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 namespace paygw_bank;
 
 use curl;
 use core_user;
-
-defined('MOODLE_INTERNAL') || die();
-
-require_once $CFG->libdir . '/filelib.php';
-
 use core_payment\helper as payment_helper;
 use stdClass;
 use moodle_url;
+
+defined('MOODLE_INTERNAL') || die();
+
+require_once($CFG->libdir . '/filelib.php');
 
 class bank_helper {
     public static function deletefiles($id): bool {
@@ -140,7 +140,12 @@ class bank_helper {
         global $DB, $USER;
         $transaction = $DB->start_delegated_transaction();
         $record = $DB->get_record('paygw_bank', ['id' => $id]);
-        $config = (object) payment_helper::get_gateway_configuration($record->component, $record->paymentarea, $record->itemid, 'bank');
+        $config = (object) payment_helper::get_gateway_configuration(
+            $record->component,
+            $record->paymentarea,
+            $record->itemid,
+            'bank'
+        );
         $payable = payment_helper::get_payable($record->component, $record->paymentarea, $record->itemid);
         $paymentid = payment_helper::save_payment(
             $payable->get_account_id(),
@@ -157,7 +162,13 @@ class bank_helper {
         $record->usercheck = $USER->id;
         $record->paymentid = $paymentid;
         $DB->update_record('paygw_bank', $record);
-        payment_helper::deliver_order($record->component, $record->paymentarea, $record->itemid, $paymentid, (int) $record->userid);
+        payment_helper::deliver_order(
+            $record->component,
+            $record->paymentarea,
+            $record->itemid,
+            $paymentid,
+            (int) $record->userid
+        );
         $transaction->allow_commit();
 
         // Set default.
@@ -251,7 +262,12 @@ class bank_helper {
         $transaction = $DB->start_delegated_transaction();
         ;
         $record = $DB->get_record('paygw_bank', ['id' => $id]);
-        $config = (object) payment_helper::get_gateway_configuration($record->component, $record->paymentarea, $record->itemid, 'bank');
+        $config = (object) payment_helper::get_gateway_configuration(
+            $record->component,
+            $record->paymentarea,
+            $record->itemid,
+            'bank'
+        );
         $payable = payment_helper::get_payable($record->component, $record->paymentarea, $record->itemid);
         $paymentuser = self::get_user($record->userid);
         $record->timechecked = time();
@@ -307,7 +323,15 @@ class bank_helper {
             return false;
         }
     }
-    public static function create_bankentry($itemid, $userid, $totalamount, $currency, $component, $paymentarea, $description): \stdClass {
+    public static function create_bankentry(
+        $itemid,
+        $userid,
+        $totalamount,
+        $currency,
+        $component,
+        $paymentarea,
+        $description
+    ): \stdClass {
         global $DB;
         if (self::has_openbankentry($itemid, $userid)) {
             return null;
@@ -443,7 +467,8 @@ class bank_helper {
             $key = self::get_item_key($component, $paymentarea, $itemid);
             if (!in_array($key, $itemsstringarray)) {
                 array_push($itemsstringarray, $key);
-                array_push($items, ['component' => $component, 'paymentarea' => $paymentarea, 'itemid' => $itemid, 'description' => $description, 'key' => $key]);
+                array_push($items, ['component' => $component,
+                'paymentarea' => $paymentarea, 'itemid' => $itemid, 'description' => $description, 'key' => $key]);
             }
         }
         return $items;
@@ -452,8 +477,6 @@ class bank_helper {
         global $DB;
         $record = $DB->get_record('paygw_bank', ['id' => $id]);
         $paymentuser = self::get_user($record->userid);
-        // $fullname = fullname($paymentuser, true);
-        // $mailcontent = $message;
         if (isset($record->userid)) {
             $oldforcelang = force_current_language($paymentuser->lang);
             $supportuser = core_user::get_support_user();

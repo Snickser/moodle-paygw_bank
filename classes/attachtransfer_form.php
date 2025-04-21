@@ -21,7 +21,6 @@
  * Encoding     UTF-8
  *
  * @package paygw_bank
- *
  * @copyright UNESCO/IESALC
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -30,7 +29,7 @@ namespace paygw_bank;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once $CFG->libdir . '/formslib.php';
+require_once($CFG->libdir . '/formslib.php');
 
 class attachtransfer_form extends \moodleform {
     /**

@@ -15,14 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Local language pack from https://edu1080.duckdns.org
+ * Plugin administration pages are defined here.
  *
- * @package    paygw_bank
- * @subpackage bank
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     paygw_bank
+ * @copyright   2024 Alex Orlov <snickser@gmail.com>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
 
 $string['approve'] = 'Утвердить заявку';
 $string['are_you_sure_cancel'] = 'Вы точно уверены что хотите отменить запрос?';

@@ -21,6 +21,7 @@
  * @copyright UNESCO/IESALC
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 $string['gatewaydescription'] = 'bank is an authorised payment gateway provider for processing credit card transactions.';
 $string['gatewayname'] = 'Bank Transfers';
 $string['concept'] = 'Concept:';
