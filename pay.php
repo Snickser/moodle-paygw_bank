@@ -275,7 +275,12 @@ costself.value = Number(inputcostself.value);
 inputcostself.addEventListener('input', function() {
         <?php
         /**
-         * @ignore
+         * Plugin version and other meta-data are defined here.
+         *
+         * @package    paygw_bank
+         * @copyright  UNESCO/IESALC
+         * @author     Carlos Vicente Corral <c.vicente@unesco.org>
+         * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
          */
         if ($config->maxcost) {
             echo "
@@ -292,7 +297,12 @@ inputcostself.addEventListener('input', function() {
 </script>
         <?php
         /**
-         * @ignore
+         * Plugin version and other meta-data are defined here.
+         *
+         * @package    paygw_bank
+         * @copyright  UNESCO/IESALC
+         * @author     Carlos Vicente Corral <c.vicente@unesco.org>
+         * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
          */
     }
 } else {
