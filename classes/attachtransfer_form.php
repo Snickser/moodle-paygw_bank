@@ -81,6 +81,14 @@ class attachtransfer_form extends \moodleform {
 
         $mform->addElement('submit', 'submitbutton', get_string('savefiles', 'paygw_bank'));
     }
+    /**
+     * Validate form data
+     *
+     * @param array $data array of ("fieldname"=>value) of submitted data
+     * @param array $files array of uploaded files "element_name"=>tmp_file_path
+     * @return array of "element_name"=>"error_description" if there are errors,
+     *         or an empty array if everything is OK.
+     */
     public function validation($data, $files) {
         global $DB;
         $errors = parent::validation($data, $files);
