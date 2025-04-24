@@ -29,4 +29,4 @@ $plugin->version   = 3025042400;        // The current plugin version (Date: YYY
 $plugin->requires  = 2021051100;        // Requires this Moodle version.
 $plugin->component = 'paygw_bank';      // Full name of the plugin (used for diagnostics).
 $plugin->maturity  = MATURITY_STABLE;
-$plugin->release   = '2.0.32';
+$plugin->release   = '2.0.33';
