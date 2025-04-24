@@ -110,7 +110,7 @@ if ($confirm && $id) {
     // Check if payment is still pending.
     if ($DB->record_exists('paygw_bank', ['id' => $id, 'status' => 'P'])) {
         if ($action == 'A') {
-            bank_helper::approve_pay($id);
+            bank_helper::aprobe_pay($id);
             $OUTPUT->notification("approved");
             \core\notification::info(get_string('mail_confirm_pay_subject', 'paygw_bank'));
         } else if ($action == 'D') {
