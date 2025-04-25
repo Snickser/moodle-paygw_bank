@@ -140,9 +140,6 @@ class gateway extends \core_payment\gateway {
         array $files,
         array &$errors
     ): void {
-        if (!$data->enabled) {
-            $errors['enabled'] = get_string('gatewaycannotbeenabled', 'payment');
-        }
         if ($data->suggest < 0 && $data->suggest) {
             $errors['suggest'] = get_string('suggesterror', 'paygw_bank');
         }
