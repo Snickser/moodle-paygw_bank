@@ -104,6 +104,7 @@ class gateway extends \core_payment\gateway {
         );
 
         $mform->addElement('advcheckbox', 'onlyingroup', get_string('onlyingroup', 'paygw_bank'));
+        $mform->disabledIf('onlyingroup', 'sendteachermail', 'ne', 1);
 
         $mform->addElement(
             'advcheckbox',
