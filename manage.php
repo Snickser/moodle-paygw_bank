@@ -493,7 +493,7 @@ if (!$bankentries) {
 }
 
 // Add bulk email sending functionality if there are entries.
-if (count($bankentries)) {
+if (count($table->data)) {
     ?>
 <div class="row">
     <div class="col">
