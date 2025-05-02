@@ -486,7 +486,7 @@ if (!$bankentries) {
 
     // Display the table if there's data.
     if (count($table->data)) {
-        echo html_writer::table($table);
+        echo html_writer::table($table) . "<br>";
     } else {
         echo '</br><h5>' . (get_string('noentriesfound', 'paygw_bank')) . '</h5>';
     }
