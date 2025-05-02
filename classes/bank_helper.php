@@ -39,6 +39,10 @@ require_once($CFG->libdir . '/filelib.php');
  *
  */
 class bank_helper {
+
+    public $sendconfirmailtosupport;
+    public $sendteachermail;
+
     /**
      * Delete all files associated with a bank payment record.
      *

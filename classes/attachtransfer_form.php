@@ -36,6 +36,10 @@ require_once($CFG->libdir . '/formslib.php');
  *
  */
 class attachtransfer_form extends \moodleform {
+
+    public $userfile;
+    public $editfiles;
+
     /**
      * form definition
      */
