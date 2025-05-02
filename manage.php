@@ -486,14 +486,14 @@ if (!$bankentries) {
 
     // Display the table if there's data.
     if (count($table->data)) {
-        echo html_writer::table($table);
+        echo html_writer::table($table) . "<br>";
     } else {
         echo '</br><h5>' . (get_string('noentriesfound', 'paygw_bank')) . '</h5>';
     }
 }
 
 // Add bulk email sending functionality if there are entries.
-if (isset($table->data) && count($table->data)) {
+if (count($bankentries)) {
     ?>
 <div class="row">
     <div class="col">
