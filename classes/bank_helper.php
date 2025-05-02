@@ -40,7 +40,10 @@ require_once($CFG->libdir . '/filelib.php');
  */
 class bank_helper {
 
+    /** @var string */
     public $sendconfirmailtosupport;
+
+    /** @var string */
     public $sendteachermail;
 
     /**
