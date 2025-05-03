@@ -376,7 +376,7 @@ if (!$bankentries) {
                         <div class="modal-header">
                             <h5 class="modal-title" id="staticBackdropLabel' . $bankentry->id . '">' .
                             get_string('files') . '</h5>
-                            <button type="button" class="' . $btnclass . '" data-bt-dismiss="modal" data-dismiss="modal"
+                            <button type="button" class="' . $btnclass . '" data-bs-dismiss="modal" data-dismiss="modal"
                              aria-label="Close">' . $btnclose . '</button>
                         </div>
                         <div class="modal-body">';
