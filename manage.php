@@ -341,9 +341,11 @@ if (!$bankentries) {
         $files = bank_helper::files($bankentry->id);
 
         if ($bankentry->hasfiles > 0 || count($files) > 0) {
-            $hasfiles = '<button type="button" class="btn btn-primary btn-block mb-2" data-toggle="modal"' .
-            ' data-target="#staticBackdrop' . $bankentry->id . '" id="launchmodal' . $bankentry->id .
-            '">&nbsp;' . get_string('view') . '&nbsp;</button>';
+            $hasfiles = '<button type="button" class="btn btn-primary w-100 mb-2" data-toggle="modal"' .
+            'data-toggle="modal" data-bs-toggle="modal" ' .
+            'data-target="#staticBackdrop' . $bankentry->id . '" ' .
+            'data-bs-target="#staticBackdrop' . $bankentry->id . '" ' .
+            'id="launchmodal' . $bankentry->id . '">&nbsp;' . get_string('view') . '&nbsp;</button>';
 
             if ($filter == 'showarchived' && has_capability('paygw/bank:managepayments', $context)) {
                 $hasfiles .= '
@@ -359,6 +361,13 @@ if (!$bankentries) {
             }
 
             // Create modal for file viewing.
+            if ($CFG->version < 2025041400) {
+                $btnclose = '<span aria-hidden="true">&times;</span>';
+                $btnclass = 'close';
+            } else {
+                $btnclose = '';
+                $btnclass = 'btn-close';
+            }
             $hasfiles .= '
             <div class="modal fade" id="staticBackdrop' . $bankentry->id . '" aria-labelledby="staticBackdropLabel' .
             $bankentry->id . '" aria-hidden="true">
@@ -367,8 +376,8 @@ if (!$bankentries) {
                         <div class="modal-header">
                             <h5 class="modal-title" id="staticBackdropLabel' . $bankentry->id . '">' .
                             get_string('files') . '</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span></button>
+                            <button type="button" class="' . $btnclass . '" data-bs-dismiss="modal" data-dismiss="modal"
+                             aria-label="Close">' . $btnclose . '</button>
                         </div>
                         <div class="modal-body">';
 
