@@ -93,25 +93,21 @@ class gateway extends \core_payment\gateway {
             'sendnewattachmentsmail',
             get_string('send_new_attachments_mail', 'paygw_bank')
         );
-        $mform->disabledIf('sendnewattachmentsmail', 'sendnewrequestmail', 'ne', 1);
 
         $mform->addElement(
             'advcheckbox',
             'sendconfirmailtosupport',
             get_string('send_confirm_mail_to_support', 'paygw_bank')
         );
-        $mform->disabledIf('sendconfirmailtosupport', 'sendnewrequestmail', 'ne', 1);
 
         $mform->addElement(
             'advcheckbox',
             'sendteachermail',
             get_string('send_teacher_mail', 'paygw_bank')
         );
-        $mform->disabledIf('sendteachermail', 'sendnewrequestmail', 'ne', 1);
 
         $mform->addElement('advcheckbox', 'onlyingroup', get_string('onlyingroup', 'paygw_bank'));
         $mform->disabledIf('onlyingroup', 'sendteachermail', 'ne', 1);
-        $mform->disabledIf('onlyingroup', 'sendnewrequestmail', 'ne', 1);
 
         $mform->addElement(
             'advcheckbox',

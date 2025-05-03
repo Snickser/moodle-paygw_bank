@@ -36,7 +36,6 @@ require_once($CFG->libdir . '/formslib.php');
  *
  */
 class attachtransfer_form extends \moodleform {
-
     /** @var string */
     public $userfile;
 
