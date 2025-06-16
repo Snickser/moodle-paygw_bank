@@ -17,7 +17,7 @@
 - Возможность студенту заменять файлы в заявке.
 - Режим рекомендованной нефиксированной цены с ограничением максимума.
 - Можно установить фиксированный комментарий платежам.
-
+- Режим автоматического отклонения заявок по времени.
 
 ## Instalation.
 
@@ -33,7 +33,7 @@ The plugin has the following configurations in the plugin section:
 - Send confirmation email. An email is sent to user if the payment is approved.
 - Send denied email an email is sent to user if the payment is denied.
 - Automatically approve request after file(s) are uploaded.
- 
+- Automatically decline "expired" requests.
 
 The mail texts are in the language strings of the plugin.
 

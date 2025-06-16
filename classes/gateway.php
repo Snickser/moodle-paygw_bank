@@ -66,6 +66,9 @@ class gateway extends \core_payment\gateway {
         $mform->setDefault('delayautocommit', 300);
         $mform->addHelpButton('delayautocommit', 'delayautocommit', 'paygw_bank');
 
+        $mform->addElement('duration', 'autodeny', get_string('autodeny', 'paygw_bank'), ['optional' => true]);
+        $mform->addHelpButton('autodeny', 'autodeny', 'paygw_bank');
+
         $mform->addElement('text', 'fixdesc', get_string('fixdesc', 'paygw_bank'), ['size' => 50]);
         $mform->setType('fixdesc', PARAM_TEXT);
         $mform->addRule('fixdesc', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
