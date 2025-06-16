@@ -129,3 +129,5 @@ $string['autocommittext'] = 'Thank you, you can start learning.';
 $string['savefiles'] = 'Save uploaded files';
 $string['delayautocommit'] = 'Minimum delay before auto approval';
 $string['delayautocommit_help'] = 'The minimum delay depends on how regularly the scheduler task is run.';
+$string['autodeny'] = 'Time to auto decline unconfirmed payment requests';
+$string['autodeny_help'] = 'The time after which unapproved applications will be automatically rejected. For example, if the confirmation file was not uploaded.';

@@ -55,11 +55,17 @@ class autocommit extends \core\task\scheduled_task {
         $items = bank_helper::get_pending('P');
 
         foreach ($items as $item) {
+
+            $config = (object) helper::get_gateway_configuration($item->component, $item->paymentarea, $item->itemid, 'bank');
+
+            if ($config->autodeny > 0 && time()-$config->autodeny > $item->timecreated) {
+                mtrace($item->id . ' declined');
+        	bank_helper::deny_pay($item->id);
+            }
+
             if (!$item->hasfiles) {
                 continue;
             }
-
-            $config = (object) helper::get_gateway_configuration($item->component, $item->paymentarea, $item->itemid, 'bank');
 
             if (!$config->autocommit) {
                 continue;
@@ -80,6 +86,7 @@ class autocommit extends \core\task\scheduled_task {
                 bank_helper::aprobe_pay($item->id);
             }
         }
+
         mtrace('end.');
     }
 }
