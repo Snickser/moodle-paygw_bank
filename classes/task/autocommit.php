@@ -57,9 +57,10 @@ class autocommit extends \core\task\scheduled_task {
         foreach ($items as $item) {
             $config = (object) helper::get_gateway_configuration($item->component, $item->paymentarea, $item->itemid, 'bank');
 
-            if ($config->autodeny > 0 && time() - $config->autodeny > $item->timecreated) {
+            if (!$item->hasfiles && $config->autodeny > 0 && time() - $config->autodeny > $item->timecreated) {
                 mtrace($item->id . ' declined');
                 bank_helper::deny_pay($item->id);
+                continue;
             }
 
             if (!$item->hasfiles) {
