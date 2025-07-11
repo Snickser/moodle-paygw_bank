@@ -44,7 +44,7 @@ class gateway extends \core_payment\gateway {
             $altcurrenc = explode(',', $alternatecurrencies);
         }
         $initialcurrencies = [
-            'USD', 'EUR', 'RUB', 'BYR',
+            'USD', 'EUR', 'RUB', 'BYR', 'UAH',
         ];
         return array_merge($initialcurrencies, $altcurrenc);
     }
