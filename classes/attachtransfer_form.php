@@ -57,7 +57,7 @@ class attachtransfer_form extends \moodleform {
         }
         $mform = $this->_form;
 
-	$mform->addElement('html', get_string('files_desc', 'paygw_bank'));
+        $mform->addElement('html', get_string('files_desc', 'paygw_bank'));
 
         $mform->setDisableShortforms(true);
         $mform->addElement('hidden', 'confirm');

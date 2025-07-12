@@ -322,7 +322,7 @@ if (!$bankentries) {
                 <input type="hidden" name="action" value="A">
                 <input type="hidden" name="confirm" value="1">
                 <input class="btn btn-block btn-' . $primary . ' mb-2 form-submit" type="submit" value="' .
-                $btstring . 
+                $btstring .
                 '"></input>
             </form>';
 
