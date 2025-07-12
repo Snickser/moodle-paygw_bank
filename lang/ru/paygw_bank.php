@@ -23,6 +23,7 @@
  */
 
 $string['approve'] = 'Утвердить заявку';
+$string['approveempty'] = 'Пустая заявка!';
 $string['are_you_sure_cancel'] = 'Вы точно уверены что хотите отменить запрос?';
 $string['cancel_process'] = 'Отменить';
 $string['code'] = 'Код платежа';
@@ -30,6 +31,8 @@ $string['codeprefix'] = 'Префикс кода платежа';
 $string['concept'] = 'Описание:';
 $string['cost'] = 'Цена';
 $string['deny'] = 'Отказать';
+$string['files'] = '<h5>Файлы:</h5>';
+$string['files_desc'] = '<b style="color: red;">!!! После выбора файлов нажмите внизу кнопку "Добавить".</b><p>';
 $string['file_already_uploaded'] = 'Файл с таким именем уже загружен';
 $string['file_uploaded'] = 'Файл загружен';
 $string['gatewaydescription'] = 'Bank Transfers - обеспечивает поддержку платежей, осуществляемых посредством денежных переводов по реквизитам или других методов ручной оплаты.';

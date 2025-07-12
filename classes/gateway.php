@@ -150,7 +150,7 @@ class gateway extends \core_payment\gateway {
         if ($data->suggest < 0 && $data->suggest) {
             $errors['suggest'] = get_string('suggesterror', 'paygw_bank');
         }
-        if ($data->maxcost < 0 && $data->maxcost || $data->maxcost < $data->suggest) {
+        if (!empty($data->maxcost) && ($data->maxcost < 0 || $data->maxcost < $data->suggest)) {
             $errors['maxcost'] = get_string('maxcosterror', 'paygw_bank');
         }
     }

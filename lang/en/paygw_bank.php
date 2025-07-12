@@ -22,11 +22,15 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['approve'] = 'Approve';
+$string['approveempty'] = 'Empty!';
 $string['gatewaydescription'] = 'bank is an authorised payment gateway provider for processing credit card transactions.';
 $string['gatewayname'] = 'Bank Transfers';
 $string['concept'] = 'Concept:';
 $string['cost'] = 'Cost';
 $string['code'] = 'Code';
+$string['files'] = '<h5>Files:</h5>';
+$string['files_desc'] = '<h5>Files:</h5>';
 $string['total_cost'] = 'Invoice cost';
 $string['today_cost'] = 'Today cost';
 $string['transfer_code'] = 'Transfer code';
@@ -47,7 +51,6 @@ $string['hasfiles'] = 'Has files';
 $string['transfer_process_initiated'] = 'Transfer process initiated';
 $string['pending_payments'] = 'Pending transfer payments';
 $string['payments'] = 'Payments';
-$string['approve'] = 'Approve';
 $string['deny'] = 'Deny';
 $string['my_pending_payments'] = 'My pending Transfer payments';
 $string['payment_denied'] = 'You have canceled the payment';

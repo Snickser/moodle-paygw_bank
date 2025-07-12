@@ -307,6 +307,9 @@ if (!$bankentries) {
 
         if (!$bankentry->hasfiles) {
             $primary = 'secondary';
+            $btstring = get_string('approveempty', 'paygw_bank');
+        } else {
+            $btstring = get_string('approve', 'paygw_bank');
         }
 
         // Create approve/deny buttons for pending payments.
@@ -319,7 +322,8 @@ if (!$bankentries) {
                 <input type="hidden" name="action" value="A">
                 <input type="hidden" name="confirm" value="1">
                 <input class="btn btn-block btn-' . $primary . ' mb-2 form-submit" type="submit" value="' .
-                get_string('approve', 'paygw_bank') . '"></input>
+                $btstring .
+                '"></input>
             </form>';
 
             $buttondeny = '<form name="formaprovepay' . $bankentry->id . '" method="POST">
@@ -336,7 +340,7 @@ if (!$bankentries) {
         // Handle file attachments.
         $files = "-";
         $selectitemcheckbox = '<input type="checkbox" name="selectitem" value="' . $bankentry->id . '">';
-        $hasfiles = get_string('no');
+        $hasfiles = '<b style="color: red;">' . get_string('no') . '</b>';
         $fs = get_file_storage();
         $files = bank_helper::files($bankentry->id);
 
