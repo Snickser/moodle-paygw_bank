@@ -103,6 +103,7 @@ $config = (object) helper::get_gateway_configuration($component, $paymentarea, $
 $payable = helper::get_payable($component, $paymentarea, $itemid);
 $currency = $payable->get_currency();
 $bankentry = null;
+$btncontinue = false;
 
 // Set default.
 if (!isset($config->autocommit)) {
@@ -416,7 +417,7 @@ inputcostself.addEventListener('input', function() {
         }
 
         if (count($files)) {
-            echo '<h5>' . get_string('files') . ':</h5>';
+            echo get_string('files', 'paygw_bank');
             echo '<ul class="list-group mb-1">';
             $i = 0;
             foreach ($files as $f) {
@@ -458,6 +459,7 @@ inputcostself.addEventListener('input', function() {
             $params['editfiles'] = 1;
             $url = new moodle_url('/payment/gateway/bank/pay.php', $params);
             echo $OUTPUT->single_button($url, get_string('editfiles'), 'post', ['type' => 'primary']);
+            $btncontinue = true;
         }
     }
 }
@@ -465,7 +467,7 @@ echo "</div>";
 echo "</div>";
 echo "</div><br>";
 
-if ($bankentry) {
+if ($btncontinue) {
     echo '<div align=center>';
     $url = new moodle_url('/payment/gateway/bank/my_pending_pay.php');
     echo $OUTPUT->single_button($url, get_string('continue'));
