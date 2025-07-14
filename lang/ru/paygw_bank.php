@@ -44,7 +44,7 @@ $string['mail_confirm_pay'] = 'Уважаемый(ая) {$a->username},
 Перейти {$a->url}';
 $string['mail_confirm_pay_subject'] = 'Запрос подтверждён';
 $string['mail_denied_pay'] = 'Уважаемый(ая) {$a->username}!
-Ваш запрос c кодом платежа "{$a->code}" на "{$a->concept}" отклонён.';
+Ваш запрос c кодом платежа "{$a->code}" на "{$a->concept}" отклонён системой. Вы можете создать новый запрос.';
 $string['mail_denied_pay_subject'] = 'Запрос отклонён';
 $string['max_number_of_files'] = 'Максимальное кол-во файлов';
 $string['my_pending_payments'] = 'Мои ожидающие платежи';
