@@ -241,8 +241,12 @@ if (!$bankentries) {
         );
     }
 
+    $ncount = 0;
+    $mcount = 0;
+
     // Populate table with payment data.
     foreach ($bankentries as $bankentry) {
+        ++$mcount;
         $bankentrykey = bank_helper::get_item_key($bankentry->component, $bankentry->paymentarea, $bankentry->itemid);
 
         // Apply filters.
@@ -339,7 +343,8 @@ if (!$bankentries) {
 
         // Handle file attachments.
         $files = "-";
-        $selectitemcheckbox = '<input type="checkbox" name="selectitem" value="' . $bankentry->id . '">';
+        $selectitemcheckbox = '<input type="checkbox" name="selectitem" value="' . $bankentry->id . '"> ' .
+            ++$ncount . ' (' . $bankentry->id . ')';
         $hasfiles = '<b style="color: red;">' . get_string('no') . '</b>';
         $fs = get_file_storage();
         $files = bank_helper::files($bankentry->id);
