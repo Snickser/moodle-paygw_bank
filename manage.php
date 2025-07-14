@@ -242,7 +242,6 @@ if (!$bankentries) {
     }
 
     $ncount = 0;
-    $mcount = 0;
 
     // Populate table with payment data.
     foreach ($bankentries as $bankentry) {
