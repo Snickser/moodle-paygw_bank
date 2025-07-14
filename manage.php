@@ -245,7 +245,6 @@ if (!$bankentries) {
 
     // Populate table with payment data.
     foreach ($bankentries as $bankentry) {
-        ++$mcount;
         $bankentrykey = bank_helper::get_item_key($bankentry->component, $bankentry->paymentarea, $bankentry->itemid);
 
         // Apply filters.
