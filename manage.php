@@ -80,7 +80,7 @@ $items = bank_helper::get_pending_item_collections($cid);
 
 echo '<form name="filteritem" method="post" action="/payment/gateway/bank/manage.php">';
 echo '<input type="hidden" name="cid" value="' . $cid . '">';
-echo '<select class="custom-select" name="filter" id="filterkey" style="width: auto">';
+echo '<select class="custom-select" onchange="this.form.submit()" name="filter" id="filterkey" style="width: auto">';
 echo '<option value="">' . get_string('pendingrequests', 'paygw_bank') . '</option>';
 foreach ($items as $item) {
     echo '<option value="' . $item['key'] . '" >' . $item['description'] . '</option>';
