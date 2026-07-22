@@ -52,6 +52,10 @@ $description = required_param('description', PARAM_TEXT);
 $description = json_decode('"' . $description . '"');
 
 $costself = optional_param('costself', 0, PARAM_FLOAT);
+if ($costself >= 1000000) {
+    $costself = 1000000;
+}
+
 $editfiles = optional_param('editfiles', 0, PARAM_INT);
 
 $params = [
